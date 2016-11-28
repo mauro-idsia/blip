@@ -1,0 +1,24 @@
+package ch.idsia.ipp.api.learn.solver.tw.brtl;
+
+
+import ch.idsia.ipp.core.learn.solver.ScoreSolver;
+import ch.idsia.ipp.core.learn.solver.brtl.BrutalGreedySolver;
+
+import java.util.logging.Logger;
+
+public class BrutalGreedySolverApi extends TwSolverApi {
+
+    private static final Logger log = Logger.getLogger(
+            BrutalGreedySolverApi.class.getName());
+
+    public static void main(String[] args) {
+        defaultMain(args, new BrutalGreedySolverApi(), log);
+    }
+
+    @Override
+    protected ScoreSolver getSolver() {
+        return new BrutalGreedySolver();
+    }
+
+}
+

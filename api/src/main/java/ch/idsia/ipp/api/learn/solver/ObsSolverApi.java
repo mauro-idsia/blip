@@ -1,0 +1,22 @@
+package ch.idsia.ipp.api.learn.solver;
+
+
+import ch.idsia.ipp.core.learn.solver.ObsSolver;
+import ch.idsia.ipp.core.learn.solver.ScoreSolver;
+
+import java.util.logging.Logger;
+
+public class ObsSolverApi extends SolverApi {
+
+    private static final Logger log = Logger.getLogger(
+            ObsSolverApi.class.getName());
+
+    public static void main(String[] args) {
+        defaultMain(args, new ObsSolverApi(), log);
+    }
+
+    @Override
+    protected ScoreSolver getSolver() {
+        return new ObsSolver();
+    }
+}

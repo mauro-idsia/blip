@@ -1,4 +1,10 @@
+*~
+
 .idea/
+*.iml
+
+api/target/
+core/target/
 
 *.class
 
