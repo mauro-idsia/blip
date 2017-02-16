@@ -2,17 +2,26 @@
 
 Bayesian network Learning and Inference Project
 
-This package implements the algorithms detailed in https://papers.nips.cc/paper/6231-learning-treewidth-bounded-bayesian-networks-with-thousands-of-variables. 
+## References
 
-The process of learning a bounded-treewidth BN is explained by using the "child" network as example
+This package implements the algorithms detailed in the following papers: 
+* Learning Bounded-Treewidth Graphs with Thousands of Variables (submitted KDD 2017) - [supplementary material](supplementary-KDD17.pdf)
+* Approximated Structural Learning for Large Bayesian Networks (submitted ML) - [supplementary material](supplementary-ML17.pdf)
+* [Learning Treewidth-Bounded Bayesian Networks with Thousands of Variables](https://papers.nips.cc/paper/6232-learning-treewidth-bounded-bayesian-networks-with-thousands-of-variables) (NIPS 2016) Mauro Scanagatta, Giorgio Corani, Cassio P. de Campos, Marco Zaffalon - [supplementary material](supplementary-NIPS16.pdf)
 
-# Dataset
+## Usage
 
-The initial dataset has to be the same as the file "child-5000.dat"
+The process of learning a bounded-treewidth BN is explained by using the "child" network as example.
 
-# Parent set identification 
+### Dataset format
 
-First step is building the parent sets score cache - can be done with: 
+The format for the initial dataset has to be the same as the file "child-5000.dat", namely a space-separated file containing: 
+* first line, list of variable names
+* following lines, discrete value for each variable
+
+### Parent set identification 
+
+The first step is build the parent sets score cache. It can be done with: 
 ```
 java -jar blip.jar scorer.sq -c bdeu -d child-5000.dat -j child-5000.jkl -n 3 -t 10
 ```
@@ -30,9 +39,9 @@ Task command line options:
 * -v N   : Verbose level (default: 0)
 
 
-# Treewidth bounded
+### k-Greedy search 
 
-Now from the scores cache we search the best bounded-treewidth BN: 
+Now from the scores cache we search the best bounded-treewidth BN (using k-greedy): 
 ```
 java -jar blip.jar solver.kg -j child-5000.jkl -r child-5000.res -t 10 -w 4
 ```
@@ -45,4 +54,13 @@ Task command line options:
 * -t N   : maximum time limit (seconds) (default: 10)
 * -v N   : Verbose level (default: 0)
 * -w N   : maximum treewidth
+
+
+### k-Greedy-ENT search 
+
+For perfoming the search with the k-greedy with entropy-based sample ordering: 
+
+```
+java -jar blip.jar solver.kg -j child-5000.jkl -r child-5000.res -t 10 -w 4
+```
 
