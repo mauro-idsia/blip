@@ -24,7 +24,7 @@
 
                     <archive>
                         <manifest>
-                            <mainClass>ch.idsia.ipp.api.Blip</mainClass>
+                            <mainClass>ch.idsia.blip.api.Blip</mainClass>
                         </manifest>
                     </archive>
 

@@ -1,21 +1,22 @@
-analyze ch.idsia.ipp.api.utils.Analyze Analyze bayesian network
-graph.gen ch.idsia.ipp.api.graph.NetToGraphApi Graph generator
-graph.net ch.idsia.ipp.api.graph.BetterNetsApi Better nets generator
-hmdist ch.idsia.ipp.api.measure.HammingDist Hamming Distance between the skeletons of two networks 
-ktree.score ch.idsia.ipp.api.utils.KTreeScore Select score ktree 
-lleval ch.idsia.ipp.api.measure.LLEval Log-likelihood Evaluator 
-matrix.graph ch.idsia.ipp.api.common.MatrixArcVisualizerApi Matrix view visualizator
-parle ch.idsia.ipp.api.utils.ParLeApi Parameter Learner 
-ranker ch.idsia.ipp.api.learn.scorer.RankScores Rank betweeen Score 
-samge ch.idsia.ipp.api.common.SamGeApi Sample Generator
-scorer.k2 ch.idsia.ipp.api.learn.scorer.AdvK2ScorerApi K2 Scorer
-scorer.gs ch.idsia.ipp.api.learn.scorer.GreedyScorerApi Greedy Selection Scorer 
-scorer.sq ch.idsia.ipp.api.learn.scorer.SeqScorerApi Sequential Score
-solver.obs.adv ch.idsia.ipp.api.learn.solver.ObsAdvSolverApi OBS with control on sampling processe
-solver.ka ch.idsia.ipp.api.learn.solver.tw.brtl.BrutalAstarSolverApi k-A*
-solver.kg ch.idsia.ipp.api.learn.solver.tw.brtl.BrutalGreedySolverApi k-G
-solver.kg.adv ch.idsia.ipp.api.learn.solver.tw.brtl.BrutalGreedyAdvSolverApi k-G (Advanced)
-solver.obs ch.idsia.ipp.api.learn.solver.ObsSolverApi Ordering-based search
-solver.quiet ch.idsia.ipp.api.learn.solver.tw.brtl.QuietMcSolverApi k-G with max degree constraint
-marg ch.idsia.ipp.api.utils.MarginalsApi Compute marginals of all variables in datafile
-query ch.idsia.ipp.api.utils.QueryApi Compute PR of a query on a dataset
+analyze ch.idsia.blip.api.utils.Analyze Analyze bayesian network
+graph.gen ch.idsia.blip.api.graph.NetToGraphApi Graph generator
+graph.net ch.idsia.blip.api.graph.BetterNetsApi Better nets generator
+hmdist ch.idsia.blip.api.measure.HammingDist Hamming Distance between the skeletons of two networks 
+ktree.score ch.idsia.blip.api.utils.KTreeScore Select score ktree 
+lleval ch.idsia.blip.api.measure.LLEval Log-likelihood Evaluator 
+matrix.graph ch.idsia.blip.api.common.MatrixArcVisualizerApi Matrix view visualizator
+parle ch.idsia.blip.api.utils.ParLeApi Parameter Learner 
+ranker ch.idsia.blip.api.learn.scorer.RankScores Rank betweeen Score 
+samge ch.idsia.blip.api.common.SamGeApi Sample Generator
+scorer.k2 ch.idsia.blip.api.learn.scorer.AdvK2ScorerApi K2 Scorer
+scorer.gs ch.idsia.blip.api.learn.scorer.GreedyScorerApi Greedy Selection Scorer 
+scorer.sq ch.idsia.blip.api.learn.scorer.SeqScorerApi Sequential Score
+solver.obs.adv ch.idsia.blip.api.learn.solver.ObsAdvSolverApi OBS with control on sampling processe
+solver.ka ch.idsia.blip.api.learn.solver.tw.brtl.BrutalAstarSolverApi k-A*
+solver.kg ch.idsia.blip.api.learn.solver.tw.brtl.BrutalGreedySolverApi k-G
+solver.kg.adv ch.idsia.blip.api.learn.solver.tw.brtl.BrutalGreedyAdvSolverApi k-G (Advanced)
+solver.kmax ch.idsia.blip.api.learn.solver.tw.brtl.BrutalMaxSolverApi k-MAX
+solver.obs ch.idsia.blip.api.learn.solver.ObsSolverApi Ordering-based search
+solver.quiet ch.idsia.blip.api.learn.solver.tw.brtl.QuietMcSolverApi k-G with max degree constraint
+marg ch.idsia.blip.api.utils.MarginalsApi Compute marginals of all variables in datafile
+query ch.idsia.blip.api.utils.QueryApi Compute PR of a query on a dataset
