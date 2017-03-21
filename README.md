@@ -44,17 +44,17 @@ java -jar blip.jar scorer.sq -c bdeu -d data/child-5000.dat -j data/child-5000.j
 For perfoming with k-greedy: 
 
 ```
-java -jar blip.jar solver.kg -j data/child-5000.jkl -r data/child.kg.res -t 10 -w 4
+java -jar blip.jar solver.kg -j data/child-5000.jkl -r data/child.kg.res -t 10 -w 4 -v 1
 ```
 
 For perfoming with the k-greedy enhanched by entropy-based sample ordering: 
 
 ```
-java -jar blip.jar solver.kg.adv -smp ent -d data/child-5000.dat -j data/child-5000.jkl -r data/child-5000.kgent.res -t 10 -w 4
+java -jar blip.jar solver.kg.adv -smp ent -d data/child-5000.dat -j data/child-5000.jkl -r data/child-5000.kgent.res -t 10 -w 4 -v 1
 ```
 
 For perfoming with k-max:
 
 ```
-java -jar blip.jar solver.kmax -j data/child-5000.jkl -r data/child-5000.kmax.res -t 10 -w 4
+java -jar blip.jar solver.kmax -j data/child-5000.jkl -r data/child-5000.kmax.res -t 10 -w 4 -v 1
 ```
