@@ -4,13 +4,16 @@ package ch.idsia.blip.core.inference.ve;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.utils.RandomStuff;
-import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 
 import java.util.*;
 import java.util.logging.Logger;
+
+import static ch.idsia.blip.core.utils.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.RandomStuff.randInt;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
 
 
 /**
@@ -50,11 +53,11 @@ public class Inference {
      */
     private static void shuffleGreedy(int[] greedy) {
         // Number of inversions
-        int n_inver = RandomStuff.randInt(1, Math.max(1, greedy.length / 4));
+        int n_inver = randInt(1, Math.max(1, greedy.length / 4));
 
         for (int i = 0; i < n_inver; i++) {
-            int a = RandomStuff.randInt(0, greedy.length - 1);
-            int b = RandomStuff.randInt(0, greedy.length - 1);
+            int a = randInt(0, greedy.length - 1);
+            int b = randInt(0, greedy.length - 1);
 
             int t = greedy[b];
 
@@ -222,10 +225,10 @@ public class Inference {
         if (!init.isEmpty()) {
             order = findEliminationOrder(init.toArray());
         }
-        RandomStuff.pf("%d \n", System.currentTimeMillis() - start);
 
         if (verbose > 1) {
             System.out.printf("Elimination order: %s\n", Arrays.toString(order));
+            pf("Required: %d \n", System.currentTimeMillis() - start);
         }
 
         List<BayesianFactor> factors = new ArrayList<BayesianFactor>();
@@ -764,7 +767,7 @@ public class Inference {
         if (query.contains(v)) {
             return false;
         }
-        if (ArrayUtils.find(v, evidence)) {
+        if (find(v, evidence)) {
             return false;
         }
         for (int c = 0; c < bn.n_var; c++) {
@@ -785,6 +788,19 @@ public class Inference {
 
         q.add(i);
         return query(q);
+    }
+
+    public int mpe(int i, TIntIntHashMap m) {
+        BayesianFactor v = query(i, m);
+        int max = -1;
+        double max_p = -Double.MAX_VALUE;
+        for (int j = 0; j < v.potent.length; j++) {
+            if (v.potent[j] > max_p) {
+                max_p = v.potent[j];
+                max = j;
+            }
+        }
+        return max;
     }
 
     /**

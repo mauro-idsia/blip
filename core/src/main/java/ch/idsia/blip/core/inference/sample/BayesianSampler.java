@@ -1,9 +1,9 @@
 package ch.idsia.blip.core.inference.sample;
 
+import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.SamGe;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
-import ch.idsia.blip.core.common.BayesianNetwork;
 
 import java.util.Arrays;
 import java.util.HashMap;

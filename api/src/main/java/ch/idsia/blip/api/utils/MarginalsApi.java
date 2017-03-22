@@ -8,7 +8,7 @@ import org.kohsuke.args4j.Option;
 import java.io.Writer;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getDataFromFile;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
 import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
 
 public class MarginalsApi extends Api {
@@ -27,7 +27,7 @@ public class MarginalsApi extends Api {
 
     @Override
     public void exec() throws Exception {
-        DataSet dat_rd = getDataFromFile(ph_dat);
+        DataSet dat_rd = getDataSet(ph_dat);
         Writer wr = getWriter(ph_out);
 
         Marginals.ex(dat_rd, wr);

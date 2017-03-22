@@ -1,9 +1,9 @@
 package ch.idsia.blip.core.common.tw;
 
 
-import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
+import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.array.TIntList;
 
 import java.util.Arrays;

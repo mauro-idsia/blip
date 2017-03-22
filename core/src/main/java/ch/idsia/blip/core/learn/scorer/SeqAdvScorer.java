@@ -9,6 +9,7 @@ import java.lang.management.ThreadMXBean;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+import static ch.idsia.blip.core.learn.scorer.SeqScorer.incrementPset;
 import static java.lang.StrictMath.max;
 
 
@@ -32,28 +33,6 @@ public class SeqAdvScorer extends BaseScorer {
 
     public SeqAdvScorer() {
         super();
-    }
-
-    private static boolean incrementPset(int[] pset, int i, int n_var) {
-
-        if (i < 0) {
-            return false;
-        }
-
-        // Try to increment set at position thread
-        pset[i]++;
-
-        // Check if we have to backtrack
-        if (pset[i] > (n_var - (pset.length - i))) {
-            boolean cnt = incrementPset(pset, i - 1, n_var);
-
-            if (cnt) {
-                pset[i] = pset[i - 1] + 1;
-            }
-            return cnt;
-        }
-
-        return true;
     }
 
     @Override
@@ -101,7 +80,7 @@ public class SeqAdvScorer extends BaseScorer {
                 double m = mi.computeMi(n, i) * dat.n_datapoints;
                 double l = max(ll_n, ll.computeLL(i));
 
-                // double l = - (ll_n -ll.computeLL(n, thread)) / dat.n_datapoints;
+                // double l = - (ll_n -ll.go(n, thread)) / dat.n_datapoints;
 
                 w[i] = m - l;
             }
@@ -124,7 +103,6 @@ public class SeqAdvScorer extends BaseScorer {
 
                     if (Arrays.binarySearch(pset, n) < 0) {
 
-                        int[][] p_values = score.computeParentSetValues(pset);
                         double sk = score.computeScore(n, pset);
 
                         double bestScore;

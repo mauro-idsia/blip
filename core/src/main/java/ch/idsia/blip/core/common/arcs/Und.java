@@ -1,11 +1,10 @@
 package ch.idsia.blip.core.common.arcs;
 
-import ch.idsia.blip.core.utils.data.ArrayUtils;
-
 import java.io.PrintWriter;
 import java.util.Formatter;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.expandArray;
 
 public class Und extends Arcs {
 
@@ -19,8 +18,12 @@ public class Und extends Arcs {
     }
 
     public void mark(int i1, int i2) {
-            neigh[i1] = ArrayUtils.expandArray(neigh[i1], i2);
-            neigh[i2] = ArrayUtils.expandArray(neigh[i2], i1);
+//        if (find(i1, neigh[i2]))
+//            p("sfasfa");
+//        if (find(i2, neigh[i1]))
+//            p("sfasfa");
+            neigh[i1] = expandArray(neigh[i1], i2);
+            neigh[i2] = expandArray(neigh[i2], i1);
     }
 
     @Override
@@ -60,7 +63,7 @@ public class Und extends Arcs {
         nw.neigh = new int[n][];
         for (int i = 0; i < n; i++) {
             nw.neigh[i] = new int[neigh[i].length];
-            ArrayUtils.cloneArray(neigh[i], nw.neigh[i]);
+            cloneArray(neigh[i], nw.neigh[i]);
         }
 
         return nw;

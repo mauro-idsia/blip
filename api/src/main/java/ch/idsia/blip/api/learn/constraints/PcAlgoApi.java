@@ -8,7 +8,7 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getDataFromFile;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
 
 public class PcAlgoApi extends Api {
 
@@ -32,7 +32,7 @@ public class PcAlgoApi extends Api {
 
     @Override
     public void exec() throws Exception {
-        DataSet dat = getDataFromFile(ph_dat);
+        DataSet dat = getDataSet(ph_dat);
         pc.verbose = verbose;
         pc.execute(dat);
     }

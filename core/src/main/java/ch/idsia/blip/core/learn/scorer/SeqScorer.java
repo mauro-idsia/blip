@@ -4,7 +4,6 @@ package ch.idsia.blip.core.learn.scorer;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.pf;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
 
 
@@ -102,7 +101,7 @@ public class SeqScorer extends BaseScorer {
 
                         addScore(cloneArray(pset), sk);
 
-                        checkBound(sk, p_values, pset);
+                        checkBound(sk, pset);
                     }
 
                     cnt = incrementPset(pset, pset.length - 1, dat.n_var);
@@ -124,6 +123,10 @@ public class SeqScorer extends BaseScorer {
 
         }
 
+        protected void checkBound(double sk, int[] pset) {
+        }
+
+        /*
         protected void checkBound(double sk, int[][] p_values, int[] pset) {
 
             // de Campos and Ji style
@@ -141,7 +144,10 @@ public class SeqScorer extends BaseScorer {
                 pf("%s Ji and Campos strikes again! \n", Arrays.toString(pset));
             }
         }
+        */
     }
+
+
 
 }
 

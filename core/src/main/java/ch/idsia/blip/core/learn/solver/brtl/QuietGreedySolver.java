@@ -2,7 +2,7 @@ package ch.idsia.blip.core.learn.solver.brtl;
 
 
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
-import ch.idsia.blip.core.learn.solver.src.brutal.BrutalOldGreedySearcher;
+import ch.idsia.blip.core.learn.solver.src.brutal.BrutalOldSearcher;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.ParentSet;
@@ -11,7 +11,7 @@ import ch.idsia.blip.core.utils.data.SIntSet;
 /**
  * Adds check to out_degree of each node
  */
-public class QuietGreedySolver extends BrutalGreedySolver {
+public class QuietGreedySolver extends BrutalSolver {
 
     public int max_out_degree;
 
@@ -30,7 +30,7 @@ public class QuietGreedySolver extends BrutalGreedySolver {
         max_out_degree = tw;
     }
 
-    public class QuietGreedySearcher extends BrutalOldGreedySearcher {
+    public class QuietGreedySearcher extends BrutalOldSearcher {
 
         int[] out_degree;
 

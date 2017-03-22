@@ -3,7 +3,7 @@ package ch.idsia.blip.core.learn.constraints;
 
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.arcs.Undirected;
-import ch.idsia.blip.core.common.io.DataFileReader;
+import ch.idsia.blip.core.common.io.dat.DatFileReader;
 import ch.idsia.blip.core.learn.constraints.oracle.Oracle;
 import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
@@ -37,7 +37,7 @@ public class PcAlgo {
 
     private DataSet dat;
 
-    public void execute(DataFileReader dr) throws IOException {
+    public void execute(DatFileReader dr) throws IOException {
 execute(dr.read());
     }
 
@@ -196,7 +196,7 @@ execute(dr.read());
         return g;
     }
 
-    public Undirected skeleton(DataFileReader dr) throws IOException {
+    public Undirected skeleton(DatFileReader dr) throws IOException {
     return skeleton(dr.read());
     }
     public Undirected skeleton(DataSet dat) throws IOException {

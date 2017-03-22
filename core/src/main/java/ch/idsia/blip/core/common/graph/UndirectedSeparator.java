@@ -31,6 +31,8 @@ public class UndirectedSeparator {
             for (int j = 0; j < ps.length; j++) {
                 n_u.mark(i, Arrays.binarySearch(ar, ps[j]));
             }
+
+            n_u.names[i] = u.names[a];
         }
 
         return n_u;

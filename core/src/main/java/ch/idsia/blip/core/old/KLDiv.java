@@ -1,9 +1,9 @@
 package ch.idsia.blip.core.old;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.inference.ve.BayesianFactor;
 import ch.idsia.blip.core.inference.ve.Inference;
+import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 
 /**

@@ -2,6 +2,7 @@ package ch.idsia.blip.core.common.io;
 
 import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.common.graph.UndToGraph;
+import ch.idsia.blip.core.common.io.dat.DatFileLineReader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -23,7 +24,7 @@ public class MatrixArcVisualizer {
     private static final Logger log = Logger.getLogger(
             MatrixArcVisualizer.class.getName());
 
-    private static DataFileLineReader dat;
+    private static DatFileLineReader dat;
 
     public static void ex(String ph_mtx, String ph_dat, Double eps, String ph_out) {
         try {
@@ -37,7 +38,7 @@ public class MatrixArcVisualizer {
         // Read data file
 
         p(ph_dat);
-        dat = new DataFileLineReader(ph_dat);
+        dat = new DatFileLineReader(ph_dat);
         dat.readMetaData();
 
         // Read arc matrix, prepare undirected

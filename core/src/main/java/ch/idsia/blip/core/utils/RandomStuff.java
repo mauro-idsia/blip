@@ -4,7 +4,9 @@ package ch.idsia.blip.core.utils;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.Worker;
-import ch.idsia.blip.core.common.io.*;
+import ch.idsia.blip.core.common.io.ScoreReader;
+import ch.idsia.blip.core.common.io.bn.*;
+import ch.idsia.blip.core.common.io.dat.*;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.io.*;
@@ -298,7 +300,7 @@ public class RandomStuff {
      * @throws IncorrectCallException        file path not valid
      * @throws java.io.FileNotFoundException data file not found
      */
-    public static DataSet getDataFromFile(String ph) {
+    public static DataSet getDataSet(String ph) {
 
         try {
             BufferedReader reader;
@@ -314,13 +316,88 @@ public class RandomStuff {
                         "No valid data point path provided: " + ph);
             }
 
-            return new DataFileReader(ph).read();
+            if (ph.endsWith(".data"))
+                return new DataFileReader(ph).read();
+            else if (ph.endsWith(".dat"))
+                return new DatFileReader(ph).read();
+            else
+                return new AnyFileReader(ph).read();
         } catch (Exception ex) {
             logExp(log, ex);
         }
 
         return null;
     }
+
+    public static void writeDataSet(DataSet dat, String ph) {
+
+        try {
+            DatFileWriter dWr = null;
+            if (ph.endsWith(".data"))
+                dWr =  new DataFileWriter();
+            else if (ph.endsWith(".dat"))
+                dWr =  new DatFileWriter();
+
+            dWr.go(dat, ph);
+        } catch (Exception ex) {
+            logExp(log, ex);
+        }
+    }
+
+
+    public static BaseFileLineReader getDataSetReader(String ph) {
+
+        try {
+            BufferedReader reader;
+
+            if (ph == null) {
+                throw new IncorrectCallException(
+                        "No data point path provided: " + ph);
+            }
+            File f_dat = new File(ph);
+
+            if (!f_dat.isFile()) {
+                throw new IncorrectCallException(
+                        "No valid data point path provided: " + ph);
+            }
+
+            if (ph.endsWith(".data"))
+                return new DataFileLineReader(ph);
+            else if (ph.endsWith(".dat"))
+                return new DatFileLineReader(ph);
+            else
+                return new AnyFileLineReader(ph);
+        } catch (Exception ex) {
+            logExp(log, ex);
+        }
+
+        return null;
+    }
+
+    public static DataSet getDataFromArff(String ph) {
+
+        try {
+            BufferedReader reader;
+
+            if (ph == null) {
+                throw new IncorrectCallException(
+                        "No data point path provided: " + ph);
+            }
+            File f_dat = new File(ph);
+
+            if (!f_dat.isFile()) {
+                throw new IncorrectCallException(
+                        "No valid data point path provided: " + ph);
+            }
+
+            return new ArffFileReader(ph).read();
+        } catch (Exception ex) {
+            logExp(log, ex);
+        }
+
+        return null;
+    }
+
 
     /**
      * Get writer for the output scores
@@ -342,6 +419,12 @@ public class RandomStuff {
         }
         return writer;
     }
+
+
+    public static BufferedReader getReader(String format, Object... args) throws FileNotFoundException {
+        return getReader(f(format, args));
+    }
+
 
     public static BufferedReader getReader(String ph) throws FileNotFoundException {
         return new BufferedReader(new FileReader(ph));
@@ -368,6 +451,11 @@ public class RandomStuff {
         return f;
     }
 
+    public static ParentSet[][] getScoreReader(String ph) throws IncorrectCallException, IOException {
+        return getScoreReader(ph, 0);
+    }
+
+
     /**
      * Get a new score file reader from the argument
      *
@@ -376,14 +464,20 @@ public class RandomStuff {
      * @throws IncorrectCallException        file path not valid
      * @throws java.io.FileNotFoundException if file is not found
      */
-    public static ScoreReader getScoreReader(String ph, int debug)
-            throws IncorrectCallException, FileNotFoundException {
+    public static ParentSet[][] getScoreReader(String ph, int debug)
+            throws IncorrectCallException, IOException {
 
         if (ph == null) {
             throw new IncorrectCallException("No score path provided: " + ph);
         }
 
-        return new ScoreReader(ph, 10);
+        if (!new File(ph).exists())
+            throw new IncorrectCallException("Score file not found: " + ph);
+
+        ScoreReader s = new ScoreReader(ph, 10);
+        s.readScores();
+
+        return s.m_scores;
     }
 
     public static void closeIt(Logger log, Closeable writer) {
@@ -701,5 +795,27 @@ else
         // System.out.println("Process exitValue: " + exitVal);
 
         return o;
+    }
+
+    private static boolean incrementPset(int[] pset, int i, int n_var) {
+
+        if (i < 0) {
+            return false;
+        }
+
+        // Try to increment set at position thread
+        pset[i]++;
+
+        // Check if we have to backtrack
+        if (pset[i] > (n_var - (pset.length - i))) {
+            boolean cnt = incrementPset(pset, i - 1, n_var);
+
+            if (cnt) {
+                pset[i] = pset[i - 1] + 1;
+            }
+            return cnt;
+        }
+
+        return true;
     }
 }

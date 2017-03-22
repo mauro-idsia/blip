@@ -1,9 +1,8 @@
 package ch.idsia.blip.core.common.tw;
 
 
-import ch.idsia.blip.core.utils.ParentSet;
-import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.common.analyze.MutualInformation;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.Random;
 import java.util.logging.Logger;
@@ -65,7 +64,7 @@ public class KTreeSampler {
                 }
 
             } catch (Exception e) {
-                RandomStuff.logExp(log, e);
+                logExp(log, e);
             }
         }
 

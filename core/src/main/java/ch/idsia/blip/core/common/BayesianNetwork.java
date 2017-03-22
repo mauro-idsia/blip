@@ -2,21 +2,22 @@ package ch.idsia.blip.core.common;
 
 
         import ch.idsia.blip.core.common.arcs.NamedDirected;
+        import ch.idsia.blip.core.common.arcs.Undirected;
         import ch.idsia.blip.core.common.tw.TreeWidth;
         import ch.idsia.blip.core.utils.ParentSet;
-        import ch.idsia.blip.core.utils.RandomStuff;
         import ch.idsia.blip.core.utils.data.array.TIntArrayList;
-        import ch.idsia.blip.core.utils.exp.CyclicGraphException;
-        import ch.idsia.blip.core.common.arcs.Undirected;
         import ch.idsia.blip.core.utils.data.set.TIntHashSet;
+        import ch.idsia.blip.core.utils.exp.CyclicGraphException;
         import ch.idsia.blip.core.utils.exp.TreeWidthExceededException;
 
+        import java.io.File;
         import java.io.IOException;
         import java.io.PrintWriter;
         import java.io.Serializable;
         import java.util.*;
         import java.util.logging.Logger;
 
+        import static ch.idsia.blip.core.utils.RandomStuff.*;
         import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
 
 
@@ -34,7 +35,7 @@ public class BayesianNetwork implements Serializable {
     /**
      * Lower value to consider in probabilities computation
      */
-    private final double eps = Math.pow(2, -20);
+    private final double eps = Math.pow(2, -10);
 
     /**
      * Number of variable in the network.
@@ -115,6 +116,7 @@ public class BayesianNetwork implements Serializable {
         assert (sample.length == n_var);
 
         double logLik = 0.0;
+        double l = 0;
 
         for (int i = 0; i < n_var; i++) {
             double p = getPotential(i, sample);
@@ -122,7 +124,9 @@ public class BayesianNetwork implements Serializable {
             if (p < eps) {
                 p = eps;
             }
-            logLik += Math.log(p);
+            l= Math.log(p);
+
+            logLik += l;
         }
 
         return logLik;
@@ -140,9 +144,11 @@ public class BayesianNetwork implements Serializable {
         int ix = potentialIndex(n, sample);
         ix *= arity(n);
         ix+= sample[n];
-
-        return potential(n)[ix];
-
+        double[] p = potential(n);
+        if (ix >= p.length)
+            return 0;
+        else
+            return p[ix];
     }
 
     /**
@@ -266,18 +272,18 @@ public class BayesianNetwork implements Serializable {
 
         try {
 
-            RandomStuff.wf(w, "digraph G {\n");
-            RandomStuff.wf(w, "labelloc=\"t\"\n");
-            RandomStuff.wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
+            wf(w, "digraph G {\n");
+            wf(w, "labelloc=\"t\"\n");
+            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
             for (int v1 = 0; v1 < n_var; v1++) {
-                RandomStuff.wf(w, "\"%s\" \n", name( v1));
+                wf(w, "\"%s\" \n", name( v1));
                 for (int v2 : parents(v1)) {
-                    RandomStuff.wf(w, "\"%s\" -> \"%s\" \n", name( v2), name( v1));
+                    wf(w, "\"%s\" -> \"%s\" \n", name( v2), name( v1));
                 }
             }
-            RandomStuff.wf(w, "}\n");
+            wf(w, "}\n");
         } catch (IOException ex) {
-            RandomStuff.logExp(log, ex);
+            logExp(log, ex);
         }
     }
 
@@ -596,22 +602,22 @@ public class BayesianNetwork implements Serializable {
     public void toGraph(PrintWriter w, TreeSet<String> highligth) {
         try {
 
-            RandomStuff.wf(w, "digraph G {\n");
-            RandomStuff.wf(w, "labelloc=\"t\"\n");
-            RandomStuff.wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
+            wf(w, "digraph G {\n");
+            wf(w, "labelloc=\"t\"\n");
+            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
             for (int v1 = 0; v1 < n_var; v1++) {
                 String v = name(v1);
                 if (highligth != null && highligth.contains(v))
-                    RandomStuff.wf(w, "\"%s\" [style=filled, fillcolor=red]  \n", v);
+                    wf(w, "\"%s\" [style=filled, fillcolor=red]  \n", v);
                 else
-                    RandomStuff.wf(w, "\"%s\" \n", v);
+                    wf(w, "\"%s\" \n", v);
                 for (int v2 : parents(v1)) {
-                    RandomStuff.wf(w, "\"%s\" -> \"%s\" \n", name( v2), v);
+                    wf(w, "\"%s\" -> \"%s\" \n", name( v2), v);
                 }
             }
-            RandomStuff.wf(w, "}\n");
+            wf(w, "}\n");
         } catch (IOException ex) {
-            RandomStuff.logExp(log, ex);
+            logExp(log, ex);
         }
     }
 
@@ -620,35 +626,50 @@ public class BayesianNetwork implements Serializable {
             if (keys != null)
                 Arrays.sort(keys);
 
-            RandomStuff.wf(w, "digraph G {\n");
-            RandomStuff.wf(w, "labelloc=\"t\"\n");
-            RandomStuff.wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
+            wf(w, "digraph G {\n");
+            wf(w, "labelloc=\"t\"\n");
+            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
             for (int v1 = 0; v1 < n_var; v1++) {
                 String v = name(v1);
                 if (keys != null && find(v1, keys))
-                    RandomStuff.wf(w, "\"%s\" [style=filled, fillcolor=red]  \n", v);
+                    wf(w, "\"%s\" [style=filled, fillcolor=red]  \n", v);
                 else
-                    RandomStuff.wf(w, "\"%s\" \n", v);
+                    wf(w, "\"%s\" \n", v);
                 for (int v2 : parents(v1)) {
-                    RandomStuff.wf(w, "\"%s\" -> \"%s\" \n", name( v2), v);
+                    wf(w, "\"%s\" -> \"%s\" \n", name( v2), v);
                 }
             }
-            RandomStuff.wf(w, "}\n");
+            wf(w, "}\n");
         } catch (IOException ex) {
-            RandomStuff.logExp(log, ex);
+            logExp(log, ex);
         }
     }
 
     public void writeGraph(String s, int[] keys) {
         try {
+            if (!new File(System.getProperty("user.home") + "/Tools/dot").exists())
+                return;
+
             PrintWriter w = new PrintWriter(s + ".dot", "UTF-8");
             toGraph(w, keys);
             w.close();
-            String h = String.format("dot -Tpng %s.dot -o %s.png", s, s);
 
-            RandomStuff.cmd(h);
+            String h = String.format("./dot -Tpng %s.dot -o %s.png", s, s);
+
+            Process proc = Runtime.getRuntime().exec(h, new String[0], new File(System.getProperty("user.home") + "/Tools"));
+            exec(proc);
+
+            // To close them
+            proc.getInputStream().close();
+            proc.getOutputStream().close();
+            proc.getErrorStream().close();
+
         } catch (IOException e) {
-            RandomStuff.logExp(e);
+            logExp(e);
+        } catch (InterruptedException e) {
+            logExp(e);
+        } catch (Exception e) {
+            logExp(e);
         }
 
     }

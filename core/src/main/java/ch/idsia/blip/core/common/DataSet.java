@@ -18,12 +18,6 @@ public class DataSet {
     public int[][][] row_values;
 
     // For each variable with missing data, array of row with missing value
-    public int[] missing_l;
-
-    // For each missing variable, array of row with missing value
-    public int[][] missing_v;
-
-    // Matrix n_var * n_datapoints, containing all the row_values in sample
-    //  public short[][] sample;
+    public int[][] missing_l;
 
 }

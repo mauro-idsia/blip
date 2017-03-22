@@ -5,7 +5,7 @@ import ch.idsia.blip.core.common.analyze.Entropy;
 
 import java.util.Random;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getDataFromFile;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
 
 public class EntropySampler implements Sampler {
 
@@ -24,7 +24,7 @@ public class EntropySampler implements Sampler {
     }
 
     public EntropySampler(String ph_dat, int n) {
-        dat = getDataFromFile(ph_dat);
+        dat = getDataSet(ph_dat);
         this.n = n;
         r = new Random();
     }

@@ -42,11 +42,11 @@ public class TopologicalOrder {
             L.add(n);
             for (int i = 0; i < E[n].size(); i++) { // for each child of node
                 int c = E[n].get(i);
-                int s = P.get(c) - 1; // reduce dom_size of parent set
+                int s = P.get(c) - 1; // reduce size of parent set
 
                 if (s == 0) {
                     S.add(c);
-                } // if m has no dand incoming edges then
+                } // if m has no incoming edges then
                 if (s < 0) {
                     p("WHAT?");
                 }

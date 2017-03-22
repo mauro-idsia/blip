@@ -107,6 +107,31 @@ public class ArrayUtils {
         return n;
     }
 
+    public static int[] diff(int[] arr1, int[] arr2) {
+
+        int i = 0;
+        int j = 0;
+        int n1 = arr1.length;
+        int n2 = arr2.length;
+
+        TIntArrayList aux = new TIntArrayList((n1 < n2) ? n1 : n2);
+
+        while ((i < n1) && (j < n2)) {
+            if (arr1[i] < arr2[j]) {
+                aux.add(arr1[i]);
+                i++;
+            } else if (arr2[j] < arr1[i]) {
+                j++;
+            } else {
+                /* equal! */
+                i++;
+                j++;
+            }
+        }
+
+        return aux.toArray();
+    }
+
     /**
      * Compute intersection of array of int
      *

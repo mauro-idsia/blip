@@ -2,7 +2,7 @@ package ch.idsia.blip.api.learn.solver.tw.brtl;
 
 
 import ch.idsia.blip.api.learn.solver.SolverApi;
-import ch.idsia.blip.core.learn.solver.brtl.BrutalGreedySolver;
+import ch.idsia.blip.core.learn.solver.brtl.BrutalSolver;
 import org.kohsuke.args4j.Option;
 
 
@@ -13,7 +13,7 @@ public abstract class TwSolverApi extends SolverApi {
 
     @Override
     public void exec() throws Exception {
-        ((BrutalGreedySolver) solver).tw = tw;
+        ((BrutalSolver) solver).tw = tw;
         super.exec();
     }
 }

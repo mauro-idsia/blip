@@ -5,6 +5,7 @@ import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.learn.param.ParLe;
+import ch.idsia.blip.core.learn.param.ParLeBayes;
 import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
@@ -23,7 +24,7 @@ public class ParLeApi extends Api {
     @Option(name="-r", required = true, usage="Network structure")
     protected String ph_res;
 
-    @Option(name="-d", required = true, usage="Dataset path")
+    @Option(name="-d", required = true, usage="Training dataset")
     protected String ph_dat;
 
     @Option(name="-n", required = true, usage="Output path")
@@ -72,9 +73,9 @@ public class ParLeApi extends Api {
     public void exec() throws Exception {
 
         BayesianNetwork res = getBayesianNetwork(ph_res);
-        DataSet dat_rd = getDataFromFile(ph_dat);
+        DataSet dat_rd = getDataSet(ph_dat);
 
-        ParLe parLe = new ParLe.ParLeBayes(d_alpha);
+        ParLe parLe = new ParLeBayes(d_alpha);
         parLe.verbose = verbose;
                /*
                 Method method = getMethodValueOf(s_method);
@@ -88,7 +89,7 @@ public class ParLeApi extends Api {
             } else if (method == Method.Cano) {
                 parLe = new ParLe.ParLeCano(5);
             } else {
-                parLe = new ParLe.ParLeBayes(d_alpha);
+                parLe = new ParLeBayes(d_alpha);
             } */
 
         BayesianNetwork newBn = parLe.go(res, dat_rd);

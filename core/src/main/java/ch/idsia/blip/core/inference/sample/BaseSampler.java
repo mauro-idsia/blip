@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getReader;
-import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
-import static ch.idsia.blip.core.utils.RandomStuff.wf;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 public abstract class BaseSampler {
 

@@ -2,7 +2,6 @@ package ch.idsia.blip.core.inference.ve;
 
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TDoubleArrayList;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
@@ -211,7 +210,7 @@ public class BayesianFactor {
         updateStride();
 
         potent = new double[size];
-        ArrayUtils.cloneArray(new_p, potent);
+        cloneArray(new_p, potent);
     }
 
     /**

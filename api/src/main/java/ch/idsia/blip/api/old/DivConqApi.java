@@ -105,7 +105,7 @@ public class DivConqApi extends Api {
 
     @Override
     public void exec() throws Exception {
-        DataSet dat = getDataFromFile(ph_dat);
+        DataSet dat = getDataSet(ph_dat);
         checkPath(ph_cluster);
 
         dv.findKMedoids(dat);

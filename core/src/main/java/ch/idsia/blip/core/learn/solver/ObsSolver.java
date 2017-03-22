@@ -1,20 +1,17 @@
 package ch.idsia.blip.core.learn.solver;
 
+
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
-import ch.idsia.blip.core.learn.solver.src.ObsSearcher;
-import ch.idsia.blip.core.learn.solver.src.Searcher;
+import ch.idsia.blip.core.learn.solver.src.*;
+import ch.idsia.blip.core.learn.solver.src.obs.*;
 
 import static ch.idsia.blip.core.learn.solver.samp.SamplerUtils.getAdvSampler;
-import static ch.idsia.blip.core.utils.RandomStuff.f;
-
-;
 
 
 /**
  * (given an order, for each variable select the best parent set that doesn't contain any preceding variable)
  */
-public class ObsSolver  extends ScoreSolver {
-
+public class ObsSolver extends ScoreSolver {
 
     public String sampler;
 
@@ -39,17 +36,27 @@ public class ObsSolver  extends ScoreSolver {
 
     @Override
     protected Sampler getSampler() {
-        return getAdvSampler(sampler, dat_path, sc.n_var);
-    }
-
-    @Override
-    protected Searcher getSearcher() {
-        return new ObsSearcher(this);
+        return getAdvSampler(sampler, dat_path, sc.length);
     }
 
     @Override
     protected String name() {
-        return f("Obs %s", searcher);
+        return "OBS";
+    }
+
+    @Override
+    protected Searcher getSearcher() {
+        if ("greedy".equals(searcher))
+            return new ObsGreedySearcher(this);
+        if ("inobs".equals(searcher))
+            return new InobsSearcher(this);
+        if ("inobs2".equals(searcher))
+            return new InobsSearcher2(this);
+        if ("inobs3".equals(searcher))
+            return new InobsSearcher3(this);
+        if ("inobs4".equals(searcher))
+            return new InobsSearcher4(this);
+        return new ObsSearcher(this);
     }
 
     public void initAdv(String searcher) {
@@ -61,4 +68,5 @@ public class ObsSolver  extends ScoreSolver {
         this.sampler = sampler;
         initAdv(searcher);
     }
+
 }

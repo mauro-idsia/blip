@@ -4,6 +4,7 @@ package ch.idsia.blip.core.common.analyze;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.SIntSet;
+import ch.idsia.blip.core.utils.math.FastMath;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,9 +21,11 @@ public class Analyzer {
     // Alpha for counts
     public double alpha = 1.0;
 
+    public boolean base2 = false;
+
     protected HashMap<SIntSet, int[][]> cache_z_rows;
 
-    protected Analyzer(DataSet dat) {
+    public Analyzer(DataSet dat) {
         this.dat = dat;
     }
 
@@ -104,5 +107,11 @@ public class Analyzer {
 
     public void resetCache() {
         cache_z_rows = new HashMap<SIntSet, int[][]>();
+    }
+
+    protected double log(double p) {
+        if (base2)
+            return FastMath.log(p) / FastMath.log(2);
+        return FastMath.log(p);
     }
 }

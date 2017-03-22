@@ -24,6 +24,8 @@ public abstract class BaseSolver extends Base {
 
     private final Logger log = Logger.getLogger(BaseSolver.class.getName());
 
+    protected ParentSet[][] sc;
+
     //Best structure found yet
     public double best_sk;
 
@@ -31,8 +33,6 @@ public abstract class BaseSolver extends Base {
     public ParentSet[] best_str;
 
     public boolean testAcycility = false;
-
-    protected long start;
 
     public int n_var;
 
@@ -50,11 +50,11 @@ public abstract class BaseSolver extends Base {
 
     private double worstSolScore;
 
-    public ParentSet[][] scores;
-
     private Sampler smp;
 
     public int delta;
+
+    public TreeSet<Solution> tryFirst;
 
     protected abstract String name();
 
@@ -64,7 +64,8 @@ public abstract class BaseSolver extends Base {
             thread_pool_size = Runtime.getRuntime().availableProcessors();
         }
 
-        start = System.currentTimeMillis();
+        if (start == 0)
+            start = System.currentTimeMillis();
         last_improvement = start;
 
         if (verbose > 0) {
@@ -118,7 +119,7 @@ public abstract class BaseSolver extends Base {
         // Obtains the parent set to optimize
         if (verbose > 0)
             log("Read scores... \n");
-        scores = pro.getParentSets();
+        sc = pro.getParentSets();
 
         almost();
 
@@ -143,6 +144,34 @@ public abstract class BaseSolver extends Base {
     }
 
     protected void almost() {
+        if (tryFirst == null)
+            return;
+
+        for (Solution s: tryFirst) {
+            tryNow(s);
+        }
+    }
+
+    protected void tryNow(Solution s) {
+        ParentSet[] t = new ParentSet[n_var];
+
+        for (int i = 0; i < n_var; i++) {
+            int[] p = s.str[i].parents;
+            t[i] = findParSet(p, sc[i]);
+            if (t[i] == null)
+                return;
+        }
+
+        newStructure(t);
+    }
+
+    private ParentSet findParSet(int[] pset, ParentSet[] sc) {
+        for (ParentSet p: sc) {
+            if (sameArray(p.parents, pset))
+                return p;
+        }
+
+        return null;
     }
 
     protected abstract Sampler getSampler();
@@ -301,6 +330,9 @@ public abstract class BaseSolver extends Base {
 
             numIter++;
 
+            if (new_str == null)
+                p("ciao");
+
             double new_sk = getSk(new_str);
 
             if (testAcycility && !testAcyclic(new_str)) {
@@ -355,7 +387,7 @@ public abstract class BaseSolver extends Base {
             ParentSet ps = new_str[i];
             if (ps == null)
                 return false;
-            if (ps.sk > scores[i][0].sk)
+            if (ps.sk > sc[i][0].sk)
                 return false;
         }
         return true;
@@ -427,7 +459,7 @@ public abstract class BaseSolver extends Base {
 
             src = getSearcher();
 
-            src.init(scores, thread);
+            src.init(sc, thread);
 
             while (still_time) {
 
@@ -445,7 +477,7 @@ public abstract class BaseSolver extends Base {
     }
 
     public static class Solution implements Comparable<Solution>{
-        private final ParentSet[] str;
+        public final ParentSet[] str;
         private final double sk;
 
         public Solution(double sk, ParentSet[] str) {

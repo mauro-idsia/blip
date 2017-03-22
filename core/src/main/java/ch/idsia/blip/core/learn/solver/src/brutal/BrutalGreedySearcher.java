@@ -12,7 +12,7 @@ import java.util.*;
  * IMPROVES best parent - handle search
  * (may generate memory problem, in that case fall back to old searcher)
  */
-public class BrutalGreedySearcher extends BrutalOldGreedySearcher {
+public class BrutalGreedySearcher extends BrutalOldSearcher {
 
     public ArrayList<TreeSet<SIntSet>> assignments;
 

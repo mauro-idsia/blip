@@ -1,6 +1,6 @@
 package ch.idsia.blip.core.learn.scorer.concurrency;
 
 
-interface ThreadCompleteListener {
+public interface ThreadCompleteListener {
     void notifyOfThreadComplete();
 }

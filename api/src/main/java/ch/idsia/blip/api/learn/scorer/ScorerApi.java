@@ -6,7 +6,7 @@ import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.learn.scorer.BaseScorer;
 import org.kohsuke.args4j.Option;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getDataFromFile;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
 
 
 abstract class ScorerApi extends Api {
@@ -29,9 +29,6 @@ abstract class ScorerApi extends Api {
     @Option(name="-a", usage="(if BDeu is chosen) equivalent sample size parameter")
     private static Double alpha = 1.0;
 
-    @Option(name="-b", usage="Number of machine cores to use (if 0, all are used)")
-    private static int thread_pool_size = 1;
-
     @Option(name="-u", usage="Search only the selected variable (ex: '3' or '1-10')")
     private static String choice_variables;
 
@@ -44,7 +41,7 @@ abstract class ScorerApi extends Api {
 
     @Override
     public void exec() throws Exception {
-        DataSet dat = getDataFromFile(ph_dat);
+        DataSet dat = getDataSet(ph_dat);
         scorer.verbose = verbose;
         scorer.init(ph_jkl, max_pset_size, max_time, scoreNm, alpha, thread_pool_size, choice_variables);
         scorer.go(dat);

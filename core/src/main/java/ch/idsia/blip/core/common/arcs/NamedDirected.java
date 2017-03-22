@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.common.arcs;
 
 
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.List;
 

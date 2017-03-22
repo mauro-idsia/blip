@@ -78,15 +78,15 @@ public class MIT extends Score {
 
                 double p_x = totcount[v] * 1.0 / dat.n_datapoints;
 
-                // System.out.printf("%.4f, %d - %d, %.3f \n", skore, valcount[v], p_values[p_v].length,  Math.log((valcount[v] * 1.0) / p_values[p_v].length));
+                // System.out.printf("%.4f, %d - %d, %.3f \n", skore, valcount[v], p_values[p_v].length,  log((valcount[v] * 1.0) / p_values[p_v].length));
 
                 skore += p_x_y
-                        * (Math.log(p_x_y) - Math.log(p_x) - Math.log(p_y));
+                        * (log(p_x_y) - log(p_x) - log(p_y));
                 // System.out.println(skore);
 
                 // System.out.printf("%d- %.2f, ", valcount[v], p);
 
-                // System.out.println(valcount[v] + "   " + Math.log(p) + "   " + p + "   " + skore);
+                // System.out.println(valcount[v] + "   " + log(p) + "   " + p + "   " + skore);
             }
 
         }
@@ -117,7 +117,7 @@ return -Double.MAX_VALUE;
         }
 
         // Penalization term
-        // skore -= Math.log(n_datapoints) * (arity - 1) * p_arity / 2.0;
+        // skore -= log(n_datapoints) * (arity - 1) * p_arity / 2.0;
         Arrays.sort(p_arity);
         // System.out.println(Arrays.toString(p_arity));
 

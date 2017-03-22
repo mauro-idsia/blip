@@ -1,6 +1,7 @@
 20
-# Scores computed using Sequential selection (3.50 seconds per variable) 
+# Method: Sequential selection 
 # Score function: BDeu (alpha: 1.00) 
+# Max in-degree: 3 
 0 1
 -1636.4811 0
 1 47

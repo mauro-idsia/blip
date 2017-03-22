@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.learn.solver.brtl;
 
 import ch.idsia.blip.core.learn.solver.SkelSolver;
-import ch.idsia.blip.core.learn.solver.src.brutal.BrutalOldGreedySearcher;
+import ch.idsia.blip.core.learn.solver.src.brutal.BrutalOldSearcher;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 
 /**
@@ -18,7 +18,7 @@ public class BrutalPcGreedySolver extends SkelSolver {
 
     @Override
     protected Searcher getSearcher() {
-        return new BrutalOldGreedySearcher(this, tw);
+        return new BrutalOldSearcher(this, tw);
     }
 
     public void init(int time, String s, int tw) {

@@ -28,7 +28,7 @@ public class QueryApi extends Api {
 
     @Override
     public void exec() throws Exception {
-        DataSet dat_rd = getDataFromFile(ph_dat);
+        DataSet dat_rd = getDataSet(ph_dat);
         TIntIntHashMap q = getEvidence(ph_evid);
 
         double res = Query.ex(dat_rd, q);

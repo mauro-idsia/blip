@@ -71,7 +71,7 @@ public class DFGenerator {
 
     }
 
-    private int sampleV(double[] distr) {
+    public int sampleV(double[] distr) {
         double v = rn.nextDouble();
         int i = 0;
         while (i < distr.length) {

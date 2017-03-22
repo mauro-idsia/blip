@@ -82,10 +82,10 @@ public class ScoreReader implements Closeable {
      * Read scores from the given file.
      */
 
-    public void readScores() throws IOException {
+    public ParentSet[][] readScores() throws IOException {
 
         if (completed)
-            return;
+            return new ParentSet[0][];
 
         int i, j = 0, k = 0;
 
@@ -110,7 +110,7 @@ public class ScoreReader implements Closeable {
                                 "Problem while reading variable: %s. Var %d, ln: %s (line number: %d)",
                                 filename, i, Arrays.toString(ln), k));
                 logExp(log, e);
-                return;
+                return new ParentSet[0][];
             }
 
             int v = Integer.parseInt(ln[0]);
@@ -140,7 +140,7 @@ public class ScoreReader implements Closeable {
                                 "Problem while reading parent set: %s. Var %d, parent set %d. aux: %s",
                                 filename, i, j, Arrays.toString(aux)));
                 logExp(log, e);
-                return;
+                return new ParentSet[0][];
             }
 
             Collections.sort(t);
@@ -150,6 +150,8 @@ public class ScoreReader implements Closeable {
         }
 
         completed = true;
+
+        return m_scores;
 
     }
 

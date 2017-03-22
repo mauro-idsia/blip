@@ -1,10 +1,10 @@
 package ch.idsia.blip.core.common.math;
 
-import ch.idsia.blip.core.utils.math.FastMath;
+import static ch.idsia.blip.core.utils.math.FastMath.*;
 
 public class ChiSquare {
-    private static final double LOG_SQRT_PI = FastMath.log(FastMath.sqrt(FastMath.PI));
-    private static final double I_SQRT_PI = 1 / FastMath.sqrt(FastMath.PI);
+    private static final double LOG_SQRT_PI = log(sqrt(PI));
+    private static final double I_SQRT_PI = 1 / sqrt(PI);
     private static final int MAX_X = 20; // max value to represent exp(x)
 
     /* POCHISQ -- probability of chi-square value
@@ -27,21 +27,21 @@ public class ChiSquare {
         if (df > 1) {
             y = ex(-a);
         }
-        s = (even ? y : (2.0 * poz(-FastMath.sqrt(x))));
+        s = (even ? y : (2.0 * poz(-sqrt(x))));
         if (df > 2) {
             x = 0.5 * (df - 1.0);
             z = (even ? 1.0 : 0.5);
             if (a > MAX_X) {
                 e = (even ? 0.0 : LOG_SQRT_PI);
-                c = FastMath.log(a);
+                c = log(a);
                 while (z <= x) {
-                    e = FastMath.log(z) + e;
+                    e = log(z) + e;
                     s += ex(c * z - a - e);
                     z += 1.0;
                 }
                 return s;
             } else {
-                e = (even ? 1.0 : (I_SQRT_PI / FastMath.sqrt(a)));
+                e = (even ? 1.0 : (I_SQRT_PI / sqrt(a)));
                 c = 0.0;
                 while (z <= x) {
                     e = e * (a / z);

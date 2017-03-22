@@ -6,6 +6,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
 
+import static ch.idsia.blip.core.utils.RandomStuff.getReader;
+import static ch.idsia.blip.core.utils.RandomStuff.wf;
+
 public class UpperMatrix {
 
     // size of matrix
@@ -52,17 +55,17 @@ public class UpperMatrix {
     }
 
     public void write(Writer w) throws IOException {
-        RandomStuff.wf(w, "%d \n", n);
+        wf(w, "%d \n", n);
         for (int v1 = 0; v1 <n; v1++) {
             for (int v2 = v1 + 1; v2 < n; v2++) {
-                RandomStuff.wf(w, "%d - %d - %.3f\n", v1, v2, Math.abs(value(v1, v2)));
+                wf(w, "%d - %d - %.3f\n", v1, v2, Math.abs(value(v1, v2)));
             }
         }
         w.close();
     }
 
     public static UpperMatrix read(String s) throws IOException {
-        BufferedReader br = new BufferedReader(RandomStuff.getReader(s));
+        BufferedReader br = new BufferedReader(getReader(s));
         int n = Integer.valueOf(br.readLine().trim());
         UpperMatrix u = new UpperMatrix(n);
         String l;

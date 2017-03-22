@@ -23,14 +23,19 @@ public class UndSeparator {
         int[] ar = s.toArray();
         Arrays.sort(ar);
         Und n_u = new Und(ar.length);
+        n_u.names = new String[ar.length];
         for (int i = 0; i < ar.length; i++) {
             int a = ar[i];
 
             int[] ps = u.neigh[a];
 
             for (int j = 0; j < ps.length; j++) {
-                n_u.mark(i, Arrays.binarySearch(ar, ps[j]));
+                int n_j = Arrays.binarySearch(ar, ps[j]);
+                if (n_j >i)
+                n_u.mark(i,n_j );
             }
+
+            n_u.names[i] = u.names[a];
         }
 
         return n_u;

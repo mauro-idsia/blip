@@ -3,7 +3,8 @@ package ch.idsia.blip.core.common.analyze;
 
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
-import ch.idsia.blip.core.utils.math.FastMath;
+
+import static ch.idsia.blip.core.utils.RandomStuff.p;
 
 
 public class Entropy extends Analyzer {
@@ -31,8 +32,10 @@ public class Entropy extends Analyzer {
         for (int v = 0; v < dat.l_n_arity[x]; v++) {
             k = dat.row_values[x][v].length;
             p = getFreq(k, dat.l_n_arity[x]);
+            if (p == 0)
+                continue;
 
-            h += p * FastMath.log(p);
+            h += p * log(p);
         }
 
         return -h;
@@ -59,9 +62,10 @@ public class Entropy extends Analyzer {
                 double p_xy = getFreq(ArrayUtils.intersectN(r_x, r_y),
                         x_ar * y_ar);
 
-                h += p_xy * FastMath.log(p_xy / p_y);
+                if (p_xy > 0)
+                    h += p_xy * log(p_xy / p_y);
 
-                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, FastFastMath.log(p_xy / (p_x * p_y)));
+                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, Fastlog(p_xy / (p_x * p_y)));
             }
         }
 
@@ -106,13 +110,16 @@ public class Entropy extends Analyzer {
                 int[] r_y = y_rows[y_i];
                 double p_y = getFreq(r_y.length, y_ar);
 
+                int r_xy = ArrayUtils.intersectN(r_x, r_y);
+                if (r_xy  == 0)
+                    continue;
+
                 // P(x, y)
-                double p_xy = getFreq(ArrayUtils.intersectN(r_x, r_y),
-                        x_ar * y_ar);
+                double p_xy = getFreq(r_xy, x_ar * y_ar);
 
-                h += p_xy * FastMath.log(p_xy / p_y);
+                h += p_xy * log(p_xy / p_y);
 
-                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, FastFastMath.log(p_xy / (p_x * p_y)));
+                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, Fastlog(p_xy / (p_x * p_y)));
             }
         }
 
@@ -138,9 +145,9 @@ public class Entropy extends Analyzer {
                 double p_xy = getFreq(ArrayUtils.intersectN(r_x, r_y),
                         x_ar * y_ar);
 
-                h += p_xy * FastMath.log(p_xy);
+                h += p_xy * log(p_xy);
 
-                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, FastFastMath.log(p_xy / (p_x * p_y)));
+                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, Fastlog(p_xy / (p_x * p_y)));
             }
         }
 
@@ -173,7 +180,7 @@ public class Entropy extends Analyzer {
             int[] r_x = x_rows[x_i];
             double p_x = getFreq(r_x.length, x_ar);
 
-            h += p_x * FastMath.log(p_x);
+            h += p_x * log(p_x);
         }
 
         return -h;
@@ -207,17 +214,22 @@ public class Entropy extends Analyzer {
             for (int x_i = 0; x_i < x_ar; x_i++) {
                 int[] r_x = dat.row_values[x][x_i];
 
-                double p_xy = getFreq(ArrayUtils.intersectN(r_x, r_y),
-                        x_ar * y_ar);
+                int r_xy = ArrayUtils.intersectN(r_x, r_y);
+                if (r_xy  == 0)
+                    continue;
 
-                h += p_xy * FastMath.log(p_xy);
+                double p_xy = getFreq(r_xy,x_ar * y_ar);
 
-                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, FastFastMath.log(p_xy / (p_x * p_y)));
+                h += p_xy * log(p_xy);
+
+                if (Double.isNaN(h))
+                    p("ciao");
+
+                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, Fastlog(p_xy / (p_x * p_y)));
             }
         }
 
         // System.out.printf("mi: x %d, y %d -> %.5f\n", x, y, mi);
-
         return -h;
     }
 }

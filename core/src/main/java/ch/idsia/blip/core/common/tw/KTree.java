@@ -1,14 +1,14 @@
 package ch.idsia.blip.core.common.tw;
 
 
+import ch.idsia.blip.core.common.analyze.MutualInformation;
 import ch.idsia.blip.core.common.arcs.Directed;
+import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.ValueIndex;
-import ch.idsia.blip.core.utils.data.array.TIntArrayList;
-import ch.idsia.blip.core.common.analyze.MutualInformation;
-import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
+import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.ArrayList;
 import java.util.Arrays;

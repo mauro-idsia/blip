@@ -3,7 +3,6 @@ package ch.idsia.blip.core.common.arcs;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.utils.RandomStuff;
-import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.data.set.TIntSet;
@@ -14,7 +13,9 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Formatter;
 
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.zeros;
 
 
 /**
@@ -38,6 +39,7 @@ public class Undirected extends Arcs {
 
     public Undirected(int n_var) {
         this(n_var, false);
+
     }
 
     public Undirected(int n_var, boolean b) {
@@ -71,7 +73,7 @@ public class Undirected extends Arcs {
      */
     @Override
     public int[] r_index(int i) {
-        int[] arr = ArrayUtils.zeros(2);
+        int[] arr = zeros(2);
 
         int n = this.n - 1;
 
@@ -200,7 +202,7 @@ public class Undirected extends Arcs {
             // if complete and the size is bigger than the allowed
             if (complete && (s.size() + 1) > maxSize) {
                 s.add(v);
-                RandomStuff.p(s.toString());
+                p(s.toString());
                 return true;
             }
         }
@@ -257,7 +259,7 @@ public class Undirected extends Arcs {
         Undirected nw = new Undirected(n);
 
         cloneArray(this.arcs, nw.arcs);
-        ArrayUtils.cloneArray(this.neigh, nw.neigh);
+        cloneArray(this.neigh, nw.neigh);
         return nw;
     }
 
@@ -278,7 +280,7 @@ public class Undirected extends Arcs {
     }
 
     public static Undirected read(String s) throws IOException {
-        BufferedReader br = new BufferedReader(RandomStuff.getReader(s));
+        BufferedReader br = new BufferedReader(getReader(s));
         int n = Integer.valueOf(br.readLine().trim());
         Undirected u = new Undirected(n);
         String l;
@@ -311,7 +313,7 @@ public class Undirected extends Arcs {
         }
 
     public void write(Writer w) throws IOException {
-        RandomStuff.wf(w, "graph G {\n");
+        wf(w, "graph G {\n");
         // wf(w, "ratio=\"0.7\"; \n");
         // wf(w, "node[fontsize=20];\n");
         // wf(w, "overlap=false;\n");
@@ -321,22 +323,22 @@ public class Undirected extends Arcs {
 
         for (int v1 = 0; v1 < n; v1++) {
 
-            RandomStuff.wf(w, "\"%s\";\n", name(v1));
+            wf(w, "\"%s\";\n", name(v1));
 
             for (int v2 = v1 + 1; v2 < n; v2++) {
                 if (check(v1, v2)) {
-                    RandomStuff.wf(w, "\"%s\" -- \"%s\"; \n", name(v1), name(v2));
+                    wf(w, "\"%s\" -- \"%s\"; \n", name(v1), name(v2));
                     j++;
                 }
             }
             w.flush();
         }
-        RandomStuff.wf(w, "label=\"Nodes: %d, arcs: %d\"\n}\n", n, j);
+        wf(w, "label=\"Nodes: %d, arcs: %d\"\n}\n", n, j);
         w.close();
     }
 
     public void write(String s) throws IOException {
-        write(RandomStuff.getWriter(s));
+        write(getWriter(s));
     }
 
     public int numEdges() {

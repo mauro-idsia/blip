@@ -15,6 +15,9 @@ public abstract class Api {
     @Option(name="-v", usage="Verbose level")
     protected static int  verbose = 0;
 
+    @Option(name="-b", usage="Number of machine cores to use (if 0, all are used)")
+    protected static int thread_pool_size = 1;
+
     public abstract void exec() throws Exception;
 
     public static void defaultMain(String[] o_args, Api api, Logger log) {

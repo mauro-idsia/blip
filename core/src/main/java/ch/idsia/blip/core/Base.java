@@ -7,6 +7,8 @@ import java.io.Writer;
 
 public class Base {
 
+    protected long start;
+
     // Maximum execution time
     public double max_exec_time = 10;
 
@@ -22,6 +24,18 @@ public class Base {
 
     public void logf(String format, Object... args) {
         log(String.format(format, args));
+    }
+
+    public void safeLogf(String format, Object... args) {
+        synchronized (lock) {
+            logf(format ,args);
+        }
+    }
+
+    public void safeLogf(int i, String format, Object... args) {
+        synchronized (lock) {
+            logf(i, format ,args);
+        }
     }
 
     public void logf(int i, String format, Object... args) {

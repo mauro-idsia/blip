@@ -1,13 +1,14 @@
 package ch.idsia.blip.core.common.arcs;
 
 
-import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.utils.data.set.TIntSet;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import static ch.idsia.blip.core.utils.RandomStuff.wf;
 
 
 /**
@@ -61,19 +62,19 @@ public class WeightUndirected extends Undirected {
     }
 
     public void write(Writer w) throws IOException {
-        RandomStuff.wf(w, "graph G {\n");
+        wf(w, "graph G {\n");
         int j = 0;
         for (int v1 = 0; v1 < n; v1++) {
             for (int v2 = v1 + 1; v2 < n; v2++) {
                 if (check(v1, v2)) {
                     double we = (weight.get(index(v1, v2)) * 3);
-                    RandomStuff.wf(w, "\"%s\" -- \"%s\" [penwidth=%.2f]\n", name(v1), name(v2), we, weight.get(index(v1, v2)));
+                    wf(w, "\"%s\" -- \"%s\" [penwidth=%.2f]\n", name(v1), name(v2), we, weight.get(index(v1, v2)));
                     j++;
                 }
             }
             w.flush();
         }
-        RandomStuff.wf(w, "label=\"Nodes: %d, arcs: %d\"\n}\n", n, j);
+        wf(w, "label=\"Nodes: %d, arcs: %d\"\n}\n", n, j);
         w.close();
     }
 

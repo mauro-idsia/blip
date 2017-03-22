@@ -35,7 +35,7 @@ public class LogLikelihood extends Analyzer {
             k = dat.row_values[x][v].length;
             p = (k + alpha_i) / (dat.n_datapoints + alpha);
 
-            ll += k * Math.log(p);
+            ll += k * log(p);
         }
 
         return ll;
@@ -63,9 +63,9 @@ public class LogLikelihood extends Analyzer {
                     continue;
                 }
 
-                mi += n_xy * Math.log(n_xy / n_y);
+                mi += n_xy * log(n_xy / n_y);
 
-                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, FastMath.log(p_xy / (p_x * p_y)));
+                // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, log(p_xy / (p_x * p_y)));
             }
         }
 

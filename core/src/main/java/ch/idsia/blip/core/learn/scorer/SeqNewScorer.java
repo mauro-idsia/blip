@@ -72,7 +72,7 @@ public class SeqNewScorer extends SeqScorer {
          }
 
         @Override
-        public void checkBound(double sk, int[][] p_values, int[] n_pset) {
+        public void checkBound(double sk, int[] n_pset) {
 
             boolean old_bound = false;
             boolean new_bound = false;

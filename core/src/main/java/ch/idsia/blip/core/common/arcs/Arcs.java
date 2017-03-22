@@ -2,14 +2,13 @@ package ch.idsia.blip.core.common.arcs;
 
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.utils.RandomStuff;
-import ch.idsia.blip.core.utils.cmd.RunTimeout;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
 import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.cmd.RunTimeout.cmdTimeout;
 
 
 public abstract class Arcs {
@@ -57,6 +56,8 @@ public abstract class Arcs {
         for (int i = 0; i < size; i++) {
             arcs[i] = b;
         }
+
+        names = new String[n];
     }
 
     protected abstract int getSize();
@@ -162,9 +163,9 @@ public abstract class Arcs {
             w.close();
             String h = String.format("dot -Tpng %s.dot -o %s.png", s, s);
 
-            RunTimeout.cmdTimeout(h, false, false, 1000000);
+            cmdTimeout(h, false, false, 1000000);
         } catch (IOException e) {
-            RandomStuff.logExp(e);
+            logExp(e);
         }
     }
 

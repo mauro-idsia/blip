@@ -2,7 +2,7 @@ package ch.idsia.blip.api.learn.solver.tw.brtl;
 
 
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
-import ch.idsia.blip.core.learn.solver.brtl.BrutalGreedySolver;
+import ch.idsia.blip.core.learn.solver.brtl.BrutalSolver;
 
 import java.util.logging.Logger;
 
@@ -17,7 +17,7 @@ public class BrutalGreedySolverApi extends TwSolverApi {
 
     @Override
     protected ScoreSolver getSolver() {
-        return new BrutalGreedySolver();
+        return new BrutalSolver();
     }
 
 }

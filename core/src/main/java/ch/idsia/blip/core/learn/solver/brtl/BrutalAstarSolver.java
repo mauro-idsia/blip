@@ -6,7 +6,7 @@ import ch.idsia.blip.core.learn.solver.src.Searcher;
 /**
  * BRTL approach, A*
  */
-public class BrutalAstarSolver extends BrutalGreedySolver {
+public class BrutalAstarSolver extends BrutalSolver {
 
     public int exp_limit = 0;
 

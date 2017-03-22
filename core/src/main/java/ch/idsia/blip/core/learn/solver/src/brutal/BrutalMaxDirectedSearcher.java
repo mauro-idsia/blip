@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.learn.solver.brtl.BrutalGreedySolver;
+import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.Clique;
 import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.ParentSet;
@@ -18,9 +18,7 @@ import java.util.TreeSet;
 import static ch.idsia.blip.core.utils.RandomStuff.*;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
 
-public class BrutalMaxDirectedSearcher extends BrutalGreedySearcher {
-
-    private final BrutalGreedySolver grSolver;
+public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
 
     private TIntHashSet todo;
 
@@ -35,9 +33,8 @@ public class BrutalMaxDirectedSearcher extends BrutalGreedySearcher {
 
     public List<Clique> junctTree;
 
-    public BrutalMaxDirectedSearcher(BrutalGreedySolver solver, int tw) {
+    public BrutalMaxDirectedSearcher(BaseSolver solver, int tw) {
         super(solver, tw);
-        this.grSolver = solver;
     }
 
     @Override
@@ -64,6 +61,7 @@ public class BrutalMaxDirectedSearcher extends BrutalGreedySearcher {
             parents[i] = l.toArray();
             Arrays.sort(parents[i]);
         }
+
     }
 
     @Override
@@ -134,7 +132,9 @@ public class BrutalMaxDirectedSearcher extends BrutalGreedySearcher {
     }
 
     private void chooseClique() {
-        int theChosen = randInt(0, n_var - 1);
+        // int theChosen = randInt(0, n_var - 1);
+
+        int theChosen = 8;
 
         TIntHashSet init = new TIntHashSet();
         init.add(theChosen);
@@ -163,6 +163,7 @@ public class BrutalMaxDirectedSearcher extends BrutalGreedySearcher {
         }
 
         initCl = init.toArray();
+        Arrays.sort(initCl);
 
         //  pf("INITIAL CLIQUE: %s \n", Arrays.toString(vars));
     }

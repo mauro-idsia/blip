@@ -1,13 +1,14 @@
 package ch.idsia.blip.core.common.graph;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.utils.RandomStuff;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 public class NetToGraph {
 
@@ -42,14 +43,14 @@ public class NetToGraph {
         else if (meth == Method.Plain)
             plain(bn, s);
         } catch (Exception e) {
-            RandomStuff.logExp(e);
+            logExp(e);
         }
     }
 
     private void plain(BayesianNetwork bn, String s) throws IOException {
         printBn(bn, s);
 
-        String h = RandomStuff.f("dot -Tplain %s.dot -o %s.plain", s, s);
+        String h = f("dot -Tplain %s.dot -o %s.plain", s, s);
 
         exec(h);
     }
@@ -68,7 +69,7 @@ public class NetToGraph {
         for (BayesianNetwork b: ls) {
             sized.put(b, b.n_var);
         }
-        sized = RandomStuff.sortInvByValues(sized);
+        sized = sortInvByValues(sized);
         // pngSingle(bn, s);
 
         int i = 0;
@@ -76,11 +77,11 @@ public class NetToGraph {
         for (BayesianNetwork b: sized.keySet()) {
 
             if (b.n_var <= 1) {
-                RandomStuff.wf(w, twoIsBetter(b));
+                wf(w, twoIsBetter(b));
                 continue;
             }
 
-            String s1 = RandomStuff.f("%s/%d", s, i);
+            String s1 = f("%s/%d", s, i);
 
             pngSingle(b, s1);
             i++;
@@ -104,23 +105,23 @@ public class NetToGraph {
     private String twoIsBetter(BayesianNetwork b) {
 
         if (b.n_var == 1)
-            return RandomStuff.f("%s \n", b.name( 0));
+            return f("%s \n", b.name( 0));
 
         if (b.l_parent_var.length > 0)
-            return RandomStuff.f("%s -> %s \n", b.name( 1), b.name( 0));
+            return f("%s -> %s \n", b.name( 1), b.name( 0));
 
-        else return RandomStuff.f("%s -> %s \n", b.name( 0), b.name( 1));
+        else return f("%s -> %s \n", b.name( 0), b.name( 1));
     }
 
     private void pngSingle(BayesianNetwork bn, String s) throws IOException {
         printBn(bn, s);
-        String h = RandomStuff.f("dot -Tpng %s.dot -o %s.png", s, s);
+        String h = f("dot -Tpng %s.dot -o %s.png", s, s);
         exec(h);
     }
 
     private void exec(String h) throws IOException {
         Process proc = Runtime.getRuntime().exec(h, new String[0]);
-        int exitVal = RandomStuff.waitForProc(proc, max_time * 1000);
+        int exitVal = waitForProc(proc, max_time * 1000);
     }
 
     private void printBn(BayesianNetwork bn, String s) throws FileNotFoundException, UnsupportedEncodingException {

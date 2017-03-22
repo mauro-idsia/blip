@@ -1,10 +1,10 @@
 package ch.idsia.blip.core.common.arcs;
 
 
-import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.Formatter;
 

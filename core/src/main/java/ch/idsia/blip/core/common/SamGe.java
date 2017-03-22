@@ -1,9 +1,9 @@
 package ch.idsia.blip.core.common;
 
 
-import ch.idsia.blip.core.common.io.ArffFileWriter;
-import ch.idsia.blip.core.common.io.DatFileLineWriter;
-import ch.idsia.blip.core.common.io.DataFileWriter;
+import ch.idsia.blip.core.common.io.dat.ArffFileWriter;
+import ch.idsia.blip.core.common.io.dat.DatFileLineWriter;
+import ch.idsia.blip.core.common.io.dat.BaseFileLineWriter;
 import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
@@ -33,7 +33,7 @@ public class SamGe {
     /**
      * Writer for sampled datapoints (Cussen's format)
      */
-    private DataFileWriter wr;
+    private BaseFileLineWriter wr;
 
     /**
      * Writer for sampled datapoints (Dataframe format)

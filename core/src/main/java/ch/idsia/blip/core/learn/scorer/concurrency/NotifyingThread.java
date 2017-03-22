@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 
-class NotifyingThread extends Thread {
+public class NotifyingThread extends Thread {
 
     private final Set<ThreadCompleteListener> listeners = new CopyOnWriteArraySet<ThreadCompleteListener>();
 

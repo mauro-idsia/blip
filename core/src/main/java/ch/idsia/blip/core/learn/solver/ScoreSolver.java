@@ -1,41 +1,47 @@
 package ch.idsia.blip.core.learn.solver;
 
-import ch.idsia.blip.core.common.io.ScoreReader;
+import ch.idsia.blip.core.learn.solver.ps.MaxScoreProvider;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
-import ch.idsia.blip.core.learn.solver.ps.ScoreProvider;
+import ch.idsia.blip.core.learn.solver.ps.SimpleProvider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.samp.SimpleSampler;
+import ch.idsia.blip.core.utils.ParentSet;
 
 public abstract class ScoreSolver extends BaseSolver {
 
     public String dat_path;
 
-    protected ScoreReader sc;
-
-    @Override
-    protected Provider getProvider() {
-        return new ScoreProvider(sc);
-    }
+    public int max_parents;
 
     @Override
     protected Sampler getSampler() {
-        return new SimpleSampler(sc.n_var);
+        return new SimpleSampler(sc.length);
     }
 
+    @Override
+    protected Provider getProvider() {
+        if (max_parents == 0) return new SimpleProvider(sc);
+        else return new MaxScoreProvider(sc, max_parents);
+    }
 
-    public void init(ScoreReader sc, int time, int threads) {
+    public void init(long start, ParentSet[][] sc, int max_exec_time, int thread_pool_size) {
+        this.start = start;
+        init(sc, max_exec_time, thread_pool_size);
+    }
+
+    public void init(ParentSet[][] sc, int time, int threads) {
         this.thread_pool_size = threads;
         init(sc, time);
     }
 
-    public void init(ScoreReader sc, int time) {
+    public void init(ParentSet[][] sc, int time) {
         this.max_exec_time = time;
         init(sc);
     }
 
-     public void init(ScoreReader sc) {
+     public void init(ParentSet[][] sc) {
         this.sc = sc;
-         this.n_var = sc.n_var;
+         this.n_var = sc.length;
     }
 
 }

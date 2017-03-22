@@ -2,18 +2,15 @@ package ch.idsia.blip.core.learn.solver.brtl;
 
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.learn.solver.src.brutal.BrutalMaxDirectedSearcher;
-import ch.idsia.blip.core.learn.solver.src.brutal.BrutalMaxDirectedSearcherWeight;
 
 /**
- * BRTL approach, Greedy
+ * BRTL approach, MAX
  */
-public class BrutalMaxSolver extends BrutalGreedySolver {
-
-    // public List<Clique> bestJuncTree;
+public class BrutalMaxSolver extends BrutalSolver {
 
     @Override
     protected String name() {
-        return "k-MAX";
+        return "BRUTAL MAX";
     }
 
     @Override
@@ -25,15 +22,15 @@ public class BrutalMaxSolver extends BrutalGreedySolver {
 
         if (verbose > 0) {
             log("tw: " + tw + "\n");
-            log("sampler: " + sampler + "\n");
         }
     }
 
+
     @Override
     protected Searcher getSearcher() {
-        if ("weight".equals(searcher))
-            return new BrutalMaxDirectedSearcherWeight(this, tw);
-        return new BrutalMaxDirectedSearcher(this, tw);
-    }
 
+      return new BrutalMaxDirectedSearcher(this, tw);
+
+           //  return new BrutalMaxDirectedSearcherWeight(this, tw);
+    }
 }

@@ -123,7 +123,11 @@ if (n_xy == 0)
                 // P(x, y)
                 double p_xy = getFreq(n_xy, x_ar * y_ar);
 
-                mi += p_xy * FastMath.log(p_xy / (p_x * p_y));
+                double t1 =  FastMath.log(p_x) + FastMath.log(p_y);
+                double t2 = FastMath.log(p_xy);
+                double t =  t2-t1;
+                t = p_xy * (t);
+                mi += t;
  // pf("%.5f \n", mi);
                 // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, FastMath.log(p_xy / (p_x * p_y)));
             }

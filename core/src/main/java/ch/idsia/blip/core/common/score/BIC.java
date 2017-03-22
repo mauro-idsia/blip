@@ -40,12 +40,12 @@ public class BIC extends Score {
         for (int v = 0; v < arity; v++) {
             double p = (values[v].length + alpha_i) / (dat.n_datapoints + alpha);
 
-            skore += values[v].length * Math.log(p);
+            skore += values[v].length * log(p);
             // System.out.printf("%d - %.2f, ", values[v].length, p);
             // System.out.println((values[v].length * 1.0) + (alpha / arity));
             // System.out.println((n_datapoints + alpha));
 
-            // System.out.println(values[v].length + " & " + Math.log(p) + " & " + p + " % " + skore);
+            // System.out.println(values[v].length + " & " + log(p) + " & " + p + " % " + skore);
         }
 
         double pen = getPenalization(arity);
@@ -56,7 +56,7 @@ public class BIC extends Score {
     }
 
     double getPenalization(int arity) {
-        return Math.log(dat.n_datapoints) * (arity - 1) / 2;
+        return log(dat.n_datapoints) * (arity - 1) / 2;
     }
 
     @Override
@@ -102,15 +102,15 @@ public class BIC extends Score {
                     continue;
                 }
 
-                // System.out.printf("%.4f, %d - %d, %.3f \n", skore, valcount[v], p_values[p_v].length,  Math.log((valcount[v] * 1.0) / p_values[p_v].length));
+                // System.out.printf("%.4f, %d - %d, %.3f \n", skore, valcount[v], p_values[p_v].length,  log((valcount[v] * 1.0) / p_values[p_v].length));
 
                 skore += valcount
-                        * (Math.log(valcount + alpha_ij)
-                                - Math.log(p_values[p_v].length + alpha_i));
+                        * (log(valcount + alpha_ij)
+                                - log(p_values[p_v].length + alpha_i));
 
                 // System.out.printf("%d- %.2f, ", valcount[v], p);
 
-                // System.out.println(valcount[v] + "   " + Math.log(p) + "   " + p + "   " + skore);
+                // System.out.println(valcount[v] + "   " + log(p) + "   " + p + "   " + skore);
             }
 
         }
@@ -121,7 +121,18 @@ public class BIC extends Score {
     }
 
     double getPenalization(int arity, int p_arity) {
-        return Math.log(dat.n_datapoints) * (arity - 1) * p_arity / 2;
+        double pen = log(dat.n_datapoints);
+        pen *= (arity - 1);
+        pen *= p_arity / 2;
+        return pen;
+    }
+
+    public double getPenalization(int n, int[] pset) {
+        int p_arity = 1;
+        for (int p : pset) {
+            p_arity *= dat.l_n_arity[p];
+        }
+        return getPenalization(dat.l_n_arity[n], p_arity);
     }
 
     @Override

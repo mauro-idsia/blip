@@ -11,7 +11,7 @@ import org.kohsuke.args4j.Option;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.RandomStuff.getBayesianNetwork;
-import static ch.idsia.blip.core.utils.RandomStuff.getDataFromFile;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
 
 
 /**
@@ -46,7 +46,7 @@ public class Bda extends Api {
     public void exec() throws Exception {
 
         BayesianNetwork bn = getBayesianNetwork(ph);
-        DataSet dat = getDataFromFile(s_datafile);
+        DataSet dat = getDataSet(s_datafile);
 
         double sum_ll = computeBDeu(bn, dat, alpha);
 

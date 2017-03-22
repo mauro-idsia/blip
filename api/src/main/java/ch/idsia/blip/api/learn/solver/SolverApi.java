@@ -2,8 +2,8 @@ package ch.idsia.blip.api.learn.solver;
 
 
 import ch.idsia.blip.api.Api;
-import ch.idsia.blip.core.common.io.ScoreReader;
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
+import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.RandomStuff;
 import org.kohsuke.args4j.Option;
 
@@ -31,8 +31,8 @@ public abstract class SolverApi extends Api {
     @Option(name="-e", usage="improvement delta")
     protected int delta = 0;
 
-    @Option(name="-b", usage="number of machine cores to use")
-    protected int thread_pool_size = 1;
+    @Option(name="-p", usage="max_parents")
+    protected int max_parents = 0;
 
     @Option(name="-o", usage="number of solutions to output")
     protected int out_solutions = 1;
@@ -50,9 +50,11 @@ public abstract class SolverApi extends Api {
      * Default command line execution
      */
     public void exec() throws Exception {
-        ScoreReader sc = RandomStuff.getScoreReader(ph_scores, verbose);
-        solver.init(sc, max_exec_time, thread_pool_size);
+        long start = System.currentTimeMillis();
+        ParentSet[][] sc = RandomStuff.getScoreReader(ph_scores, verbose);
+        solver.init(start, sc, max_exec_time, thread_pool_size);
         solver.delta = delta;
+        solver.max_parents = max_parents;
         solver. out_solutions = out_solutions;
         solver.verbose = verbose;
         if (log != null)

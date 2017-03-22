@@ -1,7 +1,6 @@
 package ch.idsia.blip.core.learn.scorer;
 
 
-import ch.idsia.blip.core.common.io.ScoreReader;
 import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.ParentSet;
 
@@ -20,23 +19,7 @@ public class RankerScores {
 
     public int debug = 0;
 
-    public int execute(ScoreReader first, ScoreReader second) throws Exception {
-
-        // Read scores
-        if (!first.completed) {
-            first.readScores();
-        }
-        ParentSet[][] f_psets = first.m_scores;
-
-        if (!second.completed) {
-            second.readScores();
-        }
-        ParentSet[][] s_psets = second.m_scores;
-
-        if (debug > 0) {
-            System.out.printf("Comparing %s with %s \n", first.filename,
-                    second.filename);
-        }
+    public int execute(ParentSet[][] f_psets, ParentSet[][] s_psets) throws Exception {
 
         if (f_psets.length != s_psets.length) {
             log.info("Different number of variables!");

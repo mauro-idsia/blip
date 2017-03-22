@@ -1,8 +1,7 @@
 package ch.idsia.blip.core.common.graph;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.common.io.BnNetWriter;
-import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.common.io.bn.BnNetWriter;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -44,7 +43,7 @@ public class BetterNets extends NetToGraph {
                 bn.positions.put(g[1], p);
             }
         } catch (Exception e) {
-            RandomStuff.logExp(log, e);
+            logExp(log, e);
         }
     }
 

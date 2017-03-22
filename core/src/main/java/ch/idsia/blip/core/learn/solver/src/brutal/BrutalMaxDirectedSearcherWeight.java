@@ -141,7 +141,7 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
         todo.remove(v);
         if (bests[v] == null)
             p("cdfjds");
-        // totWeight -= bests[v].sk;
+        // totWeight -= tryFirst[v].sk;
         bests[v] =null;
     }
 
@@ -216,10 +216,10 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
             double sk = (minSk[v] - bestPset.sk) / (minSk[v] - maxSk[v]);
 
             if (sk > bests[v].sk) {
-                // totWeight -= bests[v].sk;
+                // totWeight -= tryFirst[v].sk;
                 Result c = new Result(v, bestPset, handler, sk);
                 bests[v] = c;
-                // totWeight += bests[v].sk;
+                // totWeight += tryFirst[v].sk;
             }
         }
     }

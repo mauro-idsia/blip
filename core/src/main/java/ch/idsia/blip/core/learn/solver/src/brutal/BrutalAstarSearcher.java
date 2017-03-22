@@ -11,7 +11,7 @@ import static ch.idsia.blip.core.utils.RandomStuff.doubleEquals;
 import static ch.idsia.blip.core.utils.RandomStuff.f;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
 
-public class BrutalAstarSearcher extends BrutalOldGreedySearcher {
+public class BrutalAstarSearcher extends BrutalOldSearcher {
 
     // heuristic estimation of choices
     protected double[] heuStr;

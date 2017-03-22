@@ -74,11 +74,11 @@ public abstract class BaseScorer extends Base {
 
     public int n_var;
 
-    private ScoreWriter scoreWriter;
+    protected ScoreWriter scoreWriter;
 
-    private Writer writer;
+    protected Writer writer;
 
-    private double max_time;
+    public double max_time;
 
     BaseScorer() {
         this(10);
@@ -90,7 +90,7 @@ public abstract class BaseScorer extends Base {
 
     protected abstract String getName();
 
-    void prepareSearch() throws Exception {
+    protected void prepareSearch() throws Exception {
 
         if (start == 0)
             start = System.currentTimeMillis();
@@ -121,7 +121,7 @@ public abstract class BaseScorer extends Base {
     public void go(String dat_path) throws Exception {
         start = System.currentTimeMillis();
         logf(0, "Reading from datafile '%s'... \n", dat_path);
-        go(getDataFromFile(dat_path));
+        go(getDataSet(dat_path));
     }
 
     public void go(DataSet in_dat) throws Exception {
@@ -171,7 +171,7 @@ public abstract class BaseScorer extends Base {
             max_exec_time = 60;
 
         Thread t1 = new Thread(new Executor(thread_pool_size, s, e, this));
-        scoreWriter = new ScoreWriter(this, writer, s, e);
+        scoreWriter = new ScoreWriter(this, writer, s, e, verbose);
         Thread t2 = new Thread(scoreWriter);
 
         t1.start();
@@ -180,6 +180,40 @@ public abstract class BaseScorer extends Base {
         t1.join();
         t2.join();
 
+    }
+
+    protected void preamble(BaseScorer sc, Writer wr) throws IOException {
+        wf(wr, "%d\n", sc.n_var);
+        wf(wr, "# Method: %s \n", sc.getName(), max_exec_time);
+        wf(wr, "# Score function: %s \n", score.descr());
+        wf(wr, "# Max in-degree: %d \n", max_pset_size);
+    }
+
+    protected TreeMap<SIntSet, Double> pruneScores(TreeMap<SIntSet, Double> scores, double voidSk) {
+
+        TreeMap<SIntSet, Double> new_scores = new TreeMap<SIntSet, Double>();
+
+        // Pick only the best scores
+        for (SIntSet pset : RandomStuff.sortInvByValues(scores).keySet()) {
+
+            // Check when to limit scores
+            double sk = scores.get(pset);
+
+            // log.conclude(set + " " + new_sk);
+
+            // Decide to put it in the final score
+            boolean toPrune = sk < voidSk + 0.0001;
+
+            toPrune = toPrune || checkToPrune(sk, pset.set, scores);
+
+            if (!toPrune) {
+                new_scores.put(pset, sk);
+            }
+        }
+
+        new_scores.put(new SIntSet(), voidSk);
+
+        return new_scores;
     }
 
 
@@ -194,7 +228,7 @@ public abstract class BaseScorer extends Base {
         Runnable r = getNewSearcher(n);
         Thread t = new Thread(r);
 
-        scoreWriter = new ScoreWriter(this, writer, n, n+1);
+        scoreWriter = new ScoreWriter(this, writer, n, n+1, verbose);
         Thread t2 = new Thread(scoreWriter);
 
         t.start();
@@ -229,7 +263,7 @@ public abstract class BaseScorer extends Base {
         }
 
         Thread t1 = new Thread(new Executor(thread_pool_size, 0, n_var, this));
-        scoreWriter = new ScoreWriter(this, writer, 0, n_var);
+        scoreWriter = new ScoreWriter(this, writer, 0, n_var, verbose);
         Thread t2 = new Thread(scoreWriter);
 
         if (verbose > 0) {
@@ -333,35 +367,30 @@ public abstract class BaseScorer extends Base {
         private final Writer wr;
         private final int end;
         private final int st;
+        private final int verbose;
 
         private HashMap<Integer, TreeMap<SIntSet, Double>> cache;
 
-        ScoreWriter(BaseScorer sc, Writer in_writer, int start, int end) {
+        ScoreWriter(BaseScorer sc, Writer in_writer, int start, int end, int verbose) {
             wr = in_writer;
             this.st = start;
             this.end = Math.min(end, n_var + 1);
 
-            preamble(sc);
-        }
-
-        private void preamble(BaseScorer sc) {
             try {
-                wf(wr, "%d\n", sc.n_var);
-                wf(wr, "# Scores computed using %s (%.2f seconds per variable) \n", sc.getName(), max_exec_time);
-                wf(wr, "# Score function: %s \n", score.descr());
+                preamble(sc, wr);
                 wr.flush();
             } catch (IOException e) {
                 logExp(log, e);
             }
 
+            cache = new HashMap<Integer, TreeMap<SIntSet, Double>>();
+            this.verbose = verbose;
         }
 
         public void run() {
 
             int i = st;
             boolean cnt;
-
-            cache = new HashMap<Integer, TreeMap<SIntSet, Double>>();
 
             while (i < end) {
 
@@ -524,7 +553,7 @@ public abstract class BaseScorer extends Base {
                     continue;
 
                 if (mi.condInd(n, n2))
-                    continue;
+                     continue;
 
                 l.add(n2);
             }
@@ -535,7 +564,7 @@ public abstract class BaseScorer extends Base {
 
         private boolean monovalue(int n2) {
             for (int v = 0; v < dat.l_n_arity[n2]; v++) {
-                if (dat.row_values[n2][v].length *1.0/ dat.n_datapoints > 0.99)
+                if (dat.row_values[n2][v].length *1.0/ dat.n_datapoints > 0.9999)
                     return true;
             }
             return  false;
@@ -599,39 +628,12 @@ public abstract class BaseScorer extends Base {
         protected void conclude() {
 
             // prune scores
-            scores = pruneScores();
+            scores = pruneScores(scores, voidSk);
 
             // If parent writer is ready, graph there
             if (scoreWriter != null) {
                 scoreWriter.add(n, scores);
             }
-        }
-
-        private TreeMap<SIntSet, Double> pruneScores() {
-
-            TreeMap<SIntSet, Double> new_scores = new TreeMap<SIntSet, Double>();
-
-            // Pick only the best scores
-            for (SIntSet pset : RandomStuff.sortInvByValues(scores).keySet()) {
-
-                // Check when to limit scores
-                double sk = scores.get(pset);
-
-                // log.conclude(set + " " + new_sk);
-
-                // Decide to put it in the final score
-                boolean toPrune = sk < voidSk + 0.0001;
-
-                toPrune = toPrune || checkToPrune(sk, pset.set, scores);
-
-                if (!toPrune) {
-                    new_scores.put(pset, sk);
-                }
-            }
-
-            new_scores.put(new SIntSet(), voidSk);
-
-            return new_scores;
         }
 
         boolean thereIsTime() {

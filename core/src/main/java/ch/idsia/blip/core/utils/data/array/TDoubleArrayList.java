@@ -911,13 +911,9 @@ public class TDoubleArrayList implements TDoubleList {
         double mean = mean();
         s.append(f("Median: %.2f \n", median()));
         s.append(f("Mean: %.2f \n", mean));
-        s.append(f("Stdev: %.2f \n", stdev(mean)));
+        s.append(f("Variance: %.2f \n", variance(mean)));
 
         return  s.toString();
-    }
-
-    private Double stdev(double mean) {
-        return Math.sqrt(Math.abs(variance(mean)));
     }
 
     private double variance(double mean) {
