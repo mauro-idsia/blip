@@ -1,6 +1,7 @@
 package ch.idsia.blip.core.common.tw;
 
 
+import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
@@ -8,7 +9,6 @@ import ch.idsia.blip.core.utils.data.array.TIntList;
 
 import java.util.Arrays;
 
-import static ch.idsia.blip.core.utils.RandomStuff.randInt;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.zeros;
 
 
@@ -25,7 +25,7 @@ public class Dandelion {
     /**
      * Uniformally sample a code
      */
-    public static Dandelion sample(int n, int k) {
+    public static Dandelion sample(int n, int k, Base b) {
 
         int[] Q = zeros(k);
         TIntArrayList v = new TIntArrayList();
@@ -34,7 +34,7 @@ public class Dandelion {
             v.add(i + 1);
         }
         for (int i = 0; i < k; i++) {
-            int r = randInt(0, n - (i + 1));
+            int r = b.randInt(0, n - (i + 1));
 
             Q[i] = v.get(r);
             v.removeAt(r);
@@ -46,7 +46,7 @@ public class Dandelion {
         S[1] = zeros(n - k - 2);
 
         for (int i = 0; i < n - k - 2; i++) {
-            int r = randInt(1, (n - k) * k + 1) - 1;
+            int r = b.randInt(1, (n - k) * k + 1) - 1;
 
             if (r == (n - k) * k) {
                 S[0][i] = 0;

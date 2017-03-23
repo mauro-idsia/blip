@@ -52,11 +52,13 @@ public abstract class SolverApi extends Api {
     public void exec() throws Exception {
         long start = System.currentTimeMillis();
         ParentSet[][] sc = RandomStuff.getScoreReader(ph_scores, verbose);
-        solver.init(start, sc, max_exec_time, thread_pool_size);
+
+        solver.seed = seed;
         solver.delta = delta;
         solver.max_parents = max_parents;
         solver. out_solutions = out_solutions;
         solver.verbose = verbose;
+        solver.init(start, sc, max_exec_time, thread_pool_size);
         if (log != null)
             solver.logWr = getWriter(logPath);
         solver.go(ph_result);

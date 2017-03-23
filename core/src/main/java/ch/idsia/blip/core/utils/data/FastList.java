@@ -1,16 +1,19 @@
 package ch.idsia.blip.core.utils.data;
 
-import ch.idsia.blip.core.utils.RandomStuff;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class FastList<K> {
+
+    private final Random rnd;
 
     HashMap<K, Integer> hm;
     public ArrayList<K> ar;
 
-    public FastList() {
+
+    public FastList(Random rnd) {
+        this.rnd = rnd ;
         reset();
     }
 
@@ -20,7 +23,7 @@ public class FastList<K> {
     }
 
     public K rand() {
-        int ix = RandomStuff.randInt(0, ar.size()-1);
+        int ix = rnd.nextInt(ar.size());
         return  ar.get(ix);
     }
 

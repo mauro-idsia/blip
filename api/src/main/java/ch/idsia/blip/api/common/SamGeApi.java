@@ -19,8 +19,6 @@ public class SamGeApi extends Api {
 
     private static final Logger log = Logger.getLogger(SamGeApi.class.getName());
 
-    private final SamGe samGe;
-
     @Option(name="-n", required = true, usage="Bayesian network file path")
     private String s_bn;
 
@@ -33,9 +31,6 @@ public class SamGeApi extends Api {
     @Option(name="-f", usage="Output format (dat, arff)")
     private String format = "dat";
 
-    public SamGeApi() {
-        samGe = new SamGe();
-    }
 
     /**
      * Command line execution
@@ -50,7 +45,8 @@ public class SamGeApi extends Api {
         BayesianNetwork bn = getBayesianNetwork(s_bn);
         if (bn == null)
             return;
-
+        SamGe samGe = new SamGe();
+        samGe.seed = seed;
         samGe.go(bn, s_datafile, n_sample, format);
     }
 

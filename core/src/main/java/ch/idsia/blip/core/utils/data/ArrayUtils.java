@@ -18,8 +18,7 @@ public class ArrayUtils {
         a[j] = temp;
     }
 
-    public static void shuffleArray(int[] ar) {
-        Random rnd = new Random(System.currentTimeMillis());
+    public static void shuffleArray(int[] ar, Random rnd) {
 
         for (int i = ar.length - 1; i > 0; i--) {
             int index = rnd.nextInt(i + 1);

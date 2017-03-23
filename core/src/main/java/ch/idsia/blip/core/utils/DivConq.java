@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import static ch.idsia.blip.core.utils.RandomStuff.getRandom;
+
 
 public class DivConq {
 
@@ -57,7 +59,7 @@ public class DivConq {
         mi = new MutualInformation(dat);
         mi.compute();
 
-        rand = new Random(System.currentTimeMillis());
+        rand = getRandom();
 
         List<TIntArrayList> best_clu = null;
         Double best_sk = 0.0;

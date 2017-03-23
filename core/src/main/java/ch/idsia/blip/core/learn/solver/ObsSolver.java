@@ -36,7 +36,7 @@ public class ObsSolver extends ScoreSolver {
 
     @Override
     protected Sampler getSampler() {
-        return getAdvSampler(sampler, dat_path, sc.length);
+        return getAdvSampler(sampler, dat_path, sc.length, this.rand);
     }
 
     @Override

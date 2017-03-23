@@ -25,9 +25,9 @@ public class SimpleSampler implements Sampler {
         return  nv;
     }
 
-    public SimpleSampler(int n) {
+    public SimpleSampler(int n, Random r) {
         this.n = n;
-        r = new Random();
+        this.r = r;
     }
 
     @Override

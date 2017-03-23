@@ -44,7 +44,7 @@ public abstract class SkelSolver extends BaseSolver {
 
     @Override
     protected Sampler getSampler() {
-        return new SkelSampler(skel);
+        return new SkelSampler(skel, this.rand);
     }
 
     @Override

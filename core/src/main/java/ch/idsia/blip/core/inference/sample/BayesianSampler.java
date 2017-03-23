@@ -21,7 +21,7 @@ public class BayesianSampler extends BaseSampler {
     public BayesianSampler(BayesianNetwork bn) {
         this.bn = bn;
         this.n_var = bn.n_var;
-        this.s = new SamGe(bn);
+        this.s = new SamGe();
     }
 
     /* Computing the most likely assignment to all variables given evidence */

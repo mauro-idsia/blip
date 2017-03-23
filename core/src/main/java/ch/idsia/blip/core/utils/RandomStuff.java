@@ -21,13 +21,15 @@ public class RandomStuff {
     private static final Logger log = Logger.getLogger(
             RandomStuff.class.getName());
 
-    private static Random rand = new Random(System.currentTimeMillis());
-
     public static String rmExt(String str) {
         if (str.contains("."))
             return str.substring(0, str.lastIndexOf('.'));
         else
             return str;
+    }
+
+    public static Random getRandom() {
+        return new Random(System.currentTimeMillis());
     }
 
     public static int index(int s, int v1, int v2) {
@@ -268,10 +270,6 @@ public class RandomStuff {
 
     public static void logExp(Logger log, Throwable trw) {
         log.log(Level.SEVERE, trw.toString(), trw);
-    }
-
-    public static int randInt(int min, int max) {
-        return rand.nextInt((max - min) + 1) + min;
     }
 
     public static String readFile(String s) throws IOException {

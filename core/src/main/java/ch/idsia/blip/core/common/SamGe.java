@@ -1,23 +1,21 @@
 package ch.idsia.blip.core.common;
 
 
+import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.common.io.dat.ArffFileWriter;
-import ch.idsia.blip.core.common.io.dat.DatFileLineWriter;
 import ch.idsia.blip.core.common.io.dat.BaseFileLineWriter;
+import ch.idsia.blip.core.common.io.dat.DatFileLineWriter;
 import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.io.*;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.RandomStuff.logExp;
 
-public class SamGe {
+public class SamGe extends Base {
 
     private static final Logger log = Logger.getLogger(SamGe.class.getName());
-
-    private final Random rand;
 
     /**
      * Network to sample from
@@ -74,6 +72,8 @@ public class SamGe {
      */
     public void go(BayesianNetwork in_bn, String in_wr_path, int in_n_sample, String format)
             throws FileNotFoundException, UnsupportedEncodingException {
+
+        init();
 
         bn = in_bn;
         n_sample = in_n_sample;
@@ -156,7 +156,7 @@ public class SamGe {
      */
     private void missSample(short[] samp) {
         for (int i = 0; i < missing_var.size(); i++) {
-            if (Math.random() < perc_values) {
+            if (randProb() < perc_values) {
                 samp[missing_var.get(i)] = -1;
             }
         }
@@ -200,16 +200,6 @@ public class SamGe {
         return sample;
     }
 
-    public SamGe() {
-        rand = new Random(System.currentTimeMillis());
-    }
-
-    public SamGe(BayesianNetwork bn) {
-        this();
-        this.bn = bn;
-    }
-
-
     /**
      * Get a random value for the variable, following the probability distribution determined by the given assignment of the dand variables.
      * In this assignment it is mandatory that the parents of the variable have a value.
@@ -249,7 +239,7 @@ public class SamGe {
     }
 
     public static void ex(BayesianNetwork bn, String path, int n) {
-        SamGe sg = new SamGe(bn);
+        SamGe sg = new SamGe();
 
         try {
             sg.go(bn, path, n);

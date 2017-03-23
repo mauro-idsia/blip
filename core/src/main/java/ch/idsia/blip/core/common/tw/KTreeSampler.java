@@ -1,10 +1,10 @@
 package ch.idsia.blip.core.common.tw;
 
 
+import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.common.analyze.MutualInformation;
 import ch.idsia.blip.core.utils.ParentSet;
 
-import java.util.Random;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.RandomStuff.logExp;
@@ -20,18 +20,18 @@ public class KTreeSampler {
     private final MutualInformation mi;
     private final ParentSet[][] m_scores;
 
-    public KTreeSampler(int n_var, int maxTreeWidth, MutualInformation mi, ParentSet[][] m_scores, long seed) {
+    public KTreeSampler(int n_var, int maxTreeWidth, MutualInformation mi, ParentSet[][] m_scores, Base base) {
         this.n_var = n_var;
         this.maxTreeWidth = maxTreeWidth;
         this.mi = mi;
         this.m_scores = m_scores;
 
-        rand = new Random(seed);
+        this.base = base;
     }
 
     private double best_is = -Double.MAX_VALUE;
 
-    private final Random rand;
+    private final Base base;
 
     public KTree go() {
 
@@ -42,7 +42,7 @@ public class KTreeSampler {
 
         while (K == null) {
             try {
-                KTree K1 = KTree.decode(Dandelion.sample(n_var, maxTreeWidth));
+                KTree K1 = KTree.decode(Dandelion.sample(n_var, maxTreeWidth, base));
 
                 is = K1.informativeScore(mi, m_scores);
 
@@ -54,7 +54,7 @@ public class KTreeSampler {
 
                     // test if the score is indeed better
                     // System.out.println("is: " + is + ", best: " + is + "ratio: " + is / best_is);
-                    if (rand.nextDouble() < (is / best_is)) {
+                    if (base.rand.nextDouble() < (is / best_is)) {
                         go = true;
                     }
                 }

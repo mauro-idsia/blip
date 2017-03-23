@@ -1,6 +1,7 @@
 package ch.idsia.blip.core.common.tw;
 
 
+import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.common.analyze.MutualInformation;
 import ch.idsia.blip.core.common.arcs.Directed;
 import ch.idsia.blip.core.common.arcs.Undirected;
@@ -361,12 +362,12 @@ public class KTree {
         return phi;
     }
 
-    public static KTree sample(int n_var, int maxTw) {
+    public static KTree sample(int n_var, int maxTw, Base solver) {
         KTree k = null;
 
         while (k == null) {
             try {
-                k = decode(Dandelion.sample(n_var, maxTw));
+                k = decode(Dandelion.sample(n_var, maxTw, solver));
             } catch (Exception e) {}
         }
         return k;

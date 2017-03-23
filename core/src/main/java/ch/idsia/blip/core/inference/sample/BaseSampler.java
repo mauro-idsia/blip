@@ -6,10 +6,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Random;
 
 import static ch.idsia.blip.core.utils.RandomStuff.*;
 
-public abstract class BaseSampler {
+public abstract class BaseSampler  {
 
     protected long start;
 
@@ -27,6 +28,8 @@ public abstract class BaseSampler {
 
     public int n_var;
 
+    protected Random rand;
+
     protected void prepare(double max_time, TIntIntHashMap evidence) {
         start = System.currentTimeMillis();
         this.max_time = max_time;
@@ -42,6 +45,8 @@ public abstract class BaseSampler {
             evid[i] = evidence.get(k);
             sample[k] = (short) evid[i];
         }
+
+        rand = getRandom();
     }
 
     protected boolean thereIsTime() {

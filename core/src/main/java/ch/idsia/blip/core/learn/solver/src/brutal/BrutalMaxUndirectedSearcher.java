@@ -9,14 +9,12 @@ import ch.idsia.blip.core.utils.data.common.TIntIterator;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.pf;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
 
 public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
-
-    private final Random rand;
 
     private TIntHashSet todo;
 
@@ -26,7 +24,6 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
     public BrutalMaxUndirectedSearcher(BrutalUndirectedSolver solver, int tw, Und und) {
         super(solver, tw, und);
-        rand = new Random(System.currentTimeMillis());
     }
 
     // Maximize a network!
@@ -119,7 +116,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
             }
         } else {
             // Select a random subset of the neighborhood
-            ArrayUtils.shuffleArray(copy);
+            ArrayUtils.shuffleArray(copy, solver.rand);
         }
 
         cloneArray(copy, vars, tw);
@@ -215,7 +212,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
     private Result sampleWeighted() {
 
-        double r = rand.nextDouble() - Math.pow(2, -10);
+        double r = solver.randDouble() - Math.pow(2, -10);
         int sel = -1;
         for (int v = 0; v < n_var && sel == -1; v++) {
             if (bests[v] == null)
@@ -242,4 +239,6 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
             this.handle = handle;
         }
     }
+
+
 }

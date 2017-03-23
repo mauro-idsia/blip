@@ -2,10 +2,12 @@ package ch.idsia.blip.core.learn.solver.samp;
 
 import ch.idsia.blip.core.common.analyze.MutualInformation;
 
+import java.util.Random;
+
 public class MIRSampler extends EntropySampler {
 
-    public MIRSampler(String ph_dat, int n) {
-        super(ph_dat, n);
+    public MIRSampler(String ph_dat, int n, Random r) {
+        super(ph_dat, n, r);
     }
 
     @Override

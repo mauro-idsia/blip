@@ -6,6 +6,8 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import static ch.idsia.blip.core.utils.RandomStuff.getRandom;
+
 
 /**
  * A Markov network, and the main operations to do on them.
@@ -74,7 +76,7 @@ public class MarkovNetwork  {
     public void sample(int n_sample) {
 
         short[] sample = new short[n_var];
-        Random r = new Random(System.currentTimeMillis());
+        Random r = getRandom();
 
         updateCliqueAssignments();
 
@@ -167,7 +169,4 @@ public class MarkovNetwork  {
         return l_ar_var[i];
     }
 
-    public void resample(short[] sample, int i) {
-         resample(sample, i, new Random());
-    }
 }

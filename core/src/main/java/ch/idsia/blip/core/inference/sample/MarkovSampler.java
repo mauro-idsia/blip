@@ -6,14 +6,12 @@ import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Random;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
 
 public class MarkovSampler extends BaseSampler {
 
     private final MarkovNetwork mn;
-    private final Random rand;
 
     private int cnt_new;
 
@@ -23,7 +21,6 @@ public class MarkovSampler extends BaseSampler {
         this.mn = mn;
         this.n_var = mn.n_var;
         mn.updateCliqueAssignments();
-        rand = new Random(System.currentTimeMillis());
     }
 
 
@@ -246,10 +243,9 @@ public class MarkovSampler extends BaseSampler {
     private void ShuffleArray(int[] array)
     {
         int index, temp;
-        Random random = new Random();
         for (int i = array.length - 1; i > 0; i--)
         {
-            index = random.nextInt(i + 1);
+            index = rand.nextInt(i + 1);
             temp = array[index];
             array[index] = array[i];
             array[i] = temp;

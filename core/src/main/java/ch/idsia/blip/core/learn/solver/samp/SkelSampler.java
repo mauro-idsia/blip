@@ -11,7 +11,7 @@ import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
 /**
  * Samples topological orders - with constraints (given by skeleton)
  */
-public class SkelSampler implements Sampler{
+public class SkelSampler implements Sampler {
 
     private int[][] parents;
     private int[][] childrens;
@@ -21,7 +21,7 @@ public class SkelSampler implements Sampler{
     // for each variable its position
     private int[] state;
 
-    Random r;
+    Random rand;
 
     private int burn_iterat = 100;
 
@@ -39,23 +39,23 @@ public class SkelSampler implements Sampler{
         return parents;
     }
 
-    public SkelSampler(Directed skel) {
-        this(getParents(skel));
+    public SkelSampler(Directed skel, Random rand) {
+        this(getParents(skel), rand);
     }
 
-        public SkelSampler(int[][] parents) {
-            this.parents = parents;
-            this.n = parents.length;
+    public SkelSampler(int[][] parents, Random rand) {
+        this.parents = parents;
+        this.n = parents.length;
 
+        this.rand = rand;
 
-        r = new Random(System.currentTimeMillis());
 
         this.childrens = new int[n][];
         for (int i = 0; i < n; i++)
             childrens[i] = new int[0];
 
         for (int i = 0; i < n; i++)
-            for (int p: parents[i]) {
+            for (int p : parents[i]) {
                 childrens[p] = expandArray(childrens[p], i);
             }
     }
@@ -79,7 +79,7 @@ public class SkelSampler implements Sampler{
                 // if every parent has already been inserted
                 if (okForNow(a, done)) avail.add(a);
             }
-            int c = avail.get(r.nextInt(avail.size()));
+            int c = avail.get(rand.nextInt(avail.size()));
             state[c] = i;
             todo.remove(c);
             done.add(c);
@@ -89,9 +89,9 @@ public class SkelSampler implements Sampler{
     }
 
     private boolean okForNow(int j, TIntArrayList done) {
-        for (int p: parents[j])
+        for (int p : parents[j])
             if (!done.contains(p))
-                return  false;
+                return false;
         return true;
     }
 
@@ -102,7 +102,7 @@ public class SkelSampler implements Sampler{
         }
 
         int[] ord = new int[n];
-        for (int i = 0; i< n; i++)
+        for (int i = 0; i < n; i++)
             ord[state[i]] = i;
 
         return ord;
@@ -111,10 +111,10 @@ public class SkelSampler implements Sampler{
     private void nextState() {
 
         // Choose random pair
-        int i = r.nextInt(n);
+        int i = rand.nextInt(n);
         int j = i;
-        while(i == j)
-            j = r.nextInt(n);
+        while (i == j)
+            j = rand.nextInt(n);
 
         if (find(j, parents[i]) || find(i, parents[j]))
             return;
@@ -136,14 +136,14 @@ public class SkelSampler implements Sampler{
      */
     private boolean swapOk(int i, int j) {
 
-        for (int p: parents[i]) {
+        for (int p : parents[i]) {
             if (state[j] < state[p])
-                return  false;
+                return false;
         }
 
-        for (int c: childrens[i]) {
+        for (int c : childrens[i]) {
             if (state[j] > state[c])
-                return  false;
+                return false;
         }
 
         return true;

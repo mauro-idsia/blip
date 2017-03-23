@@ -10,23 +10,24 @@ import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
 public class EntropySampler implements Sampler {
 
     protected  int n;
+
     protected Random r;
 
     protected DataSet dat;
 
     protected double[] weight;
 
-    private Object lock = new Object();
+    protected Object lock = new Object();
 
     @Override
     public int[] sample() {
-        return sampleWeighted(n, r, weight);
+        return sampleWeighted(n, weight);
     }
 
-    public EntropySampler(String ph_dat, int n) {
+    public EntropySampler(String ph_dat, int n, Random r) {
         dat = getDataSet(ph_dat);
         this.n = n;
-        r = new Random();
+        this.r = r;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class EntropySampler implements Sampler {
             }
     }
 
-    public int[] sampleWeighted(int n, Random r, double[] weights) {
+    public int[] sampleWeighted(int n, double[] weights) {
 
         int[] new_ord = new int[n];
 

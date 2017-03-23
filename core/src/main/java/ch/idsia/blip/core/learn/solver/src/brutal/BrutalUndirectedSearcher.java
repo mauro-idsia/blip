@@ -9,7 +9,6 @@ import ch.idsia.blip.core.utils.data.SIntSet;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.RandomStuff.f;
@@ -188,12 +187,16 @@ public class BrutalUndirectedSearcher implements Searcher {
         return new Result(v, fin, max_h);
     }
 
+    protected int randInt(int a, int b) {
+        return solver.randInt(a, b);
+    }
+
     protected int getSk(int[] neigh, int[] set) {
         return ArrayUtils.intersectN(neigh, set);
     }
 
     protected SIntSet rand(TreeSet<SIntSet> h) {
-        int v = new Random().nextInt(h.size());
+        int v = solver.randInt(0, h.size());
         Iterator<SIntSet> i = h.iterator();
         while (v > 1) {
             i.next();

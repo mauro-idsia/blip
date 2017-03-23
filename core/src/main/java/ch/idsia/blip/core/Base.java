@@ -3,6 +3,7 @@ package ch.idsia.blip.core;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Random;
 
 
 public class Base {
@@ -21,6 +22,10 @@ public class Base {
     public int verbose;
 
     public Writer logWr;
+
+    public long seed;
+
+    public Random rand;
 
     public void logf(String format, Object... args) {
         log(String.format(format, args));
@@ -62,4 +67,22 @@ public class Base {
         }
     }
 
+    public void init() {
+        if (seed == 0)
+            seed = System.currentTimeMillis();
+
+         rand = new Random(seed);
+    }
+
+    public int randInt(int min, int max) {
+        return rand.nextInt((max - min) + 1) + min;
+    }
+
+    public double randProb() {
+        return randInt(0, 1) * rand.nextDouble();
+    }
+
+    public double randDouble() {
+        return rand.nextDouble();
+    }
 }

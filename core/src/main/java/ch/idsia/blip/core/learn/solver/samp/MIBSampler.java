@@ -1,5 +1,7 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+import java.util.Random;
+
 public class MIBSampler extends MISampler {
 
     protected double[] weight_r;
@@ -11,10 +13,10 @@ public class MIBSampler extends MISampler {
 
         if (turn == 0) {
             turn += 1;
-            return sampleWeighted(n, r, weight);
+            return sampleWeighted(n, weight);
         } else if (turn == 1){
             turn += 1;
-            return  sampleWeighted(n, r, weight_r);
+            return  sampleWeighted(n, weight_r);
         } else {
             turn = 0;
             return sample();
@@ -22,8 +24,8 @@ public class MIBSampler extends MISampler {
 
     }
 
-    public MIBSampler(String ph_dat, int n) {
-        super(ph_dat, n);
+    public MIBSampler(String ph_dat, int n, Random r) {
+        super(ph_dat, n, r);
     }
 
     @Override

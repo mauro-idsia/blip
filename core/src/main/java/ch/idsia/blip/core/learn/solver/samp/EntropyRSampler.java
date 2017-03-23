@@ -2,10 +2,12 @@ package ch.idsia.blip.core.learn.solver.samp;
 
 import ch.idsia.blip.core.common.analyze.Entropy;
 
+import java.util.Random;
+
 public class EntropyRSampler extends EntropySampler {
 
-    public EntropyRSampler(String ph_dat, int n) {
-        super(ph_dat, n);
+    public EntropyRSampler(String ph_dat, int n, Random r) {
+        super(ph_dat, n, r);
     }
 
     @Override

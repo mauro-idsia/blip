@@ -72,6 +72,7 @@ public abstract class BaseSolver extends Base {
             logf("Starting %s \n", name());
             logf("max_exec_time: %.2f \n", max_exec_time);
             logf("thread_pool_size: %d \n", thread_pool_size);
+            logf("seed: %d \n", seed);
         }
 
         sk_proposed = new TDoubleArrayList();

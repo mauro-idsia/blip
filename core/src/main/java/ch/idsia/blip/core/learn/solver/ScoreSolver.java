@@ -15,7 +15,7 @@ public abstract class ScoreSolver extends BaseSolver {
 
     @Override
     protected Sampler getSampler() {
-        return new SimpleSampler(sc.length);
+        return new SimpleSampler(sc.length, this.rand);
     }
 
     @Override
@@ -40,6 +40,7 @@ public abstract class ScoreSolver extends BaseSolver {
     }
 
      public void init(ParentSet[][] sc) {
+        super.init();
         this.sc = sc;
          this.n_var = sc.length;
     }

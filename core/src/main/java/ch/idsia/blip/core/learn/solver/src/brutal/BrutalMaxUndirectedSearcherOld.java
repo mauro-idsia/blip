@@ -116,7 +116,7 @@ public class BrutalMaxUndirectedSearcherOld extends BrutalUndirectedSearcher {
             }
         } else {
             // Select a random subset of the neighborhood
-            ArrayUtils.shuffleArray(copy);
+            ArrayUtils.shuffleArray(copy, solver.rand);
         }
 
         cloneArray(copy, vars, tw);

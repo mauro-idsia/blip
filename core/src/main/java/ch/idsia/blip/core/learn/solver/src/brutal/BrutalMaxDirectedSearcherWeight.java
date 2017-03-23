@@ -18,8 +18,6 @@ import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
 
 public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
 
-    private final Random rand;
-
     private TIntHashSet todo;
 
     private Result[] bests;
@@ -31,7 +29,6 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
 
     public BrutalMaxDirectedSearcherWeight(BaseSolver solver, int tw) {
         super(solver, tw);
-        rand = new Random(System.currentTimeMillis());
     }
 
     @Override
@@ -261,7 +258,7 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
 
     private Result sampleWeighted() {
 
-        double r = rand.nextDouble() - Math.pow(2, -10);
+        double r = solver.randDouble() - Math.pow(2, -10);
         int sel = -1;
 
         double totWeight = 0;

@@ -64,7 +64,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
     @Override
     protected Sampler getSampler() {
-        return new SimpleSampler(n_var);
+        return new SimpleSampler(n_var, rand);
     }
 
     @Override

@@ -7,7 +7,6 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import java.io.Writer;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -89,8 +88,6 @@ public class AdvK2 extends BaseScorer {
             double start = bean.getCurrentThreadCpuTime();
             double elapsed = 0;
 
-            Random r = new Random((long) start);
-
             // Base ord
             TIntArrayList ord = new TIntArrayList();
 
@@ -102,7 +99,7 @@ public class AdvK2 extends BaseScorer {
 
             while (cnt) {
 
-                ord.shuffle(r);
+                ord.shuffle(rand);
 
                 for (int n = 0; (n < dat.n_var) && cnt; n++) {
                     findBestParentSet(ord, n);

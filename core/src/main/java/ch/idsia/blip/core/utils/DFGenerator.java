@@ -5,9 +5,11 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.Random;
 
+import static ch.idsia.blip.core.utils.RandomStuff.getRandom;
+
 public class DFGenerator {
 
-    private final Random random = new Random(System.currentTimeMillis());
+    private final Random random = getRandom();
     private final int seed = (int) (100000 * random.nextFloat());
     private final MersenneTwister rn = new MersenneTwister(seed);
 

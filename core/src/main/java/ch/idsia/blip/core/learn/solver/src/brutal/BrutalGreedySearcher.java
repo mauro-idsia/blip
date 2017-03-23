@@ -95,7 +95,7 @@ public class BrutalGreedySearcher extends BrutalOldSearcher {
     }
 
     protected SIntSet rand(TreeSet<SIntSet> h) {
-        int v = new Random().nextInt(h.size());
+        int v = solver.randInt(0, h.size() -1);
         Iterator<SIntSet> i = h.iterator();
         while (v > 1) {
             i.next();

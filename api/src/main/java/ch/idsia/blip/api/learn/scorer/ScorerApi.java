@@ -43,6 +43,7 @@ abstract class ScorerApi extends Api {
     public void exec() throws Exception {
         DataSet dat = getDataSet(ph_dat);
         scorer.verbose = verbose;
+        scorer.seed = seed;
         scorer.init(ph_jkl, max_pset_size, max_time, scoreNm, alpha, thread_pool_size, choice_variables);
         scorer.go(dat);
     }

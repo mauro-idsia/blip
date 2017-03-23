@@ -11,8 +11,8 @@ import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static ch.idsia.blip.core.utils.RandomStuff.getRandom;
 import static ch.idsia.blip.core.utils.RandomStuff.pf;
-import static ch.idsia.blip.core.utils.RandomStuff.randInt;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
 
 
@@ -28,6 +28,8 @@ public class Inference {
     private final int verbose;
     private final BayesianNetwork bn;
 
+    private final Random rand;
+
     public EliminMethod elim = EliminMethod.Heu;
 
     /**
@@ -37,6 +39,8 @@ public class Inference {
     public Inference(BayesianNetwork bayesNet, int verb) {
         this.bn = bayesNet;
         this.verbose = verb;
+
+        rand = getRandom();
 
         HashMap<Integer, int[]> cacheElimOrder = new HashMap<Integer, int[]>();
     }
@@ -51,13 +55,13 @@ public class Inference {
      *
      * @param greedy elimination order
      */
-    private static void shuffleGreedy(int[] greedy) {
+    private void shuffleGreedy(int[] greedy) {
         // Number of inversions
-        int n_inver = randInt(1, Math.max(1, greedy.length / 4));
+        int n_inver = rand.nextInt(1+greedy.length / 4);
 
         for (int i = 0; i < n_inver; i++) {
-            int a = randInt(0, greedy.length - 1);
-            int b = randInt(0, greedy.length - 1);
+            int a = rand.nextInt(greedy.length - 1);
+            int b = rand.nextInt(greedy.length - 1);
 
             int t = greedy[b];
 
