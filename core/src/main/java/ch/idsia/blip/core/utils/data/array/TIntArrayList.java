@@ -924,6 +924,14 @@ public class TIntArrayList implements TIntList   {
         return buf.toString();
     }
 
+    public void copy(int[] nv) {
+        System.arraycopy(_d, 0, nv, 0, nv.length );
+    }
+
+    public int last() {
+        return _d[_pos-1];
+    }
+
 
     /** SIntArray iterator */
     class SIntArrayIterator implements TIntIterator {

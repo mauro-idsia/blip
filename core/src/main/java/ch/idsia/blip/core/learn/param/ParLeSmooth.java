@@ -148,7 +148,9 @@ public class ParLeSmooth extends Base {
             BayesianNetwork newBn = p.go(res, train);
             LLEval l = new LLEval();
             l.go(newBn, getDataSetReader(valid));
-            logf(0, "Propose new ll: %.4f for alpha: %.4f \n", l.ll, alpha);
+            if (verbose > 0) {
+                logf("Propose new ll: %.4f for alpha: %.4f \n", l.ll, alpha);
+            }
             propose(l.ll, newBn);
         }
     }

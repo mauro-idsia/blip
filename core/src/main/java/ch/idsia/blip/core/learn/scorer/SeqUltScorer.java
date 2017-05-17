@@ -91,20 +91,22 @@ public class SeqUltScorer extends BaseScorer {
 
         // For each pset size, search all the variables, record the joint entropies
         for (int i = 1; i <= max_pset_size; i++) {
-            safeLogf(1, "\nNew level: %d\n", i);
+            if (verbose > 1)
+            safeLogf("\nNew level: %d\n", i);
             Thread t1 = new Thread(new UltExecutor(thread_pool_size, 0, n_var, this, i));
             t1.start();
             t1.join();
         }
 
-        safeLogf(1, "\nDone! \n");
+        if (verbose > 1)
+        safeLogf("\nDone! \n");
 
         // Write scores anyway TODO
-        scoreWriter = new ScoreWriter(this, writer, 0, n_var, 0);
+        scoreWriter = new ScoreWriter(this, ph_scores, 0, n_var, 0);
         Thread t2 = new Thread(scoreWriter);
         t2.start();
         for (int i = 0; i < n_var; i++) {
-            scoreWriter.add(i, pruneScores(t_sc.get(i), voidSk[i]));
+            scoreWriter.add(i, t_sc.get(i));
         }
 
         t2.join();
@@ -151,7 +153,8 @@ public class SeqUltScorer extends BaseScorer {
                 cnt = nextPset(pset);
             }
 
-            safeLogf(1, "%d ", n);
+            if (verbose > 1)
+            safeLogf("%d ", n);
 
             aggregate(n, l_sc, l_h);
         }

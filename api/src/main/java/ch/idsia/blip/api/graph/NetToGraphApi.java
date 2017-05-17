@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 /**
- * Generate a graph from a network (requires graphviz)
+ * Generate pa graph from pa network (requires graphviz)
  */
 
 public class NetToGraphApi extends Api {

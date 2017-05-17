@@ -6,7 +6,7 @@ import ch.idsia.blip.core.common.graph.BetterNets;
 import java.util.logging.Logger;
 
 /**
- * Update a network file with position conclude (requires graphviz)
+ * Update pa network file with position conclude (requires graphviz)
  */
 
 public class BetterNetsApi extends NetToGraphApi {

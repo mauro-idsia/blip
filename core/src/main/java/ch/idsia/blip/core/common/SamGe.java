@@ -2,7 +2,7 @@ package ch.idsia.blip.core.common;
 
 
 import ch.idsia.blip.core.Base;
-import ch.idsia.blip.core.common.io.dat.ArffFileWriter;
+import ch.idsia.blip.core.common.io.dat.ArffFileLineWriter;
 import ch.idsia.blip.core.common.io.dat.BaseFileLineWriter;
 import ch.idsia.blip.core.common.io.dat.DatFileLineWriter;
 import ch.idsia.blip.core.utils.RandomStuff;
@@ -73,7 +73,7 @@ public class SamGe extends Base {
     public void go(BayesianNetwork in_bn, String in_wr_path, int in_n_sample, String format)
             throws FileNotFoundException, UnsupportedEncodingException {
 
-        init();
+        prepare();
 
         bn = in_bn;
         n_sample = in_n_sample;
@@ -89,7 +89,7 @@ public class SamGe extends Base {
             if (format.equals("dat"))
                 wr = new DatFileLineWriter(in_bn, bf_wr);
             else
-            wr = new ArffFileWriter(in_bn, bf_wr, "new");
+            wr = new ArffFileLineWriter(in_bn, bf_wr, "new");
 
 
             /*
@@ -122,7 +122,7 @@ public class SamGe extends Base {
     private void writeSample() {
 
         try {
-            wr.writeMetaData(n_sample);
+            wr.writeMetaData();
 
             // wr_dataframe.writeMetaData(n_sample);
 
@@ -136,7 +136,7 @@ public class SamGe extends Base {
                     missSample(samp);
                 }
 
-                wr.next(i, samp);
+                wr.next(samp);
 
                 if (fill_tab) {
                     //    wr_dataframe.next(thread, samp);

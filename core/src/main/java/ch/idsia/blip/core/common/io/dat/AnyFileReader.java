@@ -17,28 +17,11 @@ import static ch.idsia.blip.core.utils.data.ArrayUtils.index;
 /**
  * Reads the content of a datapoints file
  */
-public class AnyFileReader implements Closeable {
+public class AnyFileReader extends DatFileReader {
 
     // logger
     private static final Logger log = Logger.getLogger(
             AnyFileReader.class.getName());
-
-    // Reader structure.
-    private BufferedReader rd_dat;
-
-    public String path;
-
-    private boolean done = false;
-
-    private DataSet dSet;
-
-    public boolean readMissing = false;
-
-
-    public AnyFileReader(String s) throws FileNotFoundException {
-        this.rd_dat = new BufferedReader(new FileReader(s));
-        this.path = s;
-    }
 
     static public int[][] clone(int[][] a) {
         int[][] b = new int[a.length][];
@@ -54,6 +37,7 @@ public class AnyFileReader implements Closeable {
      *
      * @throws IOException if there is a problem in the reading.
      */
+    @Override
     public void readValuesCache() throws IOException {
 
         /*
@@ -123,13 +107,13 @@ public class AnyFileReader implements Closeable {
             if ("".equals(line))
                 continue;
 
-            if (readMissing && line.contains("?"))
+            if (!readMissing && line.contains("?"))
                 continue;
 
             sp = getSplit(line);
             if (sp.length != dSet.n_var) {
                 notifyError(dSet.n_datapoints + 1, sp.length);
-                return;
+
             }
 
             // For each variable
@@ -203,11 +187,8 @@ public class AnyFileReader implements Closeable {
         return aux;
     }
 
-    private void notifyError(int line, int found) {
-        log.severe(String.format("Problem in file at line %d: found %d cardinalities, %d variables.", line, dSet.n_var, found));
-    }
-
-    private String[] getSplit(String ln) {
+    @Override
+    protected String[] getSplit(String ln) {
         return ln.split("\\s+");
     }
 
@@ -217,7 +198,7 @@ public class AnyFileReader implements Closeable {
         }
     }
 
-    public DataSet read() throws IOException {
+    public DataSet read(boolean readMissing) throws Exception {
         
             if (done) {
                 return dSet;
@@ -230,8 +211,8 @@ public class AnyFileReader implements Closeable {
 
             // Read names
             String ln = rd_dat.readLine();
-            dSet.l_s_names = getSplit(ln);
-            dSet.n_var = dSet.l_s_names.length;
+            dSet.l_nm_var = getSplit(ln);
+            dSet.n_var = dSet.l_nm_var.length;
 
             // Read arities
         /*

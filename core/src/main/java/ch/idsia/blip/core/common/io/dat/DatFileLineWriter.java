@@ -28,23 +28,22 @@ public class DatFileLineWriter extends BaseFileLineWriter {
     /**
      * Write metadata in the file.
      *
-     * @param n_sample number of datapoints
      * @throws IOException if there is a problem in writing.
      */
     @Override
-    public void writeMetaData(int n_sample) throws IOException {
+    public void writeMetaData() throws IOException {
            wf(wr, "%s\n", StringUtils.join(bn.l_nm_var, " "));
+        wf(wr, "%s\n", StringUtils.join(bn.l_ar_var, " "));
     }
 
     /**
      * Write the next line of sample
      *
-     * @param n      counter
      * @param sample sample to graph (value for each variable)
      * @throws IOException if there is a problem writing
      */
     @Override
-    public void next(int n, short[] sample) throws IOException {
+    public void next(short[] sample) throws IOException {
 
         String l = "";
 

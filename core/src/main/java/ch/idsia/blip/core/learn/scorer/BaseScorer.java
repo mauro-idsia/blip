@@ -3,24 +3,20 @@ package ch.idsia.blip.core.learn.scorer;
 
 import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.analyze.MutualInformation;
 import ch.idsia.blip.core.common.score.BDeu;
 import ch.idsia.blip.core.common.score.BIC;
 import ch.idsia.blip.core.common.score.MIT;
 import ch.idsia.blip.core.common.score.Score;
 import ch.idsia.blip.core.learn.scorer.concurrency.Executor;
+import ch.idsia.blip.core.learn.scorer.utils.OpenParentSet;
 import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.hash.TIntDoubleHashMap;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,93 +30,52 @@ public abstract class BaseScorer extends Base {
     private static final Logger log = Logger.getLogger(
             BaseScorer.class.getName());
 
-    public long start;
-
-    /**
-     * Input datapoint file
-     */
+    // Input datapoint file
     public DataSet dat;
 
+    // Scores file
     public String ph_scores;
 
-    /**
-     * BDeu scorer
-     */
+    // BDeu scorer
     public Score score;
 
-    /**
-     * Parents size limit (for memory!)
-     */
-    private final long max_parents = (long) Math.pow(2, 10);
+    // Parents size limit (for memory!)
+    protected final long max_parents = (long) Math.pow(2, 10);
 
-    /**
-     * Equivalent sample size
-     */
-    public double alpha = 1.0;
+    // Equivalent sample size
+    public double alpha;
 
-    /**
-     * Maximum in-degree for variable
-     */
-    public int max_pset_size = 0;
+    // Maximum in-degree for variable
+    public int max_pset_size;
 
+    // Name of the score to be used
     public String scoreNm = "bdeu";
 
-    /**
-     * Flag to graph name of variables, instead of index
-     */
-    private boolean write_names;
+    // Flag to graph name of variables, instead of index
+    protected boolean write_names;
 
+    // Flag for searching only some variables
     public String choice_variables;
 
     public int n_var;
 
     protected ScoreWriter scoreWriter;
 
-    protected Writer writer;
-
     public double max_time;
-
-    BaseScorer() {
-        this(10);
-    }
-
-    BaseScorer(int maxExec) {
-        this.max_time = maxExec;
-    }
 
     protected abstract String getName();
 
-    protected void prepareSearch() throws Exception {
-
-        if (start == 0)
-            start = System.currentTimeMillis();
-
-        if (score == null) {
-            scoreNm = scoreNm.toLowerCase().trim();
-
-            if ("bdeu".equals(scoreNm)) {
-                score = new BDeu(alpha, dat);
-            } else if ("bic".equals(scoreNm)) {
-                score = new BIC(alpha, dat);
-            } else if ("mit".equals(scoreNm)) {
-                score = new MIT(alpha, dat);
-            } else {
-                throw new Exception("Chosen score not known!");
-            }
-        }
+    @Override
+    public void prepare() {
+        super.prepare();
 
         n_var = dat.n_var;
-
-        if (thread_pool_size == 0) {
-            thread_pool_size = Runtime.getRuntime().availableProcessors();
-        }
-
-        writer = getWriter(ph_scores);
     }
 
     public void go(String dat_path) throws Exception {
         start = System.currentTimeMillis();
-        logf(0, "Reading from datafile '%s'... \n", dat_path);
+        if (verbose > 0)
+            logf("Reading from datafile '%s'... \n", dat_path);
         go(getDataSet(dat_path));
     }
 
@@ -128,9 +83,11 @@ public abstract class BaseScorer extends Base {
 
         dat = in_dat;
 
-        prepareSearch();
+        score.dat = dat;
 
-        if (choice_variables != null) {
+        prepare();
+
+        if (choice_variables != null && ! "".equals(choice_variables)) {
             searchChoice();
         } else {
             searchAll();
@@ -163,15 +120,13 @@ public abstract class BaseScorer extends Base {
 
         // available time
         if (max_time > 0) {
-            max_exec_time = max_time - (System.currentTimeMillis() - start) / 1000.0;
             // for each searcher, (total time) * (num of threads) / (num of variables)
-            max_exec_time *= thread_pool_size;
-            max_exec_time /= (e-s);
+            max_exec_time = (max_time * thread_pool_size) / (e-s);
         } else
             max_exec_time = 60;
 
         Thread t1 = new Thread(new Executor(thread_pool_size, s, e, this));
-        scoreWriter = new ScoreWriter(this, writer, s, e, verbose);
+        scoreWriter = new ScoreWriter(this, ph_scores, s, e, verbose);
         Thread t2 = new Thread(scoreWriter);
 
         t1.start();
@@ -182,53 +137,17 @@ public abstract class BaseScorer extends Base {
 
     }
 
-    protected void preamble(BaseScorer sc, Writer wr) throws IOException {
-        wf(wr, "%d\n", sc.n_var);
-        wf(wr, "# Method: %s \n", sc.getName(), max_exec_time);
-        wf(wr, "# Score function: %s \n", score.descr());
-        wf(wr, "# Max in-degree: %d \n", max_pset_size);
-    }
-
-    protected TreeMap<SIntSet, Double> pruneScores(TreeMap<SIntSet, Double> scores, double voidSk) {
-
-        TreeMap<SIntSet, Double> new_scores = new TreeMap<SIntSet, Double>();
-
-        // Pick only the best scores
-        for (SIntSet pset : RandomStuff.sortInvByValues(scores).keySet()) {
-
-            // Check when to limit scores
-            double sk = scores.get(pset);
-
-            // log.conclude(set + " " + new_sk);
-
-            // Decide to put it in the final score
-            boolean toPrune = sk < voidSk + 0.0001;
-
-            toPrune = toPrune || checkToPrune(sk, pset.set, scores);
-
-            if (!toPrune) {
-                new_scores.put(pset, sk);
-            }
-        }
-
-        new_scores.put(new SIntSet(), voidSk);
-
-        return new_scores;
-    }
-
-
+/*
     private void searchOne(int n) throws InterruptedException, UnsupportedEncodingException, FileNotFoundException {
 
         // available time
-        if (max_time > 0) {
-            max_exec_time = max_time - (System.currentTimeMillis() - start) / 1000.0;
-        } else
+        if (max_time == 0)
             max_exec_time = 60;
 
         Runnable r = getNewSearcher(n);
         Thread t = new Thread(r);
 
-        scoreWriter = new ScoreWriter(this, writer, n, n+1, verbose);
+        scoreWriter = new ScoreWriter(this, ph_scores, n, n+1, verbose);
         Thread t2 = new Thread(scoreWriter);
 
         t.start();
@@ -237,15 +156,14 @@ public abstract class BaseScorer extends Base {
         t.join();
         t2.join();
     }
+    */
 
     public void searchAll() throws InterruptedException, IOException {
 
         // available time
         if (max_time > 0) {
-            max_exec_time = max_time - (System.currentTimeMillis() - start) / 1000.0;
             // for each searcher, (total time) * (num of threads) / (num of variables)
-            max_exec_time *= thread_pool_size;
-            max_exec_time /= dat.n_var;
+            max_exec_time = (max_time * thread_pool_size) / dat.n_var;
         } else
             max_exec_time = 60;
 
@@ -263,7 +181,7 @@ public abstract class BaseScorer extends Base {
         }
 
         Thread t1 = new Thread(new Executor(thread_pool_size, 0, n_var, this));
-        scoreWriter = new ScoreWriter(this, writer, 0, n_var, verbose);
+        scoreWriter = new ScoreWriter(this, ph_scores, 0, n_var, verbose);
         Thread t2 = new Thread(scoreWriter);
 
         if (verbose > 0) {
@@ -311,7 +229,7 @@ public abstract class BaseScorer extends Base {
      */
     private String getVarName(int n) {
         if (write_names) {
-            return dat.l_s_names[n];
+            return dat.l_nm_var[n];
         } else {
             return String.valueOf(n);
         }
@@ -344,41 +262,53 @@ public abstract class BaseScorer extends Base {
         return false;
     }
 
-    public void init(String ph_jkl, int max_pset_size, int max_time, String scoreNm, Double alpha, int thread_pool_size, String choice_variables) {
-        this.ph_scores = ph_jkl;
-        this.max_time = max_time;
-        this.max_pset_size = max_pset_size;
-        this.scoreNm = scoreNm;
-        this.alpha = alpha;
-        this.thread_pool_size = thread_pool_size;
-        this.choice_variables = choice_variables;
-    }
+    @Override
+    public void init(HashMap<String, String> options) {
+        super.init(options);
 
-    public void init(String ph_jkl, int max_pset_size, int max_time, String scoreNm, Double alpha, int thread_pool_size) {
-        init(ph_jkl, max_pset_size, max_time, scoreNm, alpha, thread_pool_size, null);
-    }
+        this.ph_scores = gStr("ph_scores");
+        this.max_time = gInt("max_time", 60);
+        this.max_pset_size = gInt("max_pset_size", 6);
+        this.scoreNm = gStr("scoreNm", "bdeu");
+        this.alpha = gDouble("alpha", 1.0);
+        this.choice_variables = gStr("choice_variables", "");
 
-    public void init(String ph_jkl, int max_pset_size, int max_time, String scoreNm, Double alpha) {
-        init(ph_jkl, max_pset_size, max_time, scoreNm, alpha, 1);
+        scoreNm = scoreNm.toLowerCase().trim();
+
+        if ("bdeu".equals(scoreNm)) {
+            score = new BDeu(alpha, dat);
+        } else if ("bic".equals(scoreNm)) {
+            score = new BIC(alpha, dat);
+        } else if ("mit".equals(scoreNm)) {
+            score = new MIT(alpha, dat);
+        } else {
+            score = new BDeu(alpha, dat);
+            pf("Unknown score: %s \n", scoreNm);
+        }
     }
 
     class ScoreWriter implements Runnable {
 
-        private final Writer wr;
         private final int end;
         private final int st;
         private final int verbose;
 
+        private final Writer wr;
+
+        private Writer cacheWr;
+
         private HashMap<Integer, TreeMap<SIntSet, Double>> cache;
 
-        ScoreWriter(BaseScorer sc, Writer in_writer, int start, int end, int verbose) {
-            wr = in_writer;
+        ScoreWriter(BaseScorer sc, String ph_scores, int start, int end, int verbose) {
+
+            wr = getWriter(ph_scores);
             this.st = start;
             this.end = Math.min(end, n_var + 1);
 
             try {
                 preamble(sc, wr);
                 wr.flush();
+
             } catch (IOException e) {
                 logExp(log, e);
             }
@@ -397,9 +327,6 @@ public abstract class BaseScorer extends Base {
                 cnt = cache.containsKey(i);
 
                 if (!cnt) {
-                    if (verbose > 1) {
-                        p("waiting for... " + i);
-                    }
                     waitAsec(1000);
                     continue;
                 }
@@ -411,16 +338,7 @@ public abstract class BaseScorer extends Base {
                     pf("%d, ", i);
                 }
 
-                if (wr != null)
-                    writeScores(wr, i, cache.get(i));
-                    // else do it yourself
-                else if (ph_scores != null)
-                    try {
-                        Writer writer = getWriter(ph_scores + i + ".jkl");
-                        writeScores(writer, i, cache.get(i));
-                    } catch (Exception ex) {
-                        logExp(log, ex);
-                    }
+                writeScores(wr, i, cache.get(i));
 
                 cache.remove(i);
 
@@ -443,20 +361,48 @@ public abstract class BaseScorer extends Base {
                 cache.put(n, scores);
             }
         }
+
     }
 
-    /**
-     * Write found scores on file
-     *
-     * @param wr writer object to output data
-     */
-    private void writeScores(Writer wr, int n, TreeMap<SIntSet, Double> scores) {
+    protected TreeMap<SIntSet, Double> pruneScores(TreeMap<SIntSet, Double> scores) {
+
+        Double voidSk = scores.get(new SIntSet());
+
+        TreeMap<SIntSet, Double> new_scores = new TreeMap<SIntSet, Double>();
+
+        // Pick only the best scores
+        for (SIntSet pset : RandomStuff.sortInvByValues(scores).keySet()) {
+
+            // Check when to limit scores
+            double sk = scores.get(pset);
+
+            // log.conclude(set + " " + new_sk);
+
+            // Decide to put it in the final score
+            boolean toPrune = sk < voidSk + 0.0001;
+
+            toPrune = toPrune || checkToPrune(sk, pset.set, scores);
+
+            if (!toPrune) {
+                new_scores.put(pset, sk);
+            }
+        }
+
+        new_scores.put(new SIntSet(), voidSk);
+
+        return new_scores;
+    }
+
+    protected void writeScores(Writer wr, int n, TreeMap<SIntSet, Double> scores) {
+
+        // prune scores
+        TreeMap<SIntSet, Double> prScores = pruneScores(scores);
 
         try {
 
-            wf(wr, "%s %d\n", getVarName(n), scores.size());
+            wf(wr, "%s %d\n", getVarName(n), prScores.size());
 
-            Set<SIntSet> aux = RandomStuff.sortInvByValues(scores).keySet();
+            Set<SIntSet> aux = RandomStuff.sortInvByValues(prScores).keySet();
 
             for (SIntSet pset : aux ) {
 
@@ -465,6 +411,7 @@ public abstract class BaseScorer extends Base {
             }
 
             wr.flush();
+
         } catch (IOException e) {
             log.severe(
                     String.format("Error writing score to file: %s",
@@ -472,6 +419,9 @@ public abstract class BaseScorer extends Base {
         }
 
     }
+
+
+
 
     public abstract class BaseSearcher implements Runnable {
 
@@ -526,13 +476,11 @@ public abstract class BaseScorer extends Base {
             voidSk = score.computeScore(n);
             addScore(voidSk);
 
-            // Evaluate parents
-            evaluateParents(n);
-
             // One score
             searchSingleParents(n);
         }
 
+        /*
         private void evaluateParents(int n) {
 
             if (monovalue(n)) {
@@ -540,7 +488,7 @@ public abstract class BaseScorer extends Base {
                 return;
             }
 
-            MutualInformation mi = new MutualInformation(dat);
+            // MutualInformation mi = new MutualInformation(dat, 0.999, 10);
             TIntArrayList l = new TIntArrayList();
 
             for (int n2 = 0; n2 < n_var; n2++) {
@@ -552,8 +500,10 @@ public abstract class BaseScorer extends Base {
                 if (monovalue(n2))
                     continue;
 
+
                 if (mi.condInd(n, n2))
                      continue;
+
 
                 l.add(n2);
             }
@@ -561,6 +511,7 @@ public abstract class BaseScorer extends Base {
             parents = l.toArray();
 
         }
+        */
 
         private boolean monovalue(int n2) {
             for (int v = 0; v < dat.l_n_arity[n2]; v++) {
@@ -574,14 +525,11 @@ public abstract class BaseScorer extends Base {
 
             oneScores = new TIntDoubleHashMap();
 
-            for (int n2: parents) {
-                double sk = score.computeScore(n, n2);
-
-                oneScores.put(n2, sk);
-                addScore(new int[] {n2}, sk);
+            if (monovalue(n)) {
+                parents = new int[0];
+                return;
             }
 
-            /*
             double worstQueueScore = 0;
 
             TreeSet<OpenParentSet> open = new TreeSet<OpenParentSet>();
@@ -592,6 +540,10 @@ public abstract class BaseScorer extends Base {
                     continue;
                 }
 
+                if (monovalue(n2))
+                    continue;
+
+                double oneSk = score.computeScore(n, n2);
 
                 boolean toDropWorst = false;
 
@@ -617,20 +569,20 @@ public abstract class BaseScorer extends Base {
 
                 open.add(new OpenParentSet(null, n2, oneSk));
             }
-
+            TIntArrayList l = new TIntArrayList(open.size());
             for (OpenParentSet p : open) {
                 oneScores.put(p.p2, p.sk);
                 addScore(p.p2, p.sk);
+            l.add(p.p2);
             }
-*/
+
+            parents = l.toArray();
+            Arrays.sort(parents);
         }
 
         protected void conclude() {
 
-            // prune scores
-            scores = pruneScores(scores, voidSk);
-
-            // If parent writer is ready, graph there
+            // If parent writer is ready, write there
             if (scoreWriter != null) {
                 scoreWriter.add(n, scores);
             }
@@ -644,6 +596,13 @@ public abstract class BaseScorer extends Base {
         }
 
 
+    }
+
+    protected void preamble(BaseScorer sc, Writer wr) throws IOException {
+        wf(wr, "%d\n", sc.n_var);
+        wf(wr, "# Method: %s \n", sc.getName(), max_exec_time);
+        wf(wr, "# Score function: %s \n", score.descr());
+        wf(wr, "# Max in-degree: %d \n", max_pset_size);
     }
 }
 

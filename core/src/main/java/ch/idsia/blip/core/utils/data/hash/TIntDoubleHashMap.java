@@ -205,7 +205,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
     /** {@inheritDoc} */
     public void putAll( Map<? extends Integer, ? extends Double> map ) {
         ensureCapacity( map.size() );
-        // could optimize this for cases when map instanceof THashMap
+        // could winasobs this for cases when map instanceof THashMap
         for ( Map.Entry<? extends Integer, ? extends Double> entry : map.entrySet() ) {
             this.put(entry.getKey(), entry.getValue());
         }

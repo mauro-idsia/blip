@@ -52,7 +52,7 @@ public abstract class ParLe extends Base {
      conv = new int[bn.n_var];
 
      for (int thread = 0; thread < dat.n_var; thread++) {
-     String nm = clean(dat.l_s_names[thread]);
+     String nm = clean(dat.l_nm_var[thread]);
      int index = -1;
 
      for (int tw = 0; tw < bn.n_var; tw++) {
@@ -87,7 +87,7 @@ public abstract class ParLe extends Base {
         int ix = 0;
 
         for (int i = 0; i < dat.n_var; i++) {
-            String s = dat.l_s_names[i];
+            String s = dat.l_nm_var[i];
 
             bn.l_nm_var[i] = s;
 
@@ -111,16 +111,20 @@ public abstract class ParLe extends Base {
 
     protected abstract double[] computePotentialsSimple(int i);
 
-    int[] computeCardinalities(int var, int[] parents, int j) {
+    protected int[] computeCardinalities(int var, int[] parents, int j) {
+        return computeCardinalities(var, parents, j, dat.row_values);
+    }
+
+    protected int[] computeCardinalities(int var, int[] parents, int j, int[][][] rows) {
 
         int n = j;
 
-        int[] parents_var = getParentsConf(parents, n);
+        int[] parents_var = getParentsConf(parents, n, rows);
 
         int ar = bn.arity(var);
         int[] n_ij = new int[ar];
 
-        int[][] vl_var = this.dat.row_values[var];
+        int[][] vl_var = rows[var];
 
         // System.out.println(var + " ... " + ar + " .... " + vl_var.length);
         if (verbose > 1 && parents_var.length < 50 )
@@ -137,6 +141,10 @@ public abstract class ParLe extends Base {
     }
 
     protected int[] getParentsConf(int[] parents, int n) {
+     return getParentsConf(parents, n, dat.row_values);
+    }
+
+    protected int[] getParentsConf(int[] parents, int n, int[][][] rows) {
         // Get a parents configuration
         int[] parents_var = null;
 
@@ -152,7 +160,7 @@ public abstract class ParLe extends Base {
             // Update set containing sample rows for the chosen configuration
             int[] par_var = null;
             try {
-                par_var = dat.row_values[par][val];
+                par_var = rows[par][val];
             } catch (ArrayIndexOutOfBoundsException ex) {
                 p("cia");
             }

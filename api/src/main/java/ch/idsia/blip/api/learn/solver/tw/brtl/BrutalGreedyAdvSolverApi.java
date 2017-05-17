@@ -29,10 +29,4 @@ public class BrutalGreedyAdvSolverApi extends TwSolverApi {
     protected ScoreSolver getSolver() {
         return new BrutalSolver();
     }
-
-    @Override
-    public void exec() throws Exception {
-        ((BrutalSolver) solver).initAdv(dat_path, sampler, searcher);
-        super.exec();
-    }
 }

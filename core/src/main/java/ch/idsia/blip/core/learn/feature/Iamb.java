@@ -59,7 +59,7 @@ public abstract class Iamb {
 
                 double f = computeCMI(x, y, CMB);
 
-                // pf("m(%s;%s|%s): %.5f \n", dat.l_s_names[x], dat.l_s_names[y], fgh(CMB.toArray()), f);
+                // pf("m(%s;%s|%s): %.5f \n", dat.l_nm_var[x], dat.l_nm_var[y], fgh(CMB.toArray()), f);
                 /*
                  pf("%d - %d - %s -> mi: %.5f \n", x, y, CMB, f);
                  pf("%.5f, %.5f, %.5f \n", weight.computeHCond(y, CMB.toArray()),
@@ -80,7 +80,7 @@ public abstract class Iamb {
                 CMB = expandArray(CMB, best_y);
 
                 if (verb)
-                    pf("Adding %s (t: %.5f, mi: %.5f) - %s \n", dat.l_s_names[best_y], alpha, best_f, Arrays.toString(CMB));
+                    pf("Adding %s (t: %.5f, mi: %.5f) - %s \n", dat.l_nm_var[best_y], alpha, best_f, Arrays.toString(CMB));
 
             } else {
                 change = false;
@@ -135,7 +135,7 @@ public abstract class Iamb {
         List<String> g = new ArrayList<String>();
 
         for (int e: s) {
-            g.add(dat.l_s_names[e]);
+            g.add(dat.l_nm_var[e]);
         }
         return g;
     }

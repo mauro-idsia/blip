@@ -6,7 +6,7 @@ public class DataSet {
     public int n_var;
 
     // List of names of variables
-    public String[] l_s_names;
+    public String[] l_nm_var;
 
     // List of arities of variables
     public int[] l_n_arity;
@@ -20,4 +20,6 @@ public class DataSet {
     // For each variable with missing data, array of row with missing value
     public int[][] missing_l;
 
+    // Names of the states for each variable
+    public String[][] l_nm_states;
 }

@@ -5,7 +5,7 @@ import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.src.ScoreSearcher;
 import ch.idsia.blip.core.utils.ParentSet;
 
-import java.util.BitSet;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
 
 
 /**
@@ -13,45 +13,57 @@ import java.util.BitSet;
  */
 public class ObsSearcher extends ScoreSearcher {
 
+    protected boolean[] voidB;
+    protected boolean[] fullB;
+
+    protected boolean[] forbidden;
+
     public ObsSearcher(BaseSolver solver) {
         super(solver);
     }
 
-    /**
-         * Find the best combination given the order (second way, koller's)
-         *
-         * @param vars     order of the variable
-         */
+    // Find the best combination given the order (second way, koller's)
     @Override
-        public ParentSet[] search(int[] vars) {
-            prepare();
-            last_sk = 0;
+    public ParentSet[] search() {
+        vars = smp.sample();
 
-            BitSet forbidden = new BitSet(n_var);
+        return obs(vars);
+    }
 
-            for (int v : vars) {
+    public ParentSet[] obs(int[] vars) {
+        last_sk = 0;
 
-                for (ParentSet pSet : m_scores[v]) {
-                    if (acceptable(pSet.parents, forbidden)) {
-                        last_str[v] = pSet;
-                        last_sk += pSet.sk;
-                        break;
-                    }
+        cloneArray(voidB, forbidden);
+
+        for (int v : vars) {
+
+            for (ParentSet pSet: m_scores[v]) {
+                if (acceptable(pSet.parents, forbidden)) {
+                    last_str[v] = pSet;
+                    last_sk += pSet.sk;
+                    break;
                 }
-
-                forbidden.set(v);
             }
 
-        return last_str;
+            forbidden[v] = true;
         }
 
-    /**
-     * Clear structure
-     */
-    protected void prepare() {
+        return last_str;
+    }
+
+    @Override
+    public void init(ParentSet[][] scores, int thread) {
+        super.init(scores, thread);
+
         last_str = new ParentSet[n_var];
+
+        forbidden = new boolean[n_var];
+
+        voidB = new boolean[n_var];
+        fullB = new boolean[n_var];
         for (int i = 0; i < n_var; i++) {
-            last_str[i] = null;
+            voidB[i] = false;
+            fullB[i] = true;
         }
     }
 
@@ -62,9 +74,9 @@ public class ObsSearcher extends ScoreSearcher {
      * @param forbidden denied variables
      * @return if the parent set is acceptable (doesn't contains forbidden variables)
      */
-    protected boolean acceptable(int[] parents, BitSet forbidden) {
+    protected boolean acceptable(int[] parents, boolean[] forbidden) {
         for (int p : parents) {
-            if (forbidden.get(p)) {
+            if (forbidden[p]) {
                 return false;
             }
         }

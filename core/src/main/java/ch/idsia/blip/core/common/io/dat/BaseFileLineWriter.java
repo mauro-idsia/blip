@@ -3,8 +3,8 @@ package ch.idsia.blip.core.common.io.dat;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 
 /**
@@ -16,34 +16,32 @@ public abstract class BaseFileLineWriter {
     protected final BayesianNetwork bn;
 
     // Writer for data
-    protected BufferedWriter wr;
+    protected Writer wr;
 
     /**
      * Default constructor
      *
-     * @param in_bn        network to graph about
-     * @param in_rd_writer writer for data
+     * @param bn        network to graph about
+     * @param wr writer for data
      */
-    public BaseFileLineWriter(BayesianNetwork in_bn, BufferedWriter in_rd_writer) {
-        wr = in_rd_writer;
-        bn = in_bn;
+    public BaseFileLineWriter(BayesianNetwork bn, Writer wr) {
+        this.wr = wr;
+        this.bn = bn;
     }
 
     /**
      * Write metadata in the file.
      *
-     * @param n_sample number of datapoints
      * @throws IOException if there is a problem in writing.
      */
-    public abstract void writeMetaData(int n_sample) throws IOException;
+    public abstract void writeMetaData() throws IOException;
     /**
      * Write the next line of sample
      *
-     * @param n      counter
      * @param sample sample to graph (value for each variable)
      * @throws IOException if there is a problem writing
      */
-    public abstract void next(int n, short[] sample) throws IOException;
+    public abstract void next(short[] sample) throws IOException;
 
     /**
      * Close the writer structure

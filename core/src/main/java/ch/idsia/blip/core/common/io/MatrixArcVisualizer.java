@@ -41,7 +41,7 @@ public class MatrixArcVisualizer {
         dat = new DatFileLineReader(ph_dat);
         dat.readMetaData();
 
-        // Read arc matrix, prepare undirected
+        // Read arc matrix, init undirected
         BufferedReader rd = new BufferedReader(new FileReader(ph_mtx));
         String[] aux = rd.readLine().split(" ");
         int n_var = Integer.valueOf(aux[0]);

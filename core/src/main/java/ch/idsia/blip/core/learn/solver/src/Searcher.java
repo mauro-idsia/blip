@@ -7,7 +7,7 @@ import ch.idsia.blip.core.utils.ParentSet;
  */
 public interface Searcher {
 
-    ParentSet[] search(int[] vars) ;
+    ParentSet[] search() ;
 
     void init(ParentSet[][] scores, int thread);
 }

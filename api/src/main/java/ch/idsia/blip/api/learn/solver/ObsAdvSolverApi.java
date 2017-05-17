@@ -30,10 +30,4 @@ public class ObsAdvSolverApi extends ObsSolverApi {
     protected ScoreSolver getSolver() {
         return new ObsSolver();
     }
-
-    @Override
-    public void exec() throws Exception {
-        ((ObsSolver) solver).initAdv(dat_path, sampler, searcher);
-        super.exec();
-    }
 }

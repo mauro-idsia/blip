@@ -52,7 +52,7 @@ public class IambMi extends Iamb {
         List<String> g = new ArrayList<String>();
 
         for (int e: s) {
-            g.add(dat.l_s_names[e]);
+            g.add(dat.l_nm_var[e]);
         }
         return g;
     }

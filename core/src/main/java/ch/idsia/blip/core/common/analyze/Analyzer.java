@@ -38,6 +38,10 @@ public class Analyzer {
 //        return d;
     }
 
+    public int[][] computeParentSetValues(int[] set_p) {
+        return computeParentSetValues(set_p, dat.row_values);
+    }
+
     /**
      * Compute the set of datapoints indexes for each parent configuration.
      * <p/>
@@ -47,7 +51,7 @@ public class Analyzer {
      * @param set_p parents to consider
      * @return for each configurations of the parents, array of datapoints indexes where that configuration appears
      */
-    public int[][] computeParentSetValues(int[] set_p) {
+    public int[][] computeParentSetValues(int[] set_p, int[][][] rows) {
 
         int p_arity = 1;
 
@@ -75,7 +79,7 @@ public class Analyzer {
 
                 // Update set containing sample rows for the chosen configuration
                 // System.out.printf("%d (%d) - %d - %d\n", p,  dat.l_n_arity[p], val, dat.row_values[p].length);
-                int[] par_var = dat.row_values[p][val];
+                int[] par_var = rows[p][val];
 
                 if (values == null) {
                     values = par_var;

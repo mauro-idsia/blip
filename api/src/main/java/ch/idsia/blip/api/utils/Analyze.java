@@ -28,7 +28,7 @@ public class Analyze extends Api {
 
         pf("Number of nodes: %d \n", bn.n_var);
         pf("Number of edges: %d \n", bn.numEdges());
-        pf("Check: is acyclic? %b \n", bn.isAcyclic());
+        pf("Check: is acyclic? %pb \n", bn.isAcyclic());
         pf("Check treediwth: %d \n", bn.treeWidth());
     }
 }

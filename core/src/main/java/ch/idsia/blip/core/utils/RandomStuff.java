@@ -8,6 +8,7 @@ import ch.idsia.blip.core.common.io.ScoreReader;
 import ch.idsia.blip.core.common.io.bn.*;
 import ch.idsia.blip.core.common.io.dat.*;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
+import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 
 import java.io.*;
 import java.util.*;
@@ -290,6 +291,12 @@ public class RandomStuff {
         }
     }
 
+
+    public static  DataSet getDataSet(String dat_path) {
+        return getDataSet(dat_path, false);
+    }
+
+
     /**
      * Get a new data file reader from the argument
      *
@@ -298,7 +305,7 @@ public class RandomStuff {
      * @throws IncorrectCallException        file path not valid
      * @throws java.io.FileNotFoundException data file not found
      */
-    public static DataSet getDataSet(String ph) {
+    public static DataSet getDataSet(String ph, boolean readMissing) {
 
         try {
             BufferedReader reader;
@@ -314,12 +321,19 @@ public class RandomStuff {
                         "No valid data point path provided: " + ph);
             }
 
+            DatFileReader dr;
+
             if (ph.endsWith(".data"))
-                return new DataFileReader(ph).read();
-            else if (ph.endsWith(".dat"))
-                return new DatFileReader(ph).read();
+                dr = new DataFileReader();
+            else if (ph.endsWith(".dat") || ph.equals("dat"))
+                dr =  new DatFileReader();
+            else if (ph.endsWith(".arff"))
+                dr =  new ArffFileReader();
             else
-                return new AnyFileReader(ph).read();
+                dr =  new AnyFileReader();
+
+            dr.init(ph, readMissing);
+            return dr.read();
         } catch (Exception ex) {
             logExp(log, ex);
         }
@@ -335,6 +349,8 @@ public class RandomStuff {
                 dWr =  new DataFileWriter();
             else if (ph.endsWith(".dat"))
                 dWr =  new DatFileWriter();
+            else if (ph.endsWith(".arff"))
+                dWr =  new ArffFileWriter();
 
             dWr.go(dat, ph);
         } catch (Exception ex) {
@@ -363,6 +379,8 @@ public class RandomStuff {
                 return new DataFileLineReader(ph);
             else if (ph.endsWith(".dat"))
                 return new DatFileLineReader(ph);
+            else if (ph.endsWith(".arff"))
+                return new ArffFileLineReader(ph);
             else
                 return new AnyFileLineReader(ph);
         } catch (Exception ex) {
@@ -388,7 +406,10 @@ public class RandomStuff {
                         "No valid data point path provided: " + ph);
             }
 
-            return new ArffFileReader(ph).read();
+            ArffFileReader rd = new ArffFileReader();
+            rd.init(ph, true);
+
+            return rd.read();
         } catch (Exception ex) {
             logExp(log, ex);
         }
@@ -405,16 +426,21 @@ public class RandomStuff {
      * @throws java.io.UnsupportedEncodingException error in stream creation
      * @throws java.io.FileNotFoundException        file path not valid
      */
-    public static Writer getWriter(String ph)
-            throws UnsupportedEncodingException, FileNotFoundException {
-        Writer writer;
+    public static Writer getWriter(String ph) {
+        Writer writer = null;
 
-        if (ph != null) {
-            writer = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(ph), "utf-8"));
-        } else {
-            writer = new BufferedWriter(new OutputStreamWriter(System.out));
+        try {
+
+            if (ph != null) {
+                writer = new BufferedWriter(
+                        new OutputStreamWriter(new FileOutputStream(ph), "utf-8"));
+            } else {
+                writer = new BufferedWriter(new OutputStreamWriter(System.out));
+            }
+        } catch (Exception e) {
+            logExp(e);
         }
+
         return writer;
     }
 
@@ -621,14 +647,14 @@ public class RandomStuff {
         }
 
         // read any errors from the attempted command
-        System.out.printf("errors: ");
+        // System.out.printf("errors: ");
         StringBuilder st = new StringBuilder();
         while ((s = stdError.readLine()) != null) {
             st.append(s);
         }
 
         if (st.length() > 0)
-           f("errors: %s \n", st.toString());
+           pf("errors: %s \n", st.toString());
     }
 
     public static void pf(String format, Object... args) {
@@ -815,5 +841,72 @@ else
         }
 
         return true;
+    }
+
+    public static Double ijgp(String bn_path, short[] sample) throws IOException, InterruptedException {
+
+        String evid_path = bn_path + ".evid";
+
+        // Write evidence
+        PrintWriter w = new PrintWriter(evid_path, "UTF-8");
+        // wf(w, "/* Evidence */ \n");
+        wf(w, "%d ", sample.length);
+        for (int j = 0; j < sample.length; j++) {
+            wf(w, "%d %d ", j, sample[j]);
+        }
+        w.close();
+
+        return cmpIjgp(bn_path, evid_path);
+    }
+
+    public static Double ijgp(String bn_path, TIntIntHashMap a) throws IOException, InterruptedException {
+
+        String evid_path = bn_path + ".evid";
+
+        // Write evidence
+        PrintWriter w = new PrintWriter(evid_path, "UTF-8");
+        // wf(w, "/* Evidence */ \n");
+        wf(w, "%d ", a.size());
+        int[] keys = a.keySet().toArray();
+        Arrays.sort(keys);
+        for (int k: keys)
+            wf(w, "%d %d ", k, a.get(k));
+        w.close();
+
+        return cmpIjgp(bn_path, evid_path);
+    }
+
+    private static Double cmpIjgp(String bn_path, String evid_path) throws IOException, InterruptedException {
+        String r = f("./ijgp  %s %s 10 PR", bn_path, evid_path);
+        String p = System.getProperty("user.home") + "/Tools";
+        Process proc = Runtime.getRuntime().exec(r, new String[0], new File(p));
+        ArrayList<String> out = exec(proc);
+
+        // To close them
+        proc.getInputStream().close();
+        proc.getOutputStream().close();
+        proc.getErrorStream().close();
+
+        String bn_name = new File(bn_path).getName();
+
+        String res = f("%s/%s.PR", p, bn_name);
+        BufferedReader rd = getReader(res);
+        rd.readLine();
+        bn_name= rd.readLine();
+        rd.close();
+
+        double v = 0;
+        try {
+            v = Double.valueOf(bn_name);
+        } catch (Exception e) {
+            logExp(log, e);
+        }
+
+        new File(res).delete();
+        return v;
+    }
+
+    public static void cloneStr(ParentSet[] a, ParentSet[] b) {
+        System.arraycopy(a, 0, b, 0, a.length);
     }
 }

@@ -15,10 +15,6 @@ public class SeqScorer extends BaseScorer {
 
     private static final Logger log = Logger.getLogger(SeqScorer.class.getName());
 
-    protected SeqScorer(int maxExec) {
-        super(maxExec);
-    }
-
     @Override
     protected String getName() {
         return "Sequential selection";
@@ -116,7 +112,8 @@ public class SeqScorer extends BaseScorer {
 
             }
 
-            logf(2, "ending with: %d, elapsed: %.2f, num evaluated %d",
+            if (verbose > 2)
+                logf("ending with: %d, elapsed: %.2f, num evaluated %d",
                     n, m_elapsed, score.numEvaluated);
 
          conclude();

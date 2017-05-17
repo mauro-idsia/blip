@@ -62,6 +62,7 @@ public class ParLeBayes extends ParLe {
         return potent;
     }
 
+
     public double[] computePotentialsSimple(int var) {
         int ar = bn.arity(var);
         double[] potent = new double[ar];

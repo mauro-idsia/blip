@@ -43,7 +43,7 @@ public abstract class SkelSolver extends BaseSolver {
     }
 
     @Override
-    protected Sampler getSampler() {
+    public Sampler getSampler() {
         return new SkelSampler(skel, this.rand);
     }
 
@@ -70,7 +70,7 @@ public abstract class SkelSolver extends BaseSolver {
                 best_str_s.add(str);
 
                 if (res_path != null) {
-                    best_str = str;
+                    cloneStr(str, best_str);
                     writeGraph(f(
                             "%s-%d-%d",
                             res_path,
@@ -85,8 +85,8 @@ public abstract class SkelSolver extends BaseSolver {
 
     private String getDescr(ParentSet[] str) {
         StringBuilder b = new StringBuilder();
-        for (ParentSet p: str) {
-            b.append(Arrays.toString(p.parents));
+        for (int v = 0; v < str.length; v++) {
+            b.append(Arrays.toString(str[v].parents));
         }
         return b.toString();
     }

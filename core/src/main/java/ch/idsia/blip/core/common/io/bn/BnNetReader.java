@@ -171,41 +171,7 @@ public class BnNetReader {
 
         BayesianNetwork b =  bn.toBn();
 
-        for (int i = 0; i < bn.n_var; i++) {
-            reorganizeCPT(b, i);
-        }
-
         return b;
-    }
-
-    private void reorganizeCPT(BayesianNetwork bn, int v) {
-        double[] orig_probs = bn.potentials(v);
-        double[] new_probs = new double[orig_probs.length];
-
-        int[] new_ps = bn.parents(v);
-
-        int[] orig_ps = new int[new_ps.length + 1];
-        cloneArray(new_ps, orig_ps);
-        orig_ps[new_ps.length] = v;
-        Arrays.sort(new_ps);
-        bn.setParents(v, new_ps);
-
-        int[] aux_ps = new int[new_ps.length + 1];
-        cloneArray(new_ps, aux_ps);
-        aux_ps[new_ps.length] = v;
-
-
-        for (int i = 0; i < orig_probs.length; i++) {
-            short[] sample = bn.getAssignmentFromIndex(orig_ps, bn.n_var, i);
-            int new_i = bn.potentialIndex(v, sample);
-            new_i *= bn.arity(v);
-            new_i +=  sample[v];
-           //  short[] sample2 = bn.getAssignmentFromIndex(aux_ps, bn.n_var, i);
-           //  pf("%d -> %d \n", i, new_i);
-            new_probs[new_i] = orig_probs[i];
-        }
-
-        bn.setPotential(v, new_probs);
     }
 
     /**

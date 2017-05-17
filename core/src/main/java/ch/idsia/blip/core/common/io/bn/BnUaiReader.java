@@ -93,7 +93,8 @@ public class BnUaiReader {
                     pf("SUM NOT 1.0: %s %.2f \n", Arrays.toString(ar), cnt);
             }
 
-            bn.l_potential_var[i]=  pt;
+            bn.l_potential_var[i] =pt;
+
         }
     }
 

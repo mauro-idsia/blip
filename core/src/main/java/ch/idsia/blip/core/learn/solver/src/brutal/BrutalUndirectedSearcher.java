@@ -2,6 +2,7 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.common.arcs.Und;
 import ch.idsia.blip.core.learn.solver.brtl.BrutalUndirectedSolver;
+import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
@@ -28,6 +29,8 @@ public class BrutalUndirectedSearcher implements Searcher {
     protected final int n_var;
     protected final int thread;
 
+    private final Sampler smp;
+
     protected int[] vars;
 
     protected Und new_und;
@@ -52,6 +55,7 @@ public class BrutalUndirectedSearcher implements Searcher {
             this.thread = solver.thread;
             solver.thread += 1;
 
+            this.smp = solver.getSampler();
     }
 
     @Override
@@ -61,9 +65,9 @@ public class BrutalUndirectedSearcher implements Searcher {
 
     // Greedily optimize a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        vars = smp.sample();
 
         start = System.currentTimeMillis();
         cnt = 1;

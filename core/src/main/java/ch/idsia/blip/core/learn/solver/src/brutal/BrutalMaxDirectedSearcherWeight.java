@@ -11,9 +11,9 @@ import ch.idsia.blip.core.utils.exp.CyclicGraphException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.f;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
 
 public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
@@ -59,9 +59,9 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
 
     // Maximize a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        this.vars = smp.sample();
 
         // clear all
         clear();

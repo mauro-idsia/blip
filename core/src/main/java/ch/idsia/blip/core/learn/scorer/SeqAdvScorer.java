@@ -22,10 +22,6 @@ public class SeqAdvScorer extends BaseScorer {
     private static final Logger log = Logger.getLogger(
             SeqAdvScorer.class.getName());
 
-    private SeqAdvScorer(int maxExec) {
-        super(maxExec);
-    }
-
     @Override
     protected String getName() {
         return "Sequential Advanced selection";

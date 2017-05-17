@@ -1,13 +1,14 @@
 package ch.idsia.blip.core.learn.solver.src;
 
 import ch.idsia.blip.core.learn.solver.BaseSolver;
+import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.utils.ParentSet;
 
 public abstract class ScoreSearcher implements Searcher {
 
     protected final BaseSolver solver;
 
-    protected ParentSet[][] m_scores;
+    public ParentSet[][] m_scores;
 
     protected int n_var;
 
@@ -17,14 +18,18 @@ public abstract class ScoreSearcher implements Searcher {
 
     public double last_sk;
 
-    protected ParentSet[] last_str;
+    public ParentSet[] last_str;
+
+    public Sampler smp;
+
+    public int[] vars;
 
     public ScoreSearcher(BaseSolver solver) {
         this.solver = solver;
     }
 
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
         return new ParentSet[0];
     }
 
@@ -34,6 +39,11 @@ public abstract class ScoreSearcher implements Searcher {
 
     @Override
     public void init(ParentSet[][] scores, int thread) {
+
+        smp = solver.getSampler();
+
+        vars = new int[n_var];
+
         m_scores = scores;
         this.n_var = scores.length;
 
@@ -50,8 +60,8 @@ public abstract class ScoreSearcher implements Searcher {
     protected double checkSk(ParentSet[] new_str) {
         double check = 0.0;
 
-        for (ParentSet p : new_str) {
-            if (p!= null)
+        for (ParentSet p: new_str) {
+            if (p != null)
                 check += p.sk;
         }
         return check;
@@ -63,6 +73,10 @@ public abstract class ScoreSearcher implements Searcher {
 
     protected int randInt(int a, int b) {
         return solver.randInt(a, b);
+    }
+
+    public int randInt(int n) {
+        return solver.randInt(0, n);
     }
 
 }

@@ -31,10 +31,6 @@ public class SeqNewScorer extends SeqScorer {
     Object lock2 = new Object();
     public Writer wr;
 
-    private SeqNewScorer(int maxExec) {
-        super(maxExec);
-    }
-
     @Override
     protected String getName() {
         return "New sequential selection";
@@ -45,8 +41,8 @@ public class SeqNewScorer extends SeqScorer {
     }
 
     @Override
-    public void prepareSearch() throws Exception {
-        super.prepareSearch();
+    public void prepare() {
+        super.prepare();
 
         def_cnt += n_var * (n_var -1);
     }

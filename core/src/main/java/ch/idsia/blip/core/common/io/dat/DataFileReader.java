@@ -3,7 +3,6 @@ package ch.idsia.blip.core.common.io.dat;
 
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +20,6 @@ public class DataFileReader extends DatFileReader {
     private static final Logger log = Logger.getLogger(
             DatFileLineReader.class.getName());
 
-
-    public DataFileReader(String s) throws FileNotFoundException {
-        super(s);
-    }
-
     @Override
     protected String[] getSplit(String ln) {
         return ln.split(",");
@@ -36,9 +30,9 @@ public class DataFileReader extends DatFileReader {
 
         nextLine = rd_dat.readLine();
         dSet.n_var = getSplit(nextLine).length;
-        dSet.l_s_names = new String[dSet.n_var];
+        dSet.l_nm_var = new String[dSet.n_var];
         for (int i = 0; i < dSet.n_var; i++) {
-            dSet.l_s_names[i] = f("N%d", i);
+            dSet.l_nm_var[i] = f("N%d", i);
         }
 
         dSet.n_datapoints = 0;

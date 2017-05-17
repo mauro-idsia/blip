@@ -66,8 +66,8 @@ execute(dr.read());
             if (skeleton.check(i)) {
                 int[] v = skeleton.r_index(i);
 
-                System.out.printf("%s - %s \n", dat.l_s_names[v[0]],
-                        dat.l_s_names[v[1]]);
+                System.out.printf("%s - %s \n", dat.l_nm_var[v[0]],
+                        dat.l_nm_var[v[1]]);
             }
         }
 
@@ -184,14 +184,14 @@ execute(dr.read());
     }
 
     private String h(int s) {
-        return dat.l_s_names[s];
+        return dat.l_nm_var[s];
     }
 
     private List<String> h(int[] s) {
         List<String> g = new ArrayList<String>();
 
         for (int e: s) {
-            g.add(dat.l_s_names[e]);
+            g.add(dat.l_nm_var[e]);
         }
         return g;
     }

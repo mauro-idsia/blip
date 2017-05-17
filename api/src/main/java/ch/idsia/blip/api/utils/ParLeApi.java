@@ -44,7 +44,7 @@ public class ParLeApi extends Api {
     }
 
     /**
-     * Get the correct value for the algorithm to use from a description.
+     * Get the correct value for the algorithm to use from pa description.
      *
      * @param t description of the method
      * @return correct method enum

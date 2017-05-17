@@ -27,18 +27,13 @@ public class DatFileReader implements Closeable {
 
     public String path;
 
-    private boolean done = false;
+    protected boolean done = false;
     
     protected DataSet dSet;
 
-    public boolean readMissing = false;
-
     protected String nextLine;
 
-    public DatFileReader(String s) throws FileNotFoundException {
-        this.rd_dat = new BufferedReader(new FileReader(s));
-        this.path = s;
-    }
+    protected boolean readMissing;
 
     static public int[][] clone(int[][] a) {
         int[][] b = new int[a.length][];
@@ -73,7 +68,7 @@ public class DatFileReader implements Closeable {
             if ("".equals(line))
                 continue;
 
-            if (readMissing && line.contains("?"))
+            if (!readMissing && line.contains("?"))
                 continue;
 
             sp = getSplit(line);
@@ -162,8 +157,8 @@ public class DatFileReader implements Closeable {
 
         // Read names
         nextLine = rd_dat.readLine();
-        dSet.l_s_names = getSplit(nextLine);
-        dSet.n_var = dSet.l_s_names.length;
+        dSet.l_nm_var = getSplit(nextLine);
+        dSet.n_var = dSet.l_nm_var.length;
 
         // Read arities
         nextLine = rd_dat.readLine();
@@ -180,5 +175,15 @@ public class DatFileReader implements Closeable {
         nextLine = rd_dat.readLine();
 
         dSet.n_datapoints = 0;
+    }
+
+    public void init(String ph) throws FileNotFoundException {
+        init(ph, false);
+    }
+
+    public void init(String ph, boolean readMissing) throws FileNotFoundException {
+        this.rd_dat = new BufferedReader(new FileReader(ph));
+        this.path = ph;
+        this.readMissing = readMissing;
     }
 }

@@ -18,7 +18,7 @@ public class BDeu extends Score {
     /**
      * Equivalent sample size
      */
-    private double alpha = 10;
+    protected double alpha = 10;
 
     /**
      * Default constructor.
@@ -45,7 +45,8 @@ public class BDeu extends Score {
                 - Gamma.lgamma(a_ij + dat.n_datapoints);
 
         for (int v = 0; v < arity; v++) {
-            skore += Gamma.lgamma(a_ijk + dat.row_values[n][v].length)
+            int weight = dat.row_values[n][v].length;
+            skore += Gamma.lgamma(a_ijk + weight)
                     - Gamma.lgamma(a_ijk);
         }
         return skore;
@@ -81,7 +82,14 @@ public class BDeu extends Score {
         skore += (Gamma.lgamma(a_ij) * p_arity)
                 - (Gamma.lgamma(a_ijk) * p_arity * arity);
 
+        /*
         int i = 0;
+
+        boolean gh = false;
+        if (n==6 && Arrays.toString(set_p).equals("[0, 3, 5]"))
+            gh = true;
+        */
+
 
         for (int p_v = 0; p_v < p_values.length; p_v++) {
 
@@ -94,13 +102,25 @@ public class BDeu extends Score {
 
             int valcount;
 
+            /*
+            if (gh) {
+                p("");
+                p(p_values[p_v].length);
+            }
+            */
+
             for (int v = 0; v < arity; v++) {
                 valcount = ArrayUtils.intersectN(dat.row_values[n][v], p_values[p_v]);
 
                 skore += Gamma.lgamma(a_ijk + valcount);
+
+                /*
+                if (gh)
+                    p(valcount);
+                    */
             }
 
-            i++;
+
         }
 
         // System.out.println(p_arity + " " + thread + " " + p_values.length);

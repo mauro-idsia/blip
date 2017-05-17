@@ -29,11 +29,11 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
         already = new boolean[n_var];
     }
 
-    // Greedily optimize a network!
+    // Greedily winasobs a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        vars = smp.sample();
 
         // clear all
         clear();
@@ -100,7 +100,7 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
             int v = vars[j];
 
             // get best parent set for the variable
-            ParentSet best = m_scores[v][0];
+            ParentSet best =m_scores[v][0];
 
             // check if there are already some handlers
             TreeSet<SIntSet> good = evaluate(best);

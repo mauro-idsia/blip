@@ -28,7 +28,7 @@ public class ObsGreedySearcher extends ObsSearcher {
             // New best parent set
             ParentSet best_pset = null;
 
-            BitSet forbidden = new BitSet(n_var);
+            forbidden = new boolean[n_var];
 
             for (int i = 0; i < (n_var - 1); i++) {
 
@@ -46,7 +46,7 @@ public class ObsGreedySearcher extends ObsSearcher {
                     // If this best parent set contains the next variable in the order
                     if (domains.get(next)) {
                         // then it is not eligible for the switch
-                        forbidden.set(var);
+                        forbidden[var] = true;
                         break;
                     }
 
@@ -82,7 +82,7 @@ public class ObsGreedySearcher extends ObsSearcher {
                     }
                 }
 
-                forbidden.set(var);
+                forbidden[var] = true;
             }
 
             if (best_i == -1) {
@@ -103,15 +103,18 @@ public class ObsGreedySearcher extends ObsSearcher {
 
         }
 
+    
+        @Override
+        public ParentSet[] search() {
 
-    @Override
-    public ParentSet[] search(int[] vars) {
+            vars = smp.sample();
 
-        if (solver.verbose > 2)
+
+            if (solver.verbose > 2)
             solver.log("going! \n");
 
         // Find initial structure!
-        super.search(vars);
+        super.search();
 
         if (solver.verbose > 2) {
             solver.logf("Initial: %.5f (check: %.5f) \n",

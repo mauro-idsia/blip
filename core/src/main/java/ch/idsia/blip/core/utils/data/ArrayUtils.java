@@ -39,33 +39,42 @@ public class ArrayUtils {
         return s / nums.length;
     }
 
-    public static int[] union(int[] dom1, int[] dom2) {
+    public static int[] union(int[] arr1, int[] arr2) {
 
-        int[] aux = new int[dom1.length + dom2.length];
         int i = 0;
         int j = 0;
-        int k = 0;
+        int n1 = arr1.length;
+        int n2 = arr2.length;
 
-        while ((i < dom1.length) && (j < dom2.length)) {
-            if (dom1[i] < dom2[j]) {
-                aux[k++] = dom1[i++];
+        TIntArrayList aux = new TIntArrayList((n1 < n2) ? n1 : n2);
+
+        while ((i < n1) && (j < n2)) {
+            if (arr1[i] < arr2[j]) {
+                aux.add(arr1[i]);
+                i++;
+            } else if (arr2[j] < arr1[i]) {
+                aux.add(arr2[j]);
+                j++;
             } else {
-                aux[k++] = dom2[j++];
+
+                /* equal! */
+                aux.add(arr1[i]);
+                i++;
+                j++;
             }
         }
 
-        while (i < dom1.length) {
-            aux[k++] = dom1[i++];
+        while (i < n1) {
+            aux.add(arr1[i]);
+            i++;
         }
 
-        while (j < dom2.length) {
-            aux[k++] = dom2[j++];
+        while (j < n2) {
+            aux.add(arr2[j]);
+            j++;
         }
 
-        int[] uni = new int[k];
-
-        System.arraycopy(aux, 0, uni, 0, k);
-        return uni;
+        return aux.toArray();
     }
 
     public static boolean findAll(int[] arr1, int[] arr2) {
@@ -128,6 +137,16 @@ public class ArrayUtils {
             }
         }
 
+        while (i < n1) {
+            aux.add(arr1[i]);
+            i++;
+        }
+
+        while (j < n2) {
+            aux.add(arr2[j]);
+            j++;
+        }
+
         return aux.toArray();
     }
 
@@ -164,6 +183,33 @@ public class ArrayUtils {
         return aux.toArray();
     }
 
+    public static TIntArrayList intersect(TIntArrayList arr1, TIntArrayList arr2) {
+
+        int i = 0;
+        int j = 0;
+        int n1 = arr1.size();
+        int n2 = arr2.size();
+
+        TIntArrayList aux = new TIntArrayList((n1 < n2) ? n1 : n2);
+
+        while ((i < n1) && (j < n2)) {
+            if (arr1.get(i) < arr2.get(j)) {
+                i++;
+            } else if (arr2.get(j) < arr1.get(i)) {
+                j++;
+            } else {
+
+                /* equal! */
+                aux.add(arr1.get(i));
+                i++;
+                j++;
+            }
+        }
+
+        return aux;
+    }
+
+
     /**
      * Reduce the array
      *
@@ -182,6 +228,34 @@ public class ArrayUtils {
         }
         return set_p2;
     }
+
+    public static int[] removeElementAt(int[] original, int element){
+        int[] n = new int[original.length - 1];
+        System.arraycopy(original, 0, n, 0, element );
+        System.arraycopy(original, element+1, n, element, original.length - element-1);
+        return n;
+    }
+
+    /**
+     * Add element to the end of the array
+     */
+    public static int[] addArray(int[] a, int p) {
+        int[] b = new int[a.length+1];
+        System.arraycopy(a, 0, b, 0, a.length);
+        b[a.length] = p;
+        return b;
+    }
+
+    /**
+     * Add element to the start of the array
+     */
+    public static int[] addArray(int p, int[] a) {
+        int[] b = new int[a.length+1];
+        System.arraycopy(a, 0, b, 1, a.length);
+        b[0] = p;
+        return b;
+    }
+
 
     /**
      * Expand the array (keeps ordering)
@@ -284,6 +358,18 @@ public class ArrayUtils {
 
     public static void cloneArray(int[] a, int[] b) {
         System.arraycopy(a, 0, b, 0, a.length);
+    }
+
+    public static double[] cloneArray(double[] a) {
+        double[] b = new double[a.length];
+        cloneArray(a, b);
+        return b;
+    }
+
+    public static String[] cloneArray(String[] a) {
+        String[] b = new String[a.length];
+        cloneArray(a, b);
+        return b;
     }
 
     public static void cloneArray(String[] a, String[] b) {
@@ -406,6 +492,19 @@ public class ArrayUtils {
         return a;
     }
 
+    public static double[] arrD(int n, double d) {
+        double[] a = new double[n];
+
+        for (int i = 0; i < n; i++) {
+            a[i] = d;
+        }
+        return a;
+    }
+
+    public static double[] onesD(int n) {
+        return arrD(n, 1);
+    }
+
     public static int[] ones(int n) {
         return arr(n, 1);
     }
@@ -488,6 +587,12 @@ public class ArrayUtils {
     public static int index(int p, TIntArrayList v) {
         for (int i = 0; i < v.size(); i++)
             if (v.get(i) == p) return i;
+        return  -1;
+    }
+
+    public static int index(String p, String[] v) {
+        for (int i = 0; i < v.length; i++)
+            if (v[i].equals(p.trim())) return i;
         return  -1;
     }
 }

@@ -9,7 +9,6 @@ import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.exp.CyclicGraphException;
 
 import java.util.Arrays;
-import java.util.BitSet;
 
 import static ch.idsia.blip.core.utils.RandomStuff.p;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
@@ -65,9 +64,9 @@ public class InobsSearcher4 extends ObsSearcher {
         for (int i = 0; i < n_var; i++)
             new_vars[i] = vars[i];
 
-        BitSet forbidden = new BitSet(n_var);
+        forbidden = new boolean[n_var];
         for (int i = 0; i < ix; i++) {
-            forbidden.set(vars[i]);
+            forbidden[vars[i]] = true;
         }
 
         int lim;
@@ -129,11 +128,11 @@ public class InobsSearcher4 extends ObsSearcher {
         return new_s;
     }
 
-    private void varSwitch(int ix, ParentSet[] str, int[] vars, BitSet forbidden) {
+    private void varSwitch(int ix, ParentSet[] str, int[] vars, boolean[] forbidden) {
         int a = vars[ix];
         int b = vars[ix - 1];
 
-        forbidden.set(a);
+        forbidden[a] = true;
 
         // pf("Old parent set for %d: %s \n", b, str[b]);
 
@@ -147,7 +146,7 @@ public class InobsSearcher4 extends ObsSearcher {
         //  pf("Old parent set for %d: %s \n", a, str[a]);
 
         // Find new best parent set for a, now that b is available
-        forbidden.clear(b);
+        forbidden[b] = false;
         if (find(b, cand[a]))
             bests(a, str, forbidden);
 
@@ -157,7 +156,7 @@ public class InobsSearcher4 extends ObsSearcher {
         ArrayUtils.swapArray(vars, ix, ix-1);
     }
 
-    private void bests(int a, ParentSet[] str, BitSet forbidden) {
+    private void bests(int a, ParentSet[] str, boolean[] forbidden) {
         for (ParentSet pSet : m_scores[a]) {
             if (acceptable(pSet.parents, forbidden)) {
                 str[a] = pSet;
@@ -178,13 +177,15 @@ public class InobsSearcher4 extends ObsSearcher {
 
 
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
+
+        vars = smp.sample();
 
         if (solver.verbose > 2)
             solver.log("going! \n");
 
         // Find initial structure!
-        super.search(vars);
+        super.search();
 
         if (solver.verbose > 2) {
             solver.logf("Initial: %.5f (check: %.5f) \n",

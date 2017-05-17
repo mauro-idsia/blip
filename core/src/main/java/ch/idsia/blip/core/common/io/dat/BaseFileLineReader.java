@@ -46,4 +46,25 @@ public abstract class BaseFileLineReader implements Closeable {
         }
     }
 
+    protected String[] splitSpace(String ln) {
+        return ln.split("\\s+");
+    }
+
+    protected String readLn() throws IOException {
+        String s = readL();
+        if (s == null) return null;
+        while (s.equals("")) {
+            s = readL();
+            if (s == null) return null;
+        }
+        return s;
+    }
+
+    private String readL() throws IOException {
+        String s = rd_dat.readLine();
+        if (s == null)
+            return null;
+        s = s.trim();
+        return s;
+    }
 }

@@ -27,10 +27,6 @@ public class GreedyScorer extends BaseScorer {
      */
     private long queue_size;
 
-    private GreedyScorer(int maxExec) {
-        super(maxExec);
-    }
-
     @Override
     protected String getName() {
         return "Greedy scoring";
@@ -41,8 +37,8 @@ public class GreedyScorer extends BaseScorer {
     }
 
     @Override
-    protected void prepareSearch() throws Exception {
-        super.prepareSearch();
+    public void prepare() {
+        super.prepare();
 
         queue_size = (long) Math.pow(dat.n_var, 3);
         if (queue_size > max_queue_size) {

@@ -14,6 +14,7 @@ import ch.idsia.blip.core.learn.solver.src.brutal.BrutalUndirectedSearcher;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -32,7 +33,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
     private Und best_und;
 
-    public int thread = 0;
+    public int thread;
 
     TreeSet<Solution2> open;
 
@@ -40,21 +41,25 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
     public int behaviour;
 
-    public void init(int time, Und und, int threads, int maxTw) {
-        this.tw = maxTw;
-        this.thread_pool_size = threads;
-        this.max_exec_time = time;
-        this.und = und;
-        this.n_var = und.n;
+    @Override
+    public void init(HashMap<String, String> options) {
+        super.init(options);
+        this.tw = gInt("maxTw");
+    }
 
-        this.open=new TreeSet<Solution2>();
+    public void setUnd(Und und) {
+        this.und =und;
+        this.n_var =und.n;
     }
 
     @Override
     protected void prepare() {
         super.prepare();
 
-        logf(0, "treewidth: %d \n", tw);
+        if (verbose >0)
+            logf("treewidth: %d \n", tw);
+
+        this.open = new TreeSet<Solution2>();
     }
 
     @Override
@@ -63,7 +68,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
     }
 
     @Override
-    protected Sampler getSampler() {
+    public Sampler getSampler() {
         return new SimpleSampler(n_var, rand);
     }
 

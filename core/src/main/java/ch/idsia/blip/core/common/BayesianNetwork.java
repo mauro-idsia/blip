@@ -6,6 +6,7 @@ package ch.idsia.blip.core.common;
         import ch.idsia.blip.core.common.tw.TreeWidth;
         import ch.idsia.blip.core.utils.ParentSet;
         import ch.idsia.blip.core.utils.data.array.TIntArrayList;
+        import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
         import ch.idsia.blip.core.utils.data.set.TIntHashSet;
         import ch.idsia.blip.core.utils.exp.CyclicGraphException;
         import ch.idsia.blip.core.utils.exp.TreeWidthExceededException;
@@ -118,13 +119,12 @@ public class BayesianNetwork implements Serializable {
         double logLik = 0.0;
         double l = 0;
 
+        // System.out.println(Arrays.toString(sample));
+
         for (int i = 0; i < n_var; i++) {
             double p = getPotential(i, sample);
-
-            if (p < eps) {
-                p = eps;
-            }
-            l= Math.log(p);
+           //  pf("%d | %.5f \n", i, p);
+            l= Math.log10(p);
 
             logLik += l;
         }
@@ -145,10 +145,17 @@ public class BayesianNetwork implements Serializable {
         ix *= arity(n);
         ix+= sample[n];
         double[] p = potential(n);
+        double ps;
         if (ix >= p.length)
-            return 0;
+            ps = 0;
         else
-            return p[ix];
+            ps = p[ix];
+
+        if (ps < eps) {
+            ps = eps;
+        }
+
+        return ps;
     }
 
     /**
@@ -186,21 +193,19 @@ public class BayesianNetwork implements Serializable {
      * @param index index of the CPT of the variable
      * @return List of values for each variable, associated with the given index.
      */
-    public short[] getAssignmentFromIndex(int[] order, int n_var, int index) {
-        short[] sample = new short[n_var];
+    public TIntIntHashMap getAssignmentFromIndex(int[] order, int n_var, int index) {
+        TIntIntHashMap t = new TIntIntHashMap();
 
-        for (int i = 0; i < n_var; i++) {
-            sample[i] = 0;
-        }
+        // for (int i = order.length-1; i >= 0; i--) {
 
-        for (int i = order.length-1; i >= 0; i--) {
-            int n = order[i];
+        //     int n = order[i];
+        for (int n: order) {
             int ar = arity(n);
 
-            sample[n] = (short) (index % ar);
+            t.put(n, (index % ar));
             index /= ar;
         }
-        return sample;
+        return t;
     }
 
     /**
@@ -654,15 +659,8 @@ public class BayesianNetwork implements Serializable {
             toGraph(w, keys);
             w.close();
 
-            String h = String.format("./dot -Tpng %s.dot -o %s.png", s, s);
-
-            Process proc = Runtime.getRuntime().exec(h, new String[0], new File(System.getProperty("user.home") + "/Tools"));
-            exec(proc);
-
-            // To close them
-            proc.getInputStream().close();
-            proc.getOutputStream().close();
-            proc.getErrorStream().close();
+            dot(f("./dot -Tpng %s.dot -o %s.png", s, s));
+            dot(f("./dot -Tpdf %s.dot -o %s.pdf", s, s));
 
         } catch (IOException e) {
             logExp(e);
@@ -674,11 +672,37 @@ public class BayesianNetwork implements Serializable {
 
     }
 
+    private void dot(String h) throws IOException, InterruptedException {
+          Process proc = Runtime.getRuntime().exec(h, new String[0], new File(System.getProperty("user.home") + "/Tools"));
+        exec(proc);
+
+        // To close them
+        proc.getInputStream().close();
+        proc.getOutputStream().close();
+        proc.getErrorStream().close();
+    }
+
     public void writeGraph(String s) {
         writeGraph(s, null);
     }
 
     public void setPotential(int v, double[] new_probs) {
         l_potential_var[v] = new_probs;
+    }
+
+    public int getIndexFromAssignment(int[] new_ord, TIntIntHashMap t) {
+        int ix = 0;
+        // Add parents index value
+        int ix_ml = 1;
+
+        // for (int n : order) {
+        // for (int i = new_ord.length-1; i >= 0; i--) {
+         //   int p = new_ord[i];
+        for (int p: new_ord) {
+            ix += t.get(p) * ix_ml; // Shift index
+            ix_ml *= arity(p); // Compute cumulative shifter
+            // log.severe("P:" + par + " - v: " + sample[par] + " - " + arity(par) + " - " + ix );
+        }
+        return ix;
     }
 }

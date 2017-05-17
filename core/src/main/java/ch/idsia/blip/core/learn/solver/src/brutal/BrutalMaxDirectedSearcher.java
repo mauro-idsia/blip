@@ -73,7 +73,7 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
 
     // Maximize a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
         // clear all
         clear();
@@ -132,9 +132,8 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
     }
 
     private void chooseClique() {
-        // int theChosen = randInt(0, n_var - 1);
 
-        int theChosen = 8;
+        int theChosen = randInt(0, n_var - 1);
 
         TIntHashSet init = new TIntHashSet();
         init.add(theChosen);

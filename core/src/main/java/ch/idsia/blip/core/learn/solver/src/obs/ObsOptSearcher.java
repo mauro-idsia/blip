@@ -4,7 +4,6 @@ package ch.idsia.blip.core.learn.solver.src.obs;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.ParentSet;
 
-import java.util.BitSet;
 import java.util.LinkedHashSet;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
@@ -23,15 +22,17 @@ public class ObsOptSearcher extends ObsSearcher {
 
     /**
      * Find the best combination given the order (second way, koller's)
-     *
-     * @param vars order of the variable
      */
     @Override
-    public ParentSet[] search(int[] vars) {
-        prepare();
+    public ParentSet[] search() {
+
+        vars = smp.sample();
+
+        done = new boolean[n_var];
+
         last_sk = 0;
 
-        BitSet forbidden = new BitSet(n_var);
+        forbidden = new boolean[n_var];
 
         LinkedHashSet todo = new LinkedHashSet();
         for (int v = 0; v < n_var; v++)
@@ -88,7 +89,7 @@ public class ObsOptSearcher extends ObsSearcher {
 
             // "sel" is the selected index
             int var = ix[sel];
-            forbidden.set(var);
+            forbidden[var] = true;
             last_chosen = var;
             done[var] = true;
             last_str[var] = m_scores[var][best_ps[var]];
@@ -101,7 +102,7 @@ public class ObsOptSearcher extends ObsSearcher {
     }
 
     // Finds the best
-    private int new_best(int v, BitSet forbidden, int start) {
+    private int new_best(int v, boolean[] forbidden, int start) {
         for (int i = start; i < m_scores[v].length; i++) {
             if (acceptable(m_scores[v][i].parents, forbidden)) {
                 return i;
@@ -111,9 +112,4 @@ public class ObsOptSearcher extends ObsSearcher {
         return -1;
     }
 
-    @Override
-    protected void prepare() {
-        done = new boolean[n_var];
-        super.prepare();
-    }
 }

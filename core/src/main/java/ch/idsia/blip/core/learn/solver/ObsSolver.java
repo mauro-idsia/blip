@@ -5,6 +5,8 @@ import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.src.*;
 import ch.idsia.blip.core.learn.solver.src.obs.*;
 
+import java.util.HashMap;
+
 import static ch.idsia.blip.core.learn.solver.samp.SamplerUtils.getAdvSampler;
 
 
@@ -35,7 +37,14 @@ public class ObsSolver extends ScoreSolver {
     }
 
     @Override
-    protected Sampler getSampler() {
+    public void init(HashMap<String, String> options) {
+        super.init(options);
+        sampler = gStr("sampler", null);
+        searcher = gStr("sercher", null);
+    }
+
+    @Override
+    public Sampler getSampler() {
         return getAdvSampler(sampler, dat_path, sc.length, this.rand);
     }
 
@@ -50,12 +59,6 @@ public class ObsSolver extends ScoreSolver {
             return new ObsGreedySearcher(this);
         if ("inobs".equals(searcher))
             return new InobsSearcher(this);
-        if ("inobs2".equals(searcher))
-            return new InobsSearcher2(this);
-        if ("inobs3".equals(searcher))
-            return new InobsSearcher3(this);
-        if ("inobs4".equals(searcher))
-            return new InobsSearcher4(this);
         return new ObsSearcher(this);
     }
 

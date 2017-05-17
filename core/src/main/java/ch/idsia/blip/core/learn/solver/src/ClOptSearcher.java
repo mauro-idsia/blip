@@ -218,7 +218,9 @@ public class ClOptSearcher extends ObsSearcher {
 
 
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
+
+        vars = smp.sample();
 
         if (solver.verbose > 2)
             solver.log("going! \n");
@@ -226,7 +228,8 @@ public class ClOptSearcher extends ObsSearcher {
         // Find initial structure!
         this.searchF(vars);
 
-        solver.logf(2, "Initial: %.5f (check: %.5f) \n",
+        if (solver.verbose > 2)
+        solver.logf("Initial: %.5f (check: %.5f) \n",
                 last_sk, checkSk());
 
         vars = new BayesianNetwork(last_str).getTopologicalOrder();
@@ -257,7 +260,8 @@ public class ClOptSearcher extends ObsSearcher {
         checkCorrect(last_str, vars);
 
 
-        solver.logf(2, "After greedy! %.5f - %.3f \n", solver.elapsed, skore(last_str));
+        if (solver.verbose > 2)
+        solver.logf("After greedy! %.5f - %.3f \n", solver.elapsed, skore(last_str));
 
         return last_str;
     }

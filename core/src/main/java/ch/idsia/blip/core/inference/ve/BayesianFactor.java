@@ -2,15 +2,14 @@ package ch.idsia.blip.core.inference.ve;
 
 
 import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TDoubleArrayList;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
+import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
-import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
 
 
 /**
@@ -26,17 +25,17 @@ public class BayesianFactor {
     /**
      * Domain
      */
-    public final TIntArrayList dom;
+    public int[] dom;
 
     /**
      * Cardinality of each variable
      */
-    public final TIntArrayList card;
+    public int[] card;
 
     /**
      * Stride of each variable
      */
-    public TIntArrayList stride;
+    public int[] stride;
 
     /**
      * Total size of potentials
@@ -46,14 +45,14 @@ public class BayesianFactor {
     /**
      * Potentials (ordered by variables in numerical order)
      */
-    final double[] potent;
+    public double[] potent;
 
     /**
      * Void constructor.
      */
     public BayesianFactor() {
-        dom = new TIntArrayList();
-        card = new TIntArrayList();
+        dom = new int[0];
+        card = new int[0];
         updateStride();
         potent = new double[size];
     }
@@ -66,12 +65,15 @@ public class BayesianFactor {
      */
     public BayesianFactor(TreeSet<Integer> n_dom, Map<Integer, Integer> n_card) {
         // Set domain
-        dom = new TIntArrayList();
-        card = new TIntArrayList();
+        TIntArrayList aux_dom = new TIntArrayList();
+        TIntArrayList aux_card = new TIntArrayList();
         for (int v : n_dom) {
-            dom.add(v);
-            card.add(n_card.get(v));
+            aux_dom.add(v);
+            aux_card.add(n_card.get(v));
         }
+        
+        dom = aux_dom.toArray();
+        card = aux_card.toArray();
 
         // Set stride
         updateStride();
@@ -88,18 +90,13 @@ public class BayesianFactor {
      */
     public BayesianFactor(BayesianFactor psi, int v) {
 
+        int p_v = pos(v, psi.dom);
+
         // Set domain
-        dom = new TIntArrayList();
-        dom.addAll(psi.dom);
+        dom = removeElementAt(psi.dom, p_v);
 
         // Set cardinality
-        card = new TIntArrayList();
-        card.addAll(psi.card);
-
-        int i_v = dom.indexOf(v);
-
-        card.removeAt(i_v);
-        dom.removeAt(i_v);
+        card = removeElementAt(psi.card, p_v);
 
         // Set stride
         updateStride();
@@ -117,40 +114,43 @@ public class BayesianFactor {
     public BayesianFactor(BayesianFactor psi1, BayesianFactor psi2) {
 
         // Set domain
-        dom = new TIntArrayList();
-        card = new TIntArrayList();
+        TIntArrayList aux_dom = new TIntArrayList();
+        TIntArrayList aux_card = new TIntArrayList();
 
         int i = 0;
         int j = 0;
 
-        while ((i < psi1.dom.size()) && (j < psi2.dom.size())) {
-            if (psi1.dom.get(i) == psi2.dom.get(j)) {
-                dom.add(psi1.dom.get(i));
-                card.add(psi1.card.get(i));
+        while ((i < psi1.dom.length) && (j < psi2.dom.length)) {
+            if (psi1.dom[i] == psi2.dom[j]) {
+                aux_dom.add(psi1.dom[i]);
+                aux_card.add(psi1.card[i]);
                 i++;
                 j++;
-            } else if (psi1.dom.get(i) < psi2.dom.get(j)) {
-                dom.add(psi1.dom.get(i));
-                card.add(psi1.card.get(i));
+            } else if (psi1.dom[i] < psi2.dom[j]) {
+                aux_dom.add(psi1.dom[i]);
+                aux_card.add(psi1.card[i]);
                 i++;
             } else {
-                dom.add(psi2.dom.get(j));
-                card.add(psi2.card.get(j));
+                aux_dom.add(psi2.dom[j]);
+                aux_card.add(psi2.card[j]);
                 j++;
             }
         }
 
-        while (i < psi1.dom.size()) {
-            dom.add(psi1.dom.get(i));
-            card.add(psi1.card.get(i));
+        while (i < psi1.dom.length) {
+            aux_dom.add(psi1.dom[i]);
+            aux_card.add(psi1.card[i]);
             i++;
         }
 
-        while (j < psi2.dom.size()) {
-            dom.add(psi2.dom.get(j));
-            card.add(psi2.card.get(j));
+        while (j < psi2.dom.length) {
+            aux_dom.add(psi2.dom[j]);
+            aux_card.add(psi2.card[j]);
             j++;
         }
+
+        card = aux_card.toArray();
+        dom = aux_dom.toArray();
 
         // Set stride
         updateStride();
@@ -169,17 +169,18 @@ public class BayesianFactor {
     public BayesianFactor(int v, BayesianNetwork bn) {
 
         // Set domain
-        dom = new TIntArrayList();
-        for (int p : bn.parents(v)) {
-            dom.add(p);
+        int[] ps = bn.parents(v);
+        dom = new int[ps.length + 1];
+        for (int i = 0; i < ps.length; i++) {
+            dom[i] = ps[i];
         }
-        dom.add(v);
-        dom.sort();
+        dom[ps.length] = v;
+        Arrays.sort(dom);
 
         // Set cardinality
-        card = new TIntArrayList();
-        for (int c : dom.toArray()) {
-            card.add(bn.arity(c));
+        card = new int[dom.length];
+        for (int i = 0; i < dom.length; i++) {
+            card[i] = bn.arity(dom[i]);
         }
 
         // Set stride
@@ -194,17 +195,41 @@ public class BayesianFactor {
         // Prepare potentials
         potent = new double[size];
         updatePotent(bn.potentials(v));
+        reorganizePotent(bn, v);
 
+    }
+
+    private void reorganizePotent(BayesianNetwork bn, int v) {
+
+        if (bn.parents(v).length == 0)
+            return;
+
+        double[] new_pt = new double[potent.length];
+
+        int[] ord = cloneArray(bn.parents(v));
+        ArrayUtils.reverse(ord);
+        ord = addArray(v, ord);
+        int[] new_ord = expandArray(bn.parents(v), v);
+
+        if (Arrays.equals(ord, new_ord))
+            return;
+
+        for (int i = 0; i < potent.length; i++) {
+           TIntIntHashMap t = bn.getAssignmentFromIndex(ord, v, i);
+            int n_i = bn.getIndexFromAssignment(new_ord, t);
+            // pf("%d - %s - %d \n", i, t, n_i);
+            new_pt[n_i] = potent[i];
+        }
+
+        potent = new_pt;
     }
 
     public BayesianFactor(int v, BayesianNetwork bn, double[] new_p) {
         // Set domain
-        dom = new TIntArrayList();
-        dom.add(v);
+        dom = new int[] {v};
 
         // Set cardinality
-        card = new TIntArrayList();
-        card.add(bn.arity(v));
+        card =new int[]{bn.arity(v)};
 
         // Set stride
         updateStride();
@@ -223,11 +248,11 @@ public class BayesianFactor {
         double sum = 0.0;
 
         for (int i = 0; i < nums.size(); i++) {
-            sum += Math.exp(nums.getQuick(i) - max_exp);
+            sum += Math.pow(10, nums.getQuick(i) - max_exp);
             // printf("nums[thread]: %.5f, max_exp: %.5f, diff: %.5f", nums[thread], max_exp, nums[thread] - max_exp);
         }
 
-        return Math.log(sum) + max_exp;
+        return Math.log10 (sum) + max_exp;
     }
 
     /**
@@ -249,10 +274,10 @@ public class BayesianFactor {
     private void updateStride() {
         int s = 1;
 
-        stride = new TIntArrayList(dom.size());
-        for (int i = 0; i < dom.size(); i++) {
-            stride.add(s);
-            s *= card.get(i);
+        stride = new int[dom.length];
+        for (int i = 0; i < dom.length; i++) {
+            stride[i] = s;
+            s *= card[i];
         }
         size = s;
     }
@@ -268,7 +293,7 @@ public class BayesianFactor {
         int l = 0;
 
         for (double p : n_potent) {
-            potent[l++] = logComp ? Math.log(p) : p;
+            potent[l++] = logComp ? Math.log10 (p) : p;
         }
     }
 
@@ -276,7 +301,7 @@ public class BayesianFactor {
 
         return String.format(
                 "size: %d && dom: %s && card: %s && stride; %s && potent:%s\n\n",
-                size, dom, card, stride, printPotent());
+                size, Arrays.toString(dom), Arrays.toString(card), Arrays.toString(stride), printPotent());
     }
 
     /**
@@ -288,7 +313,7 @@ public class BayesianFactor {
         double sum = 0.0;
 
         for (double p : potent) {
-            sum += logComp ? Math.exp(p) : p;
+            sum += logComp ? Math.pow(10, p) : p;
         }
 
         return Math.abs(sum - 1.0);
@@ -304,7 +329,7 @@ public class BayesianFactor {
 
         str.append("[ ");
         for (int j = 0; j < potent.length; j++) {
-            str.append(String.format("%.8f ", getPotent(j)));
+            str.append(String.format("%.6f ", getPotent(j)));
         }
         str.append("]");
 
@@ -319,11 +344,11 @@ public class BayesianFactor {
         double sum = 0.0;
 
         for (int i = 0; i < size; i++) {
-            sum += logComp ? Math.exp(potent[i]) : potent[i];
+            sum += logComp ? Math.pow(10, potent[i]) : potent[i];
         }
         for (int i = 0; i < size; i++) {
             potent[i] = logComp
-                    ? potent[i] - Math.log(sum)
+                    ? potent[i] - Math.log10 (sum)
                     : potent[i] / sum;
         }
 
@@ -335,8 +360,8 @@ public class BayesianFactor {
      * @param j index
      * @return potential
      */
-    private double getPotent(int j) {
-        return logComp ? Math.exp(potent[j]) : potent[j];
+    public double getPotent(int j) {
+        return logComp ? Math.pow(10, potent[j]) : potent[j];
     }
 
     /**
@@ -348,7 +373,7 @@ public class BayesianFactor {
         double[] d = new double[size];
 
         for (int i = 0; i < size; i++) {
-            d[i] = logComp ? Math.exp(potent[i]) : potent[i];
+            d[i] = logComp ? Math.pow(10, potent[i]) : potent[i];
         }
         return d;
     }
@@ -366,10 +391,10 @@ public class BayesianFactor {
 
         int p = n_psi.size;
 
-        int i_v = dom.indexOf(e);
+        int i_v = pos(e, dom);
 
-        int v_card = card.get(i_v);
-        int v_stride = stride.get(i_v);
+        int v_card = card[i_v];
+        int v_stride = stride[i_v];
 
         // First position of evidence variable with given variable
         int k = val * v_stride;
@@ -378,7 +403,7 @@ public class BayesianFactor {
         for (int i = 0; i < p; i++) {
 
             // System.out.println(thread+ " " + tw);
-            n_psi.potent[i] = logComp ? Math.exp(potent[k]) : potent[k];
+            n_psi.potent[i] = logComp ? Math.pow(10, potent[k]) : potent[k];
 
             // Advance to next position in the potentials
             k++;
@@ -392,14 +417,14 @@ public class BayesianFactor {
         if (logComp) {
             // Go back to log
             for (int i = 0; i < p; i++) {
-                n_psi.potent[i] = Math.log(n_psi.potent[i]);
+                n_psi.potent[i] = Math.log10 (n_psi.potent[i]);
             }
         }
 
         /*
          // Normalize?
          for (int thread = 0; thread < p; thread++) {
-         n_potent[thread] = logComp ? Math.log(n_potent[thread] / sum)  : n_potent[thread] / sum;
+         n_potent[thread] = logComp ? Math.log10 (n_potent[thread] / sum)  : n_potent[thread] / sum;
          }
          */
         return n_psi;
@@ -418,7 +443,7 @@ public class BayesianFactor {
 
         // Create new factor
         BayesianFactor n_psi = new BayesianFactor(this, psi2);
-        int d = n_psi.dom.size();
+        int d = n_psi.dom.length;
         int p = n_psi.potent.length;
 
         // System.out.println("N_psi: " + n_psi.dom + " - " + RandomStuff.printOrdMap(n_psi.stride));
@@ -433,18 +458,18 @@ public class BayesianFactor {
         int[] stride2 = new int[d];
         int[] shift2 = new int[d];
 
-        for (int m = 0; m < n_psi.dom.size(); m++) {
+        for (int m = 0; m < n_psi.dom.length; m++) {
             assignment[m] = 0;
 
-            int v = n_psi.dom.getQuick(m);
+            int v = n_psi.dom[m];
 
-            card[m] = n_psi.card.get(m);
+            card[m] = n_psi.card[m];
 
-            stride1[m] = (dom.contains(v) ? stride.get(dom.indexOf(v)) : 0);
+            stride1[m] = (find(v, dom) ? stride[pos(v, dom)] : 0);
             shift1[m] = (card[m] - 1) * stride1[m];
 
-            stride2[m] = (psi2.dom.contains(v)
-                    ? psi2.stride.get(psi2.dom.indexOf(v))
+            stride2[m] = (find(v, psi2.dom)
+                    ? psi2.stride[pos(v, psi2.dom)]
                     : 0);
             shift2[m] = (card[m] - 1) * stride2[m];
         }
@@ -487,10 +512,10 @@ public class BayesianFactor {
         int l = 0;
         int j = 0;
 
-        int i_v = dom.indexOf(v);
+        int i_v = pos(v, dom);
 
-        int v_card = card.get(i_v);
-        int v_stride = stride.get(i_v);
+        int v_card = card[i_v];
+        int v_stride = stride[i_v];
 
         List<TDoubleArrayList> aux = new ArrayList<TDoubleArrayList>();
 
@@ -528,8 +553,8 @@ public class BayesianFactor {
         /*
          // Normalize?
          for (int thread = 0; thread < p; thread++) {
-         // n_psi.potent[thread] = logComp ? Math.log(n_psi.potent[thread] / sum)  : n_psi.potent[thread] / sum;
-         n_psi.potent[thread] = logComp ? Math.log(n_psi.potent[thread] )  : n_psi.potent[thread] ;
+         // n_psi.potent[thread] = logComp ? Math.log10 (n_psi.potent[thread] / sum)  : n_psi.potent[thread] / sum;
+         n_psi.potent[thread] = logComp ? Math.log10 (n_psi.potent[thread] )  : n_psi.potent[thread] ;
          }*/
 
         return n_psi;
@@ -551,13 +576,30 @@ public class BayesianFactor {
             potent[i] = logComp
                     ? potent[i] + psi2.potent[i]
                     : potent[i] * psi2.potent[i];
-            sum += logComp ? Math.exp(potent[i]) : potent[i];
+            sum += logComp ? Math.pow(10, potent[i]) : potent[i];
         }
         for (int i = 0; i < potent.length; i++) {
             potent[i] = logComp
-                    ? potent[i] - Math.log(sum)
+                    ? potent[i] - Math.log10 (sum)
                     : potent[i] / sum;
         }
     }
 
+    public short mostProbable() {
+        Double best;
+        short ix = -1;
+
+        if (logComp)
+            best = -Double.MAX_VALUE;
+        else
+            best = 0.0;
+
+        for (short i = 0; i < potent.length; i++ ) {
+            if(potent[i] > best) {
+                best = potent[i];
+                ix = i;
+            }
+        }
+return ix;
+    }
 }

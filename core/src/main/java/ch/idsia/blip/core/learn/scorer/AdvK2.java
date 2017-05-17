@@ -19,10 +19,6 @@ public class AdvK2 extends BaseScorer {
 
     private static final Logger log = Logger.getLogger(AdvK2.class.getName());
 
-    private AdvK2(int maxExec) {
-        super(maxExec);
-    }
-
     @Override
     protected String getName() {
         return "Advanced K2 selection";
@@ -58,9 +54,6 @@ public class AdvK2 extends BaseScorer {
             // writeScores(writer, n, sc);
         }
     }
-
-    @Override
-    protected void prepareSearch() {}
 
     @Override
     public AdvK2Searcher getNewSearcher(int n) {

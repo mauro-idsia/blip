@@ -6,6 +6,7 @@ import ch.idsia.blip.core.common.io.ScoreWriter;
 import ch.idsia.blip.core.common.tw.KTree;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 public class KTreeScore extends Base {
@@ -16,6 +17,8 @@ public class KTreeScore extends Base {
     private int max_tw;
 
     public void go() throws IOException {
+
+        prepare();
 
         ScoreReader sc = new ScoreReader(ph_scores.toString(), 0);
         sc.readScores();
@@ -69,11 +72,13 @@ public class KTreeScore extends Base {
         }
     }
 
-    public void init(int max_tw, int num_outputs, String ph_output, String ph_scores) {
-        this.max_tw = max_tw;
-        this.num_outputs = num_outputs;
-        this.ph_output = ph_output;
-        this.ph_scores = ph_scores;
+    @Override
+    public void init(HashMap<String, String> options) {
+        super.init(options);
+        this.max_tw = gInt("max_tw");
+        this.num_outputs =  gInt("num_outputs");
+        this.ph_output =  gStr("ph_output");
+        this.ph_scores =  gStr("ph_scores");
     }
 
 

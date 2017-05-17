@@ -3,21 +3,22 @@ package ch.idsia.blip.core;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Random;
 
 
 public class Base {
 
-    protected long start;
+    public long start;
 
     // Maximum execution time
-    public double max_exec_time = 10;
+    public double max_exec_time;
 
     // Maximum number of threads to use
-    public Integer thread_pool_size = 0;
+    public int thread_pool_size;
 
     // Lock for concurrent searchers
-    protected final Object lock = new Object();
+    public final Object lock = new Object();
 
     public int verbose;
 
@@ -27,6 +28,8 @@ public class Base {
 
     public Random rand;
 
+    private HashMap<String, String> options;
+
     public void logf(String format, Object... args) {
         log(String.format(format, args));
     }
@@ -35,22 +38,6 @@ public class Base {
         synchronized (lock) {
             logf(format ,args);
         }
-    }
-
-    public void safeLogf(int i, String format, Object... args) {
-        synchronized (lock) {
-            logf(i, format ,args);
-        }
-    }
-
-    public void logf(int i, String format, Object... args) {
-        if (verbose > i)
-            log(String.format(format, args));
-    }
-
-    public void log(int i, String s) {
-        if (verbose > i)
-            log(s);
     }
 
     public void log(String s) {
@@ -67,11 +54,19 @@ public class Base {
         }
     }
 
-    public void init() {
+
+    protected void prepare() {
+
         if (seed == 0)
             seed = System.currentTimeMillis();
 
          rand = new Random(seed);
+
+        if (thread_pool_size == 0) {
+            thread_pool_size = Runtime.getRuntime().availableProcessors();
+        }
+
+        start = System.currentTimeMillis();
     }
 
     public int randInt(int min, int max) {
@@ -84,5 +79,53 @@ public class Base {
 
     public double randDouble() {
         return rand.nextDouble();
+    }
+
+    protected String gStr(String k) {
+        return options.get(k);
+    }
+
+    protected int gInt(String k) {
+        return Integer.valueOf(options.get(k));
+    }
+
+    protected int gInt(String k, int v) {
+        if (options.containsKey(k))
+        return Integer.valueOf(options.get(k));
+        else
+            return v;
+    }
+
+    protected double gDouble(String k, double v) {
+        if (options.containsKey(k))
+            return Double.valueOf(options.get(k));
+        else
+            return v;
+    }
+
+    protected String gStr(String k, String v) {
+        if (options.containsKey(k))
+            return options.get(k);
+        else
+            return v;
+    }
+
+    protected boolean gBool(String k) {
+        if (options.containsKey(k))
+            return Boolean.valueOf(options.get(k));
+        return false;
+    }
+
+    public void init(HashMap<String, String> options) {
+        this.options = options;
+
+        seed = gInt("seed", 0);
+        thread_pool_size = gInt("thread_pool_size", 0);
+        max_exec_time = gDouble("max_exec_time", 10);
+        verbose = gInt("verbose", 0);
+    }
+
+    public void init() {
+        this.init(new HashMap<String, String>());
     }
 }

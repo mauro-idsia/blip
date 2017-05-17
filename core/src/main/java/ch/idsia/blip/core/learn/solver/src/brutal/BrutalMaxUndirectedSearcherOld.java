@@ -28,7 +28,7 @@ public class BrutalMaxUndirectedSearcherOld extends BrutalUndirectedSearcher {
 
     // Maximize a network!
     @Override
-    public ParentSet[] search(int[] bakaro) {
+    public ParentSet[] search() {
 
         // clear all
         clear();

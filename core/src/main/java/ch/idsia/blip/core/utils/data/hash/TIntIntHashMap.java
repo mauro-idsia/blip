@@ -216,7 +216,7 @@ public class TIntIntHashMap extends TIntIntHash implements TIntIntMap {
      */
     public void putAll(Map<? extends Integer, ? extends Integer> map) {
         ensureCapacity(map.size());
-        // could optimize this for cases when map instanceof THashMap
+        // could winasobs this for cases when map instanceof THashMap
         for (Map.Entry<? extends Integer, ? extends Integer> entry : map.entrySet()) {
             this.put(entry.getKey(), entry.getValue());
         }

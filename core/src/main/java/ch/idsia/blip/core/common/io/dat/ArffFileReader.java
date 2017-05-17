@@ -4,7 +4,7 @@ package ch.idsia.blip.core.common.io.dat;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,31 +18,15 @@ import static ch.idsia.blip.core.utils.data.ArrayUtils.index;
 /**
  * Reads the content of a datapoints file
  */
-public class ArffFileReader implements Closeable {
+public class ArffFileReader extends DatFileReader {
 
     // logger
     private static final Logger log = Logger.getLogger(
             ArffFileReader.class.getName());
 
-    // Reader structure.
-    private BufferedReader rd_dat;
-
-    public String path;
-
-    private boolean done = false;
-
-    private DataSet dSet;
-
-    public boolean readMissing = false;
-    
     private String relation;
 
-    ArrayList<String[]> values;
-
-    public ArffFileReader(String s) throws FileNotFoundException {
-        this.rd_dat = new BufferedReader(new FileReader(s));
-        this.path = s;
-    }
+    ArrayList<HashMap<String, Integer>> values;
 
     static public int[][] clone(int[][] a) {
         int[][] b = new int[a.length][];
@@ -74,7 +58,7 @@ public class ArffFileReader implements Closeable {
 
         String line;
         String [] sp;
-        Integer v;
+        int v;
         List<TIntArrayList> lu;
         HashMap<String, Integer> lv;
         dSet.n_datapoints = 0;
@@ -83,7 +67,7 @@ public class ArffFileReader implements Closeable {
             if ("".equals(line))
                 continue;
 
-            if (readMissing && line.contains("?"))
+            if (!readMissing && line.contains("?"))
                 continue;
 
             sp = getSplit(line);
@@ -104,7 +88,7 @@ public class ArffFileReader implements Closeable {
 
                     missing_aux_v.get(pos).add(dSet.n_datapoints);
                 } else {
-                    v = Arrays.binarySearch(values.get(i), sp[i]);
+                    v = values.get(i).get(sp[i]);
                     if (v < 0)
                         p("ciao");
                     v_aux[i][v].add(dSet.n_datapoints);
@@ -136,11 +120,8 @@ public class ArffFileReader implements Closeable {
 
     }
 
-    private void notifyError(int line, int found) {
-        log.severe(String.format("Problem in file at line %d: found %d cardinalities, %d variables.", line, dSet.n_var, found));
-    }
-
-    private String[] getSplit(String ln) {
+    @Override
+    protected String[] getSplit(String ln) {
         return ln.split(",");
     }
 
@@ -150,6 +131,7 @@ public class ArffFileReader implements Closeable {
         }
     }
 
+    @Override
     public DataSet read() throws IOException {
         
             if (done) {
@@ -167,7 +149,7 @@ public class ArffFileReader implements Closeable {
 
             int n_var = 0;
             ArrayList<String> names = new ArrayList<String>();
-            values = new ArrayList<String[]>();
+        ArrayList<String[]> v_aux = new ArrayList<String[]>();
 
             // Read names 
             while (!ln.equals("@data")) {
@@ -191,12 +173,12 @@ public class ArffFileReader implements Closeable {
 
                 names.add(name);
                 String[] v = getSplit(value.replace("{", "").replace("}", "").trim());
-                Arrays.sort(v);
+                // Arrays.sort(v);
                 String[] va = new String[v.length];
                 for (int j = 0;j  < v.length; j++)
                     va[j] = v[j].trim();
 
-                values.add(va);
+                v_aux.add(va);
 
                 n_var++;
 
@@ -205,16 +187,26 @@ public class ArffFileReader implements Closeable {
 
             // Read names
             dSet.n_var = n_var;
-            dSet.l_s_names = new String[n_var];
+            dSet.l_nm_var = new String[n_var];
             dSet.l_n_arity = new int[n_var];
+            dSet.l_nm_states = new String[n_var][];
+
+        values = new ArrayList<HashMap<String, Integer>>(n_var);
 
             for (int i = 0; i < n_var; i++) {
-                dSet.l_s_names[i] = names.get(i);
-                dSet.l_n_arity[i] = values.get(i).length;
+                dSet.l_nm_var[i] = names.get(i);
+                dSet.l_n_arity[i] = v_aux.get(i).length;
+
+                dSet.l_nm_states[i]= v_aux.get(i);
+
+                HashMap<String, Integer> h = new HashMap<String, Integer>();
+                for (int j = 0; j < dSet.l_n_arity[i]; j++)
+                    h.put(dSet.l_nm_states[i][j], j);
+                values.add(h);
             }
 
             dSet.n_datapoints = 0;
-        
+
         readValuesCache();
 
         done = true;

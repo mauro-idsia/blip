@@ -907,7 +907,7 @@ public class FastMath {
          */
         private Split pow(final long e) {
 
-            // prepare result
+            // init result
             Split result = new Split(1);
 
             // d^(2p)

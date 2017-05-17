@@ -2,6 +2,7 @@ package ch.idsia.blip.core.utils;
 
 
 import java.util.Arrays;
+import java.util.BitSet;
 
 
 /**
@@ -9,15 +10,13 @@ import java.util.Arrays;
  */
 public class ParentSet implements Comparable<ParentSet> {
 
-    /**
-     * Indexes of parent variables
-     */
+    //Indexes of parent variables
     public final int[] parents;
 
-    /**
-     * Score of the parent set.
-     */
+    // Score of the parent set.
     public final double sk;
+
+    public BitSet bs;
 
     /**
      * Constructor from local score line

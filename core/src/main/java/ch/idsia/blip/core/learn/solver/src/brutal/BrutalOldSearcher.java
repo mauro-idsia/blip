@@ -47,9 +47,9 @@ public class BrutalOldSearcher extends ScoreSearcher {
 
     // Greedily optimize a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        vars = smp.sample();
 
         // clear all
         clear();
@@ -140,7 +140,7 @@ public class BrutalOldSearcher extends ScoreSearcher {
         for (int i = 0; i < Math.pow(tw, 3); i++) {
             init.shuffle(solver.rand);
             // Search current
-            new_str = aso.search(init.toArray());
+            new_str = aso.search();
              new_sk = checkSk(new_str);
             //  p(Arrays.toString(initCl));
 

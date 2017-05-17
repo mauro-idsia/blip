@@ -18,8 +18,12 @@ public class LLEval {
 
     public TDoubleArrayList ls;
 
-    public void go(BayesianNetwork bn, String s) {
-        go(bn, getDataSetReader(s));
+    public static double ex(BayesianNetwork bn, String s) {
+        return new LLEval().go(bn, s);
+    }
+
+    public double go(BayesianNetwork bn, String s) {
+       return go(bn, getDataSetReader(s));
     }
 
     /**
@@ -27,7 +31,7 @@ public class LLEval {
      * @param dat_rd
      * @return computed log-likelihood of the given Bayesian network over the given data
      */
-    public void go(BayesianNetwork bn, BaseFileLineReader dat_rd) {
+    public double go(BayesianNetwork bn, BaseFileLineReader dat_rd) {
 
          ll = 0.0;
 
@@ -40,13 +44,11 @@ public class LLEval {
         try {
             dat_rd.readMetaData();
 
-            samp = dat_rd.next();
-
             while (!dat_rd.concluded) {
+                samp = dat_rd.next();
                 double l = bn.getLogLik(samp);
                 ll += l;
                 ls.add(l);
-                samp = dat_rd.next();
                 cnt++;
             }
 
@@ -56,6 +58,8 @@ public class LLEval {
         }
 
         ll /= cnt;
+
+        return ll;
 
     }
 

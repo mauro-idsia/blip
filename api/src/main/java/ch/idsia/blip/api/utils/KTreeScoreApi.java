@@ -35,10 +35,8 @@ public class KTreeScoreApi extends Api {
 
     @Override
     public void exec() throws IOException {
-
         KTreeScore k = new KTreeScore();
-        k.seed = seed;
-        k.init(max_tw, num_outputs, ph_output, ph_scores);
+        k.init(options());
         k.go();
     }
 
