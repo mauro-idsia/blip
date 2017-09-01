@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class UndToGraph {
 
@@ -30,7 +30,7 @@ public class UndToGraph {
         PrintWriter w = new PrintWriter(s + "/excluded", "UTF-8");
 
         Map<Undirected, Integer> sized = new HashMap<Undirected, Integer>();
-        for (Undirected n_u: ls) {
+        for (Undirected n_u : ls) {
             sized.put(n_u, n_u.n);
         }
         sized = sortInvByValues(sized);
@@ -38,7 +38,7 @@ public class UndToGraph {
 
         int i = 0;
         // Print each bn separated
-        for (Undirected n_u: sized.keySet()) {
+        for (Undirected n_u : sized.keySet()) {
 
             if (n_u.n <= 1) {
                 wf(w, twoIsBetter(n_u));
@@ -58,7 +58,7 @@ public class UndToGraph {
     private String twoIsBetter(Undirected b) {
 
         if (b.n == 1)
-            return f("%s \n", b.name( 0));
+            return f("%s \n", b.name(0));
 
         else
             return null;

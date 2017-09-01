@@ -9,7 +9,7 @@ public class CyclicGraphException extends Exception {
     private final BayesianNetwork bn;
 
     public CyclicGraphException(BayesianNetwork bn) {
-        super("Found an cyclic bayesian network!");
+        super("Found a cyclic bayesian network!");
         this.bn = bn;
     }
 }

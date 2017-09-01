@@ -5,7 +5,9 @@ import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.ps.SimpleProvider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.samp.SimpleSampler;
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
+
+import java.util.HashMap;
 
 public abstract class ScoreSolver extends BaseSolver {
 
@@ -14,7 +16,7 @@ public abstract class ScoreSolver extends BaseSolver {
     public int max_parents;
 
     @Override
-    protected Sampler getSampler() {
+    public Sampler getSampler() {
         return new SimpleSampler(sc.length, this.rand);
     }
 
@@ -24,25 +26,20 @@ public abstract class ScoreSolver extends BaseSolver {
         else return new MaxScoreProvider(sc, max_parents);
     }
 
-    public void init(long start, ParentSet[][] sc, int max_exec_time, int thread_pool_size) {
-        this.start = start;
-        init(sc, max_exec_time, thread_pool_size);
+    @Override
+    public void init(HashMap<String, String> options) {
+        super.init(options);
+        max_parents = gInt("max_parents", 0);
+        dat_path = gStr("dat_path", null);
     }
 
-    public void init(ParentSet[][] sc, int time, int threads) {
-        this.thread_pool_size = threads;
-        init(sc, time);
+    public void init(ParentSet[][] sc) {
+        this.sc = sc;
+        this.n_var = sc.length;
     }
 
     public void init(ParentSet[][] sc, int time) {
-        this.max_exec_time = time;
         init(sc);
+        this.max_exec_time = time;
     }
-
-     public void init(ParentSet[][] sc) {
-        super.init();
-        this.sc = sc;
-         this.n_var = sc.length;
-    }
-
 }

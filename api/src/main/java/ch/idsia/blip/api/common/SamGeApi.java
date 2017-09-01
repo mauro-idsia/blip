@@ -8,7 +8,7 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getBayesianNetwork;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getBayesianNetwork;
 
 
 /**
@@ -19,16 +19,16 @@ public class SamGeApi extends Api {
 
     private static final Logger log = Logger.getLogger(SamGeApi.class.getName());
 
-    @Option(name="-n", required = true, usage="Bayesian network file path")
+    @Option(name = "-n", required = true, usage = "Bayesian network file path")
     private String s_bn;
 
-    @Option(name="-d", required = true, usage="Datafile path (.dat format)")
+    @Option(name = "-d", required = true, usage = "Datafile path (.dat format)")
     private String s_datafile;
 
-    @Option(name="-s", usage="Number of samples")
+    @Option(name = "-set", usage = "Number of samples")
     private Integer n_sample = 10000;
 
-    @Option(name="-f", usage="Output format (dat, arff)")
+    @Option(name = "-f", usage = "Output format (dat, arff)")
     private String format = "dat";
 
 

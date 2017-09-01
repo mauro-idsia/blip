@@ -27,7 +27,6 @@ public class IambBMi extends Iamb {
 
     @Override
     protected void prepare() {
-        bmi.resetCache();
     }
 
     @Override

@@ -1,17 +1,17 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.common.arcs.Directed;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.Random;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.expandArray;
-import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
 
 /**
  * Samples topological orders - with constraints (given by skeleton)
  */
-public class SkelSampler implements Sampler {
+public class SkelSampler extends Base implements Sampler {
 
     private int[][] parents;
     private int[][] childrens;

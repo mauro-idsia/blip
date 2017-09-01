@@ -5,7 +5,7 @@ import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.ps.SkelProvider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.samp.SkelSampler;
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public abstract class SkelSolver extends BaseSolver {
 
@@ -43,7 +43,7 @@ public abstract class SkelSolver extends BaseSolver {
     }
 
     @Override
-    protected Sampler getSampler() {
+    public Sampler getSampler() {
         return new SkelSampler(skel, this.rand);
     }
 
@@ -55,7 +55,7 @@ public abstract class SkelSolver extends BaseSolver {
             if (new_sk > best_sk) {
                 best_sk = new_sk;
                 best_str_s = new ArrayList<ParentSet[]>();
-                 best_str_c = new TreeSet<String>();
+                best_str_c = new TreeSet<String>();
             }
 
             if (new_sk != best_sk)
@@ -67,26 +67,26 @@ public abstract class SkelSolver extends BaseSolver {
                 return;
 
             best_str_c.add(c);
-                best_str_s.add(str);
+            best_str_s.add(str);
 
-                if (res_path != null) {
-                    best_str = str;
-                    writeGraph(f(
-                            "%s-%d-%d",
-                            res_path,
-                            (int) new_sk,
-                            best_str_s.size())
-                    );
-                }
+            if (res_path != null) {
+                cloneStr(str, best_str);
+                writeGraph(f(
+                        "%s-%d-%d",
+                        res_path,
+                        (int) new_sk,
+                        best_str_s.size())
+                );
             }
+        }
 
 
     }
 
     private String getDescr(ParentSet[] str) {
         StringBuilder b = new StringBuilder();
-        for (ParentSet p: str) {
-            b.append(Arrays.toString(p.parents));
+        for (int v = 0; v < str.length; v++) {
+            b.append(Arrays.toString(str[v].parents));
         }
         return b.toString();
     }
@@ -99,7 +99,7 @@ public abstract class SkelSolver extends BaseSolver {
             String l;
             while ((l = br.readLine()) != null) {
                 String[] aux = l.split("->");
-                u.mark(nt(aux, 0) - 1, nt(aux, 1) -1);
+                u.mark(nt(aux, 0) - 1, nt(aux, 1) - 1);
             }
             return u;
         } catch (IOException e) {

@@ -25,7 +25,9 @@ import java.util.Map;
 public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
     static final long serialVersionUID = 1L;
 
-    /** the values of the map */
+    /**
+     * the values of the map
+     */
     private transient double[] _values;
 
 
@@ -45,8 +47,8 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      *
      * @param initialCapacity an <code>int</code> value
      */
-    public TIntDoubleHashMap( int initialCapacity ) {
-        super( initialCapacity );
+    public TIntDoubleHashMap(int initialCapacity) {
+        super(initialCapacity);
     }
 
 
@@ -56,10 +58,10 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      * with the specified load factor.
      *
      * @param initialCapacity an <code>int</code> value
-     * @param loadFactor a <code>float</code> value
+     * @param loadFactor      a <code>float</code> value
      */
-    public TIntDoubleHashMap( int initialCapacity, float loadFactor ) {
-        super( initialCapacity, loadFactor );
+    public TIntDoubleHashMap(int initialCapacity, float loadFactor) {
+        super(initialCapacity, loadFactor);
     }
 
 
@@ -69,15 +71,15 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      * with the specified load factor.
      *
      * @param initialCapacity an <code>int</code> value
-     * @param loadFactor a <code>float</code> value
-     * @param noEntryKey a <code>int</code> value that represents
-     *                   <tt>null</tt> for the Key set.
-     * @param noEntryValue a <code>double</code> value that represents
-     *                   <tt>null</tt> for the Value set.
+     * @param loadFactor      a <code>float</code> value
+     * @param noEntryKey      a <code>int</code> value that represents
+     *                        <tt>null</tt> for the Key set.
+     * @param noEntryValue    a <code>double</code> value that represents
+     *                        <tt>null</tt> for the Value set.
      */
-    public TIntDoubleHashMap( int initialCapacity, float loadFactor,
-        int noEntryKey, double noEntryValue ) {
-        super( initialCapacity, loadFactor, noEntryKey, noEntryValue );
+    public TIntDoubleHashMap(int initialCapacity, float loadFactor,
+                             int noEntryKey, double noEntryValue) {
+        super(initialCapacity, loadFactor, noEntryKey, noEntryValue);
     }
 
 
@@ -85,15 +87,15 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      * Creates a new <code>TIntDoubleHashMap</code> instance containing
      * all of the entries in the map passed in.
      *
-     * @param keys a <tt>int</tt> array containing the keys for the matching values.
+     * @param keys   a <tt>int</tt> array containing the keys for the matching values.
      * @param values a <tt>double</tt> array containing the values.
      */
-    public TIntDoubleHashMap( int[] keys, double[] values ) {
-        super( Math.max( keys.length, values.length ) );
+    public TIntDoubleHashMap(int[] keys, double[] values) {
+        super(Math.max(keys.length, values.length));
 
-        int size = Math.min( keys.length, values.length );
-        for ( int i = 0; i < size; i++ ) {
-            this.put( keys[i], values[i] );
+        int size = Math.min(keys.length, values.length);
+        for (int i = 0; i < size; i++) {
+            this.put(keys[i], values[i]);
         }
     }
 
@@ -104,24 +106,24 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      *
      * @param map a <tt>TIntDoubleMap</tt> that will be duplicated.
      */
-    public TIntDoubleHashMap( TIntDoubleMap map ) {
-        super( map.size() );
-        if ( map instanceof TIntDoubleHashMap ) {
-            TIntDoubleHashMap hashmap = ( TIntDoubleHashMap ) map;
+    public TIntDoubleHashMap(TIntDoubleMap map) {
+        super(map.size());
+        if (map instanceof TIntDoubleHashMap) {
+            TIntDoubleHashMap hashmap = (TIntDoubleHashMap) map;
             this._loadFactor = hashmap._loadFactor;
             this.no_entry_key = hashmap.no_entry_key;
             this.no_entry_value = hashmap.no_entry_value;
             //noinspection RedundantCast
-            if ( this.no_entry_key != ( int ) 0 ) {
-                Arrays.fill( _set, this.no_entry_key );
+            if (this.no_entry_key != (int) 0) {
+                Arrays.fill(_set, this.no_entry_key);
             }
             //noinspection RedundantCast
-            if ( this.no_entry_value != ( double ) 0 ) {
-                Arrays.fill( _values, this.no_entry_value );
+            if (this.no_entry_value != (double) 0) {
+                Arrays.fill(_values, this.no_entry_value);
             }
-            setUp( (int) Math.ceil( DEFAULT_CAPACITY / _loadFactor ) );
+            setUp((int) Math.ceil(DEFAULT_CAPACITY / _loadFactor));
         }
-        putAll( map );
+        putAll(map);
     }
 
 
@@ -132,10 +134,10 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      * @param initialCapacity an <code>int</code> value
      * @return the actual capacity chosen
      */
-    protected int setUp( int initialCapacity ) {
+    protected int setUp(int initialCapacity) {
         int capacity;
 
-        capacity = super.setUp( initialCapacity );
+        capacity = super.setUp(initialCapacity);
         _values = new double[capacity];
         return capacity;
     }
@@ -146,8 +148,10 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      *
      * @param newCapacity an <code>int</code> value
      */
-     /** {@inheritDoc} */
-    protected void rehash( int newCapacity ) {
+    /**
+     * {@inheritDoc}
+     */
+    protected void rehash(int newCapacity) {
         int oldCapacity = _set.length;
 
         int oldKeys[] = _set;
@@ -158,147 +162,171 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         _values = new double[newCapacity];
         _states = new byte[newCapacity];
 
-        for ( int i = oldCapacity; i-- > 0; ) {
-            if( oldStates[i] == FULL ) {
+        for (int i = oldCapacity; i-- > 0; ) {
+            if (oldStates[i] == FULL) {
                 int o = oldKeys[i];
-                int index = insertKey( o );
+                int index = insertKey(o);
                 _values[index] = oldVals[i];
             }
         }
     }
 
 
-    /** {@inheritDoc} */
-    public double put( int key, double value ) {
-        int index = insertKey( key );
-        return doPut(value, index );
+    /**
+     * {@inheritDoc}
+     */
+    public double put(int key, double value) {
+        int index = insertKey(key);
+        return doPut(value, index);
     }
 
 
-    /** {@inheritDoc} */
-    public double putIfAbsent( int key, double value ) {
-        int index = insertKey( key );
+    /**
+     * {@inheritDoc}
+     */
+    public double putIfAbsent(int key, double value) {
+        int index = insertKey(key);
         if (index < 0)
             return _values[-index - 1];
-        return doPut(value, index );
+        return doPut(value, index);
     }
 
 
     private double doPut(double value, int index) {
         double previous = no_entry_value;
         boolean isNewMapping = true;
-        if ( index < 0 ) {
-            index = -index -1;
+        if (index < 0) {
+            index = -index - 1;
             previous = _values[index];
             isNewMapping = false;
         }
         _values[index] = value;
 
         if (isNewMapping) {
-            postInsertHook( consumeFreeSlot );
+            postInsertHook(consumeFreeSlot);
         }
 
         return previous;
     }
 
 
-    /** {@inheritDoc} */
-    public void putAll( Map<? extends Integer, ? extends Double> map ) {
-        ensureCapacity( map.size() );
-        // could optimize this for cases when map instanceof THashMap
-        for ( Map.Entry<? extends Integer, ? extends Double> entry : map.entrySet() ) {
+    /**
+     * {@inheritDoc}
+     */
+    public void putAll(Map<? extends Integer, ? extends Double> map) {
+        ensureCapacity(map.size());
+        // could winasobs this for cases when map instanceof THashMap
+        for (Map.Entry<? extends Integer, ? extends Double> entry : map.entrySet()) {
             this.put(entry.getKey(), entry.getValue());
         }
     }
 
 
-    /** {@inheritDoc} */
-    public void putAll( TIntDoubleMap map ) {
-        ensureCapacity( map.size() );
+    /**
+     * {@inheritDoc}
+     */
+    public void putAll(TIntDoubleMap map) {
+        ensureCapacity(map.size());
         TIntDoubleIterator iter = map.iterator();
-        while ( iter.hasNext() ) {
+        while (iter.hasNext()) {
             iter.advance();
-            this.put( iter.key(), iter.value() );
+            this.put(iter.key(), iter.value());
         }
     }
 
 
-    /** {@inheritDoc} */
-    public double get( int key ) {
-        int index = index( key );
+    /**
+     * {@inheritDoc}
+     */
+    public double get(int key) {
+        int index = index(key);
         return index < 0 ? no_entry_value : _values[index];
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void clear() {
         super.clear();
-        Arrays.fill( _set, 0, _set.length, no_entry_key );
-        Arrays.fill( _values, 0, _values.length, no_entry_value );
-        Arrays.fill( _states, 0, _states.length, FREE );
+        Arrays.fill(_set, 0, _set.length, no_entry_key);
+        Arrays.fill(_values, 0, _values.length, no_entry_value);
+        Arrays.fill(_states, 0, _states.length, FREE);
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isEmpty() {
         return 0 == _size;
     }
 
 
-    /** {@inheritDoc} */
-    public double remove( int key ) {
+    /**
+     * {@inheritDoc}
+     */
+    public double remove(int key) {
         double prev = no_entry_value;
-        int index = index( key );
-        if ( index >= 0 ) {
+        int index = index(key);
+        if (index >= 0) {
             prev = _values[index];
-            removeAt( index );    // clear key,state; adjust size
+            removeAt(index);    // clear key,state; adjust size
         }
         return prev;
     }
 
 
-    /** {@inheritDoc} */
-    protected void removeAt( int index ) {
+    /**
+     * {@inheritDoc}
+     */
+    protected void removeAt(int index) {
         _values[index] = no_entry_value;
-        super.removeAt( index );  // clear key, state; adjust size
+        super.removeAt(index);  // clear key, state; adjust size
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public TIntSet keySet() {
         return new TKeyView();
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int[] keys() {
         int[] keys = new int[size()];
         int[] k = _set;
         byte[] states = _states;
 
-        for ( int i = k.length, j = 0; i-- > 0; ) {
-          if ( states[i] == FULL ) {
-            keys[j++] = k[i];
-          }
+        for (int i = k.length, j = 0; i-- > 0; ) {
+            if (states[i] == FULL) {
+                keys[j++] = k[i];
+            }
         }
         return keys;
     }
 
 
-    /** {@inheritDoc} */
-    public int[] keys( int[] array ) {
+    /**
+     * {@inheritDoc}
+     */
+    public int[] keys(int[] array) {
         int size = size();
-        if ( array.length < size ) {
+        if (array.length < size) {
             array = new int[size];
         }
 
         int[] keys = _set;
         byte[] states = _states;
 
-        for ( int i = keys.length, j = 0; i-- > 0; ) {
-          if ( states[i] == FULL ) {
-            array[j++] = keys[i];
-          }
+        for (int i = keys.length, j = 0; i-- > 0; ) {
+            if (states[i] == FULL) {
+                array[j++] = keys[i];
+            }
         }
         return array;
     }
@@ -309,47 +337,53 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public double[] values() {
         double[] vals = new double[size()];
         double[] v = _values;
         byte[] states = _states;
 
-        for ( int i = v.length, j = 0; i-- > 0; ) {
-          if ( states[i] == FULL ) {
-            vals[j++] = v[i];
-          }
+        for (int i = v.length, j = 0; i-- > 0; ) {
+            if (states[i] == FULL) {
+                vals[j++] = v[i];
+            }
         }
         return vals;
     }
 
 
-    /** {@inheritDoc} */
-    public double[] values( double[] array ) {
+    /**
+     * {@inheritDoc}
+     */
+    public double[] values(double[] array) {
         int size = size();
-        if ( array.length < size ) {
+        if (array.length < size) {
             array = new double[size];
         }
 
         double[] v = _values;
         byte[] states = _states;
 
-        for ( int i = v.length, j = 0; i-- > 0; ) {
-          if ( states[i] == FULL ) {
-            array[j++] = v[i];
-          }
+        for (int i = v.length, j = 0; i-- > 0; ) {
+            if (states[i] == FULL) {
+                array[j++] = v[i];
+            }
         }
         return array;
     }
 
 
-    /** {@inheritDoc} */
-    public boolean containsValue( double val ) {
+    /**
+     * {@inheritDoc}
+     */
+    public boolean containsValue(double val) {
         byte[] states = _states;
         double[] vals = _values;
 
-        for ( int i = vals.length; i-- > 0; ) {
-            if ( states[i] == FULL && val == vals[i] ) {
+        for (int i = vals.length; i-- > 0; ) {
+            if (states[i] == FULL && val == vals[i]) {
                 return true;
             }
         }
@@ -357,26 +391,34 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
     }
 
 
-    /** {@inheritDoc} */
-    public boolean containsKey( int key ) {
-        return contains( key );
+    /**
+     * {@inheritDoc}
+     */
+    public boolean containsKey(int key) {
+        return contains(key);
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public TIntDoubleIterator iterator() {
-        return new TIntDoubleHashIterator( this );
+        return new TIntDoubleHashIterator(this);
     }
 
-    /** {@inheritDoc} */
-    public boolean increment( int key ) {
-        return adjustValue( key, ( double ) 1 );
+    /**
+     * {@inheritDoc}
+     */
+    public boolean increment(int key) {
+        return adjustValue(key, (double) 1);
     }
 
 
-    /** {@inheritDoc} */
-    public boolean adjustValue( int key, double amount ) {
-        int index = index( key );
+    /**
+     * {@inheritDoc}
+     */
+    public boolean adjustValue(int key, double amount) {
+        int index = index(key);
         if (index < 0) {
             return false;
         } else {
@@ -386,23 +428,25 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
     }
 
 
-    /** {@inheritDoc} */
-    public double adjustOrPutValue( int key, double adjust_amount, double put_amount ) {
-        int index = insertKey( key );
+    /**
+     * {@inheritDoc}
+     */
+    public double adjustOrPutValue(int key, double adjust_amount, double put_amount) {
+        int index = insertKey(key);
         final boolean isNewMapping;
         final double newValue;
-        if ( index < 0 ) {
-            index = -index -1;
-            newValue = ( _values[index] += adjust_amount );
+        if (index < 0) {
+            index = -index - 1;
+            newValue = (_values[index] += adjust_amount);
             isNewMapping = false;
         } else {
-            newValue = ( _values[index] = put_amount );
+            newValue = (_values[index] = put_amount);
             isNewMapping = true;
         }
 
         byte previousState = _states[index];
 
-        if ( isNewMapping ) {
+        if (isNewMapping) {
             postInsertHook(consumeFreeSlot);
         }
 
@@ -410,7 +454,9 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
     }
 
 
-    /** a view onto the keys of the map. */
+    /**
+     * a view onto the keys of the map.
+     */
     protected class TKeyView implements TIntSet {
 
         /**

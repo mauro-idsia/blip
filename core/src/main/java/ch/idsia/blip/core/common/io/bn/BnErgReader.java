@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.common.io.bn.BnUaiReader.readPotent;
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
-public class  BnErgReader {
+public class BnErgReader {
 
     private static final Logger log = Logger.getLogger(
             BnErgReader.class.getName());
@@ -46,8 +46,8 @@ public class  BnErgReader {
             ar = splitLine(rd);
             int p_ar = Integer.valueOf(ar[0]);
             TIntArrayList pars = new TIntArrayList();
-            for (int j = 0; j< p_ar; j++) {
-                pars.add(Integer.valueOf(ar[j+1]));
+            for (int j = 0; j < p_ar; j++) {
+                pars.add(Integer.valueOf(ar[j + 1]));
             }
 
             int[] parents = pars.toArray();

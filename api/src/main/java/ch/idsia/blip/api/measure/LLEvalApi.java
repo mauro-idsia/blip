@@ -4,14 +4,14 @@ package ch.idsia.blip.api.measure;
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.io.dat.BaseFileLineReader;
-import ch.idsia.blip.core.utils.IncorrectCallException;
-import ch.idsia.blip.core.utils.LLEval;
+import ch.idsia.blip.core.utils.other.IncorrectCallException;
+import ch.idsia.blip.core.utils.other.LLEval;
 import org.kohsuke.args4j.Option;
 
 import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 
 /**

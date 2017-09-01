@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.learn.solver.src.obs;
 
 import ch.idsia.blip.core.learn.solver.BaseSolver;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.BitSet;
 
@@ -15,103 +15,106 @@ public class ObsGreedySearcher extends ObsSearcher {
     /**
      * Try to improve structure with a single switch in the order (second way, koller's)
      *
-     * @param vars     old variable order
+     * @param vars old variable order
      * @return if an improvement was possible
      */
-        public boolean greedy(int[] vars) {
+    public boolean greedy(int[] vars) {
 
-            // Index of the best switch
-            int best_i = -1;
-            int best_j = -1;
-            // Gain from the best switch
-            double best_gain = 0;
-            // New best parent set
-            ParentSet best_pset = null;
+        // Index of the best switch
+        int best_i = -1;
+        int best_j = -1;
+        // Gain from the best switch
+        double best_gain = 0;
+        // New best parent set
+        ParentSet best_pset = null;
 
-            BitSet forbidden = new BitSet(n_var);
+        forbidden = new boolean[n_var];
 
-            for (int i = 0; i < (n_var - 1); i++) {
+        for (int i = 0; i < (n_var - 1); i++) {
 
-                int var = vars[i];
+            int var = vars[i];
 
-                BitSet domains = new BitSet();
+            BitSet domains = new BitSet();
 
-                for (int p : last_str[var].parents) {
+            for (int p : last_str[var].parents) {
+                domains.set(p);
+            }
+
+            for (int j = i + 1; j < n_var; j++) {
+                int next = vars[j];
+
+                // If this best parent set contains the next variable in the order
+                if (domains.get(next)) {
+                    // then it is not eligible for the switch
+                    forbidden[var] = true;
+                    break;
+                }
+
+                for (int p : last_str[next].parents) {
                     domains.set(p);
                 }
 
-                for (int j = i + 1; j < n_var; j++) {
-                    int next = vars[j];
+                // System.out.printf("%d (%s) con %d, %d\n", var, Arrays.toString(new_str.get(var).parents), next,
+                // Arrays.binarySearch(new_str.get(var).parents, next));
 
-                    // If this best parent set contains the next variable in the order
-                    if (domains.get(next)) {
-                        // then it is not eligible for the switch
-                        forbidden.set(var);
-                        break;
+                ParentSet nextPSet = last_str[next];
+
+                for (ParentSet pSet : m_scores[next]) {
+                    if (!acceptable(pSet.parents, forbidden)) {
+                        // If not acceptable, continue with the next one
+                        continue;
+                    }
+                    double gain = pSet.sk - nextPSet.sk;
+
+                    if (gain < 0) {
+                        // If it doesn't beat the new_sk, continue
+                        continue;
                     }
 
-                    for (int p : last_str[next].parents) {
-                        domains.set(p);
+                    if (gain > best_gain) {
+                        best_gain = gain;
+                        best_i = i;
+                        best_j = j;
+                        best_pset = pSet;
                     }
 
-                    // System.out.printf("%d (%s) con %d, %d\n", var, Arrays.toString(new_str.get(var).parents), next,
-                    // Arrays.binarySearch(new_str.get(var).parents, next));
-
-                    ParentSet nextPSet = last_str[next];
-
-                    for (ParentSet pSet : m_scores[next]) {
-                        if (!acceptable(pSet.parents, forbidden)) {
-                            // If not acceptable, continue with the next one
-                            continue;
-                        }
-                        double gain = pSet.sk - nextPSet.sk;
-
-                        if (gain < 0) {
-                            // If it doesn't beat the new_sk, continue
-                            continue;
-                        }
-
-                        if (gain > best_gain) {
-                            best_gain = gain;
-                            best_i = i;
-                            best_j = j;
-                            best_pset = pSet;
-                        }
-
-                        break;
-                    }
+                    break;
                 }
-
-                forbidden.set(var);
             }
 
-            if (best_i == -1) {
-                return false;
-            } else {
-
-                // System.out.printf("swapArray: %d and %d, gain: %.5f, new best: %s\n", vars.get(best_ix), vars.get(best_ix + 1), best_gain, best_pset);
-
-                // Update the structure for the following index
-                last_str[vars[best_j]] = best_pset;
-                // Do the switch
-                ArrayUtils.swapArray(vars, best_i, best_j);
-                // Update the new_sk
-                last_sk += best_gain;
-
-                return true;
-            }
-
+            forbidden[var] = true;
         }
+
+        if (best_i == -1) {
+            return false;
+        } else {
+
+            // System.out.printf("swapArray: %d and %d, gain: %.5f, new best: %s\n", vars.get(best_ix), vars.get(best_ix + 1), best_gain, best_pset);
+
+            // Update the structure for the following index
+            last_str[vars[best_j]] = best_pset;
+            // Do the switch
+            ArrayUtils.swapArray(vars, best_i, best_j);
+            // Update the new_sk
+            last_sk += best_gain;
+
+            return true;
+        }
+
+    }
 
 
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
+
+        vars = smp.sample();
+
 
         if (solver.verbose > 2)
             solver.log("going! \n");
 
         // Find initial structure!
-        super.search(vars);
+        super.search();
 
         if (solver.verbose > 2) {
             solver.logf("Initial: %.5f (check: %.5f) \n",

@@ -15,10 +15,6 @@ public class SeqScorer extends BaseScorer {
 
     private static final Logger log = Logger.getLogger(SeqScorer.class.getName());
 
-    protected SeqScorer(int maxExec) {
-        super(maxExec);
-    }
-
     @Override
     protected String getName() {
         return "Sequential selection";
@@ -70,7 +66,7 @@ public class SeqScorer extends BaseScorer {
             if (verbose > 2) {
                 log.info(
                         String.format("Starting with: %d, max time: %.2f", n,
-                        max_exec_time));
+                                max_exec_time));
             }
 
             prepare();
@@ -95,8 +91,6 @@ public class SeqScorer extends BaseScorer {
 
                     if (Arrays.binarySearch(pset, n) < 0) {
 
-                        int[][] p_values = score.computeParentSetValues(pset);
-
                         double sk = score.computeScore(n, pset);
 
                         addScore(cloneArray(pset), sk);
@@ -116,10 +110,11 @@ public class SeqScorer extends BaseScorer {
 
             }
 
-            logf(2, "ending with: %d, elapsed: %.2f, num evaluated %d",
-                    n, m_elapsed, score.numEvaluated);
+            if (verbose > 2)
+                logf("ending with: %d, elapsed: %.2f, num evaluated %d",
+                        n, m_elapsed, score.numEvaluated);
 
-         conclude();
+            conclude();
 
         }
 
@@ -127,7 +122,7 @@ public class SeqScorer extends BaseScorer {
         }
 
         /*
-        protected void checkBound(double sk, int[][] p_values, int[] pset) {
+        protected void checkBound(double sk, int[][] p_values, int[] s) {
 
             // de Campos and Ji style
             int k_i = 0;
@@ -141,12 +136,11 @@ public class SeqScorer extends BaseScorer {
             double bound = (-Math.log(dat.l_n_arity[n]) * k_i);
 
             if (sk > bound) {
-                pf("%s Ji and Campos strikes again! \n", Arrays.toString(pset));
+                pf("%s Ji and Campos strikes again! \n", Arrays.toString(s));
             }
         }
         */
     }
-
 
 
 }

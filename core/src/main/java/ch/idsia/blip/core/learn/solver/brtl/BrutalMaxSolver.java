@@ -29,8 +29,8 @@ public class BrutalMaxSolver extends BrutalSolver {
     @Override
     protected Searcher getSearcher() {
 
-      return new BrutalMaxDirectedSearcher(this, tw);
+        return new BrutalMaxDirectedSearcher(this, tw);
 
-           //  return new BrutalMaxDirectedSearcherWeight(this, tw);
+        //  return new BrutalMaxDirectedSearcherWeight(this, tw);
     }
 }

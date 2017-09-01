@@ -4,7 +4,7 @@ package ch.idsia.blip.core.common.analyze;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 
-import static ch.idsia.blip.core.utils.RandomStuff.p;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
 
 
 public class Entropy extends Analyzer {
@@ -111,7 +111,7 @@ public class Entropy extends Analyzer {
                 double p_y = getFreq(r_y.length, y_ar);
 
                 int r_xy = ArrayUtils.intersectN(r_x, r_y);
-                if (r_xy  == 0)
+                if (r_xy == 0)
                     continue;
 
                 // P(x, y)
@@ -215,10 +215,10 @@ public class Entropy extends Analyzer {
                 int[] r_x = dat.row_values[x][x_i];
 
                 int r_xy = ArrayUtils.intersectN(r_x, r_y);
-                if (r_xy  == 0)
+                if (r_xy == 0)
                     continue;
 
-                double p_xy = getFreq(r_xy,x_ar * y_ar);
+                double p_xy = getFreq(r_xy, x_ar * y_ar);
 
                 h += p_xy * log(p_xy);
 

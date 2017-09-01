@@ -3,12 +3,12 @@ package ch.idsia.blip.api.learn.scorer;
 
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.learn.scorer.RankerScores;
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getScoreReader;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getScoreReader;
 
 
 /**
@@ -19,10 +19,10 @@ public class RankScores extends Api {
     private static final Logger log = Logger.getLogger(
             RankScores.class.getName());
 
-    @Option(name="-j1", required = true, usage="First parent set scores output file (jkl format)")
+    @Option(name = "-j1", required = true, usage = "First parent set scores output file (jkl format)")
     private static String ph_scores_f = "";
 
-    @Option(name="-j2", required = true, usage="Second parent set scores output file (jkl format)")
+    @Option(name = "-j2", required = true, usage = "Second parent set scores output file (jkl format)")
     private static String ph_scores_s = "";
 
     private final RankerScores ranker;

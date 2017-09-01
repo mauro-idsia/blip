@@ -22,7 +22,7 @@ class DoneParentSet implements Comparable<DoneParentSet> {
     /**
      * Default constructor.
      *
-     * @param sk    score of the parent set
+     * @param sk score of the parent set
      */
     public DoneParentSet(double sk) {
         this.pset = pset.clone();

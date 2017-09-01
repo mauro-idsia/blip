@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class BnUaiReader {
 
@@ -57,8 +57,8 @@ public class BnUaiReader {
             ar = splitLine(rd);
             int p_ar = Integer.valueOf(ar[0]);
             TIntArrayList pars = new TIntArrayList();
-            for (int j = 0; j< p_ar; j++) {
-                pars.add(Integer.valueOf(ar[j+1]));
+            for (int j = 0; j < p_ar; j++) {
+                pars.add(Integer.valueOf(ar[j + 1]));
             }
             pars.remove(i);
             int[] parents = pars.toArray();
@@ -84,16 +84,17 @@ public class BnUaiReader {
             for (int j = 0; j < n_par; j++) {
                 ar = splitLine(rd);
                 double cnt = 0;
-                for (String a: ar) {
+                for (String a : ar) {
                     p = Double.valueOf(a);
                     pt[t++] = p;
-                    cnt +=p;
+                    cnt += p;
                 }
                 if (!doubleEquals(cnt, 1.0))
                     pf("SUM NOT 1.0: %s %.2f \n", Arrays.toString(ar), cnt);
             }
 
-            bn.l_potential_var[i]=  pt;
+            bn.l_potential_var[i] = pt;
+
         }
     }
 

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class CsvToDat {
 
@@ -24,10 +24,9 @@ public class CsvToDat {
             CsvToDat inst = new CsvToDat();
             inst.readAll(input);
             inst.write(output);
+        } catch (Exception e) {
+            logExp(log, e);
         }
-            catch (Exception e) {
-                logExp(log, e);
-            }
     }
 
     private void write(String output) throws IOException {
@@ -72,36 +71,36 @@ public class CsvToDat {
         data = new ArrayList<int[]>();
 
 
-            BufferedReader br = new BufferedReader( new FileReader(input));
-            String strLine = null;
-            StringTokenizer st = null;
-            int lineNumber = 0, tokenNumber = 0;
+        BufferedReader br = new BufferedReader(new FileReader(input));
+        String strLine = null;
+        StringTokenizer st = null;
+        int lineNumber = 0, tokenNumber = 0;
 
-            String fileName;
-            while((fileName = br.readLine()) != null) {
-                lineNumber++;
-                String[] result = fileName.split(",");
-                if (n_var == 0) {
-                    n_var = result.length;
-                    values = new ArrayList<List<String>>();
-                    for (int i = 0; i < n_var; i++) {
-                        values.add(new ArrayList<String>());
-                    }
+        String fileName;
+        while ((fileName = br.readLine()) != null) {
+            lineNumber++;
+            String[] result = fileName.split(",");
+            if (n_var == 0) {
+                n_var = result.length;
+                values = new ArrayList<List<String>>();
+                for (int i = 0; i < n_var; i++) {
+                    values.add(new ArrayList<String>());
                 }
-                if (n_var != result.length) {
-                    throw new Exception(f("Different number of values! Found %d at first line, %d at line %d",
-                            n_var, result.length, lineNumber));
-                }
-
-                int[] row = new int[n_var];
-                for (int i = 0; i < result.length; i++) {
-                    String v = result[i];
-                    List<String> l_v = values.get(i);
-                    if (!l_v.contains(v))
-                        l_v.add(v);
-                    row[i] = l_v.indexOf(v);
-                }
-                data.add(row);
             }
+            if (n_var != result.length) {
+                throw new Exception(f("Different number of values! Found %d at first line, %d at line %d",
+                        n_var, result.length, lineNumber));
+            }
+
+            int[] row = new int[n_var];
+            for (int i = 0; i < result.length; i++) {
+                String v = result[i];
+                List<String> l_v = values.get(i);
+                if (!l_v.contains(v))
+                    l_v.add(v);
+                row[i] = l_v.indexOf(v);
+            }
+            data.add(row);
         }
+    }
 }

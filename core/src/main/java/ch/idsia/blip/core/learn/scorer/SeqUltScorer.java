@@ -7,19 +7,22 @@ import ch.idsia.blip.core.common.analyze.MutualInformation;
 import ch.idsia.blip.core.common.score.BIC;
 import ch.idsia.blip.core.learn.scorer.concurrency.NotifyingThread;
 import ch.idsia.blip.core.learn.scorer.concurrency.ThreadCompleteListener;
-import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.utils.data.SIntSet;
+import ch.idsia.blip.core.utils.other.RandomStuff;
+import ch.idsia.blip.core.utils.structure.ArrayHashingStrategy;
+import ch.idsia.blip.core.utils.structure.TCustomHashMap;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.learn.scorer.SeqScorer.incrementPset;
-import static ch.idsia.blip.core.utils.RandomStuff.pf;
-import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
+import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 import static java.lang.StrictMath.max;
 
 
@@ -29,8 +32,8 @@ import static java.lang.StrictMath.max;
 
 public class SeqUltScorer extends BaseScorer {
 
-    private List<TreeMap<SIntSet, Double>> t_sc;
-    private List<TreeMap<SIntSet, Double>> t_h;
+    private List<Map<int[], Double>> t_sc;
+    private List<Map<int[], Double>> t_h;
 
     private static final Logger log = Logger.getLogger(
             SeqUltScorer.class.getName());
@@ -58,11 +61,11 @@ public class SeqUltScorer extends BaseScorer {
 
     public void searchAll() throws InterruptedException, IOException {
 
-        t_sc = new ArrayList<TreeMap<SIntSet, Double>>();
-        t_h = new ArrayList<TreeMap<SIntSet, Double>>();
+        t_sc = new ArrayList<Map<int[], Double>>();
+        t_h = new ArrayList<Map<int[], Double>>();
         for (int i = 0; i < n_var; i++) {
-            t_sc.add(new TreeMap<SIntSet, Double>());
-            t_h.add(new TreeMap<SIntSet, Double>());
+            t_sc.add(new TCustomHashMap<int[], Double>(new ArrayHashingStrategy()));
+            t_h.add(new TCustomHashMap<int[], Double>(new ArrayHashingStrategy()));
         }
 
         voidSk = new double[n_var];
@@ -81,30 +84,32 @@ public class SeqUltScorer extends BaseScorer {
 
         for (int n = 0; n < n_var; n++) {
             double sk = score.computeScore(n);
-            t_sc.get(n).put(new SIntSet(), sk);
+            t_sc.get(n).put(new int[0], sk);
             voidSk[n] = sk;
 
             double h = ent.computeH(n);
-            t_h.get(n).put(new SIntSet(), h);
+            t_h.get(n).put(new int[0], h);
             voidH[n] = h;
         }
 
-        // For each pset size, search all the variables, record the joint entropies
+        // For each s size, search all the variables, record the joint entropies
         for (int i = 1; i <= max_pset_size; i++) {
-            safeLogf(1, "\nNew level: %d\n", i);
+            if (verbose > 1)
+                safeLogf("\nNew level: %d\n", i);
             Thread t1 = new Thread(new UltExecutor(thread_pool_size, 0, n_var, this, i));
             t1.start();
             t1.join();
         }
 
-        safeLogf(1, "\nDone! \n");
+        if (verbose > 1)
+            safeLogf("\nDone! \n");
 
         // Write scores anyway TODO
-        scoreWriter = new ScoreWriter(this, writer, 0, n_var, 0);
+        scoreWriter = new ScoreWriter(this, ph_scores, 0, n_var, 0);
         Thread t2 = new Thread(scoreWriter);
         t2.start();
         for (int i = 0; i < n_var; i++) {
-            scoreWriter.add(i, pruneScores(t_sc.get(i), voidSk[i]));
+            scoreWriter.add(i, t_sc.get(i));
         }
 
         t2.join();
@@ -118,8 +123,8 @@ public class SeqUltScorer extends BaseScorer {
 
     public class SeqUltSearcher extends BaseSearcher {
 
-        TreeMap<SIntSet, Double> l_sc;
-        TreeMap<SIntSet, Double> l_h;
+        Map<int[], Double> l_sc;
+        Map<int[], Double> l_h;
 
         private final int pset_size;
 
@@ -127,8 +132,8 @@ public class SeqUltScorer extends BaseScorer {
             super(n);
             this.pset_size = pset_size;
 
-            l_sc = new TreeMap<SIntSet, Double>();
-            l_h = new TreeMap<SIntSet, Double>();
+            l_sc = new TCustomHashMap<int[], Double>(new ArrayHashingStrategy());
+            l_h = new TCustomHashMap<int[], Double>(new ArrayHashingStrategy());
         }
 
         /**
@@ -151,7 +156,8 @@ public class SeqUltScorer extends BaseScorer {
                 cnt = nextPset(pset);
             }
 
-            safeLogf(1, "%d ", n);
+            if (verbose > 1)
+                safeLogf("%d ", n);
 
             aggregate(n, l_sc, l_h);
         }
@@ -191,9 +197,9 @@ public class SeqUltScorer extends BaseScorer {
             SIntSet s = new SIntSet(cloneArray(pset));
 
             /*
-            for (int Z: pset) {
-                int[] o_pset = reduceArray(pset, Z);
-                double p = -pen(n, pset);
+            for (int Z: s) {
+                int[] o_pset = reduceArray(s, Z);
+                double p = -pen(n, s);
                 if (o_pset.length > 1) {
                     double o_sk = t_sc.get(n).get(new SIntSet(o_pset));
                     if(p + o_sk >= 0){
@@ -201,8 +207,8 @@ public class SeqUltScorer extends BaseScorer {
                     }
                 }
             }*/
-/*p(Arrays.toString(pset));
-            if (n == 1 && Arrays.toString(pset).equals("[0, 2, 6, 7]"))
+/*p(Arrays.toString(s));
+            if (n == 1 && Arrays.toString(s).equals("[0, 2, 6, 7]"))
                 p("bro");*/
 
             // Pruning
@@ -245,10 +251,10 @@ public class SeqUltScorer extends BaseScorer {
                 return;
 
             double sk = bic.computeScore(n, pset);
-            l_sc.put(s, sk);
+            l_sc.put(s.set, sk);
 
             double h = ent.computeHCond(n, pset);
-            l_h.put(s, h);
+            l_h.put(s.set, h);
         }
 
         private double pen(int n, int[] pset) {
@@ -282,7 +288,6 @@ public class SeqUltScorer extends BaseScorer {
 
             return false;
         }
-
 
 
         private boolean pruneX(int[] orig, int[] pset) {
@@ -335,7 +340,6 @@ public class SeqUltScorer extends BaseScorer {
         }
 
 
-
         private boolean pruneXPi(int[] orig, int[] pset) {
 
             SIntSet s = new SIntSet(pset);
@@ -366,7 +370,7 @@ public class SeqUltScorer extends BaseScorer {
                 return false;
 
             double t1 = dat.n_datapoints * h;
-            double t2 = (dat.l_n_arity[y]-1) * pen;
+            double t2 = (dat.l_n_arity[y] - 1) * pen;
 
             // if (t2 > t1)
             //      p("ciao");
@@ -374,37 +378,37 @@ public class SeqUltScorer extends BaseScorer {
             // if (s.set.length >=3)
             //     p("CIA");
 //            if (t1 <=t2) {
- //               p(ent.computeHCond(v, s.set));
-  //              p("ca");
-   //          }
+            //               p(ent.computeHCond(v, s.set));
+            //              p("ca");
+            //          }
 
-            return  t1 <= t2 ;
+            return t1 <= t2;
         }
 
         private boolean check(double pen, SIntSet s, int v, int y) {
-             Double h = t_h.get(v).get(s);
-              if (h == null)
-                 return false;
-            double sc2 = bic.computeScore(n,s.set);
-             double pen2 = bic.getPenalization(n, s.set);
-            double t = sc2 +pen2;
+            Double h = t_h.get(v).get(s);
+            if (h == null)
+                return false;
+            double sc2 = bic.computeScore(n, s.set);
+            double pen2 = bic.getPenalization(n, s.set);
+            double t = sc2 + pen2;
 
             h = voidH[v];
 
             double t1 = dat.n_datapoints * h;
-            double t2 = (dat.l_n_arity[y]-1) * pen;
+            double t2 = (dat.l_n_arity[y] - 1) * pen;
 
             // if (t2 > t1)
             //      p("ciao");
 
-             // if (s.set.length >=3)
-             //     p("CIA");
+            // if (s.set.length >=3)
+            //     p("CIA");
 
-            return  t1 <= t2 ;
+            return t1 <= t2;
         }
     }
 
-    private void aggregate(int n, TreeMap<SIntSet, Double> l_sc, TreeMap<SIntSet, Double> l_h) {
+    private void aggregate(int n, Map<int[], Double> l_sc, Map<int[], Double> l_h) {
         synchronized (lock) {
             t_sc.get(n).putAll(l_sc);
             t_h.get(n).putAll(l_h);

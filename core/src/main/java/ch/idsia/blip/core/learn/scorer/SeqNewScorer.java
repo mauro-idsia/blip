@@ -10,9 +10,9 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.p;
-import static ch.idsia.blip.core.utils.RandomStuff.wf;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
 
 
 /**
@@ -31,10 +31,6 @@ public class SeqNewScorer extends SeqScorer {
     Object lock2 = new Object();
     public Writer wr;
 
-    private SeqNewScorer(int maxExec) {
-        super(maxExec);
-    }
-
     @Override
     protected String getName() {
         return "New sequential selection";
@@ -45,10 +41,10 @@ public class SeqNewScorer extends SeqScorer {
     }
 
     @Override
-    public void prepareSearch() throws Exception {
-        super.prepareSearch();
+    public void prepare() {
+        super.prepare();
 
-        def_cnt += n_var * (n_var -1);
+        def_cnt += n_var * (n_var - 1);
     }
 
     @Override
@@ -69,7 +65,7 @@ public class SeqNewScorer extends SeqScorer {
             super.prepare();
 
             computeW();
-         }
+        }
 
         @Override
         public void checkBound(double sk, int[] n_pset) {
@@ -77,7 +73,7 @@ public class SeqNewScorer extends SeqScorer {
             boolean old_bound = false;
             boolean new_bound = false;
 
-            for (int Z: n_pset) {
+            for (int Z : n_pset) {
 
                 boolean explore = true;
 
@@ -99,25 +95,25 @@ public class SeqNewScorer extends SeqScorer {
                 }
             }
 
-                synchronized (lock2) {
-                    if (new_bound)
-                        new_cnt ++;
+            synchronized (lock2) {
+                if (new_bound)
+                    new_cnt++;
 
-                    if (old_bound)
-                        old_cnt++;
+                if (old_bound)
+                    old_cnt++;
 
-                    if (new_bound || old_bound)
-                        both_cnt++;
+                if (new_bound || old_bound)
+                    both_cnt++;
 
-                    def_cnt++;
+                def_cnt++;
 
-                    try {
-                        wf(wr, "%.2f %d %s\n", sk, n, Arrays.toString(n_pset));
-                        wr.flush();
-                    } catch (IOException ex) {
-                        p(ex.getMessage());
-                    }
+                try {
+                    wf(wr, "%.2f %d %s\n", sk, n, Arrays.toString(n_pset));
+                    wr.flush();
+                } catch (IOException ex) {
+                    p(ex.getMessage());
                 }
+            }
 
         }
 
@@ -128,12 +124,12 @@ public class SeqNewScorer extends SeqScorer {
             start = System.currentTimeMillis();
             elapsed = 0;
 
-            int[] pset = new int[0];
+            int[] s = new int[0];
 
-            exploreSubSet(pset);
+            exploreSubSet(s);
         }
 
-        private void exploreSubSet(int[] pset) throws IOException {
+        private void exploreSubSet(int[] s) throws IOException {
 
             if (!thereIsTime())
                 return;
@@ -144,36 +140,36 @@ public class SeqNewScorer extends SeqScorer {
                 computed += 1;
             }
 
-            //pf("%s\n", Arrays.toString(pset));
+            //pf("%s\n", Arrays.toString(s));
 
-            if (pset.length > 0) {
+            if (s.length > 0) {
 
-                sk = score.computeScore(n, pset);
+                sk = score.computeScore(n, s);
 
-                // p(Arrays.toString(pset));
+                // p(Arrays.toString(s));
 
                 if (sk > voidSk) {
-                    addScore(pset, sk);
+                    addScore(s, sk);
                 }
             } else
                 sk = voidSk;
 
 
-            if (pset.length >= max_pset_size)
+            if (s.length >= max_pset_size)
                 return;
 
             // Check for supersets to explore
             for (int Z = 0; Z < n_var && thereIsTime(); Z++) {
 
-                if (Z <= n && Arrays.binarySearch(pset, Z) >= 0)
+                if (Z <= n && Arrays.binarySearch(s, Z) >= 0)
                     continue;
 
                 boolean explore = true;
 
-                int[] n_pset = expandArray(pset, Z);
+                int[] n_pset = expandArray(s, Z);
                 double p = -pen(n, n_pset);
-                double p_o = pen(n, pset);
-                double p2 = (1 - dat.l_n_arity[Z]) * pen(n, pset);
+                double p_o = pen(n, s);
+                double p2 = (1 - dat.l_n_arity[Z]) * pen(n, s);
 
                 // OLD BOUND
                 if (explore && oldBound) {
@@ -199,21 +195,21 @@ public class SeqNewScorer extends SeqScorer {
             }
         }
 
-        private void expandParentSet(int[] pset) throws IOException {
+        private void expandParentSet(int[] s) throws IOException {
 
             /*
-            // Find the best Y with highest w(X, Y) + Pen(X, pset + Y)
+            // Find the best Y with highest w(X, Y) + Pen(X, s + Y)
             int best_Y = -1;
             double best_S = -Double.MAX_VALUE;
 
-            // Pen(X, pset)
-            double pen = pen(n, pset);
+            // Pen(X, s)
+            double pen = pen(n, s);
 
             for (int Y = 0; Y < n_var; Y++) {
                 if (Y == n)
                     continue;
 
-                // w(X, Y) + Pen(X, pset) * |Y|
+                // w(X, Y) + Pen(X, s) * |Y|
                 double S = w[Y] + pen*dat.l_n_arity[Y];
                 if (S > best_S) {
                     best_Y = Y;
@@ -252,21 +248,21 @@ public class SeqNewScorer extends SeqScorer {
     }
 
 
-    /*public static boolean incrementPset(int[] pset, int i, int n_var) {
+    /*public static boolean incrementPset(int[] s, int i, int n_var) {
 
         if (i < 0) {
             return false;
         }
 
         // Try to increment set at position thread
-        pset[i]++;
+        s[i]++;
 
         // Check if we have to backtrack
-        if (pset[i] > (n_var - (pset.length - i))) {
-            boolean cnt = incrementPset(pset, i - 1, n_var);
+        if (s[i] > (n_var - (s.length - i))) {
+            boolean cnt = incrementPset(s, i - 1, n_var);
 
             if (cnt) {
-                pset[i] = pset[i - 1] + 1;
+                s[i] = s[i - 1] + 1;
             }
             return cnt;
         }

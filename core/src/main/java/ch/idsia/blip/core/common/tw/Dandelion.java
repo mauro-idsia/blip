@@ -1,11 +1,11 @@
 package ch.idsia.blip.core.common.tw;
 
 
-import ch.idsia.blip.core.Base;
-import ch.idsia.blip.core.utils.Pair;
+import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.array.TIntList;
+import ch.idsia.blip.core.utils.other.Pair;
 
 import java.util.Arrays;
 
@@ -25,7 +25,7 @@ public class Dandelion {
     /**
      * Uniformally sample a code
      */
-    public static Dandelion sample(int n, int k, Base b) {
+    public static Dandelion sample(int n, int k, App b) {
 
         int[] Q = zeros(k);
         TIntArrayList v = new TIntArrayList();
@@ -68,7 +68,7 @@ public class Dandelion {
 
         int n = S[0].length + 2;
 
-        // construct G from S
+        // construct Base from S
         TIntArrayList V = new TIntArrayList();
 
         for (int i = 0; i < n; i++) {
@@ -116,7 +116,7 @@ public class Dandelion {
             l[i] = G[2][temp2[i]];
         }
 
-        // identify all cycles in G
+        // identify all cycles in Base
         // processed -> 1, inProgress ->2
 
         int[] status = zeros(n);
@@ -206,13 +206,13 @@ public class Dandelion {
                 if (S[1][i] != -1) {
                     throw new Error(
                             "Row " + i + " of S incorrect! " + S[0][i] + ", "
-                            + S[1][i]);
+                                    + S[1][i]);
                 }
             } else if (S[1][i] == -1) {
                 if (S[0][i] != 0) {
                     throw new Error(
                             "Row " + i + " of S incorrect! " + S[0][i] + ", "
-                            + S[1][i]);
+                                    + S[1][i]);
                 }
             } else if (S[0][i] < 1 || S[0][i] > n - k) {
                 throw new Error("Row " + i + " of S[0] incorrect! " + S[0][i]);

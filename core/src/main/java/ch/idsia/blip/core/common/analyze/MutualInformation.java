@@ -5,13 +5,12 @@ import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.math.ChiSquare;
 import ch.idsia.blip.core.learn.constraints.oracle.Oracle;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
-import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.math.FastMath;
 
 import java.io.IOException;
 
-import static ch.idsia.blip.core.utils.RandomStuff.f;
-import static ch.idsia.blip.core.utils.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 
 
 public class MutualInformation extends Oracle {
@@ -26,7 +25,7 @@ public class MutualInformation extends Oracle {
      */
     private int r;
 
-    private final int  maxDF;
+    private final int maxDF;
 
     public MutualInformation(DataSet dat) {
         this(dat, 0.95, 1);
@@ -61,8 +60,8 @@ public class MutualInformation extends Oracle {
     /**
      * Compute the MI between all the variables
      *
-     * @throws java.io.IOException if there is an error with the reader
      * @param v
+     * @throws java.io.IOException if there is an error with the reader
      */
     private void compute(int v) throws IOException {
 
@@ -118,17 +117,17 @@ public class MutualInformation extends Oracle {
                 double p_y = getFreq(r_y.length, y_ar);
 
                 int n_xy = ArrayUtils.intersectN(r_x, r_y);
-if (n_xy == 0)
-    continue;
+                if (n_xy == 0)
+                    continue;
                 // P(x, y)
                 double p_xy = getFreq(n_xy, x_ar * y_ar);
 
-                double t1 =  FastMath.log(p_x) + FastMath.log(p_y);
+                double t1 = FastMath.log(p_x) + FastMath.log(p_y);
                 double t2 = FastMath.log(p_xy);
-                double t =  t2-t1;
+                double t = t2 - t1;
                 t = p_xy * (t);
                 mi += t;
- // pf("%.5f \n", mi);
+                // pf("%.5f \n", mi);
                 // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, FastMath.log(p_xy / (p_x * p_y)));
             }
         }
@@ -151,17 +150,17 @@ if (n_xy == 0)
             // P(z)
             int[] r_z = dat.row_values[z][z_i];
             double p_z = getFreq(r_z.length, z_ar);
-        for (int x_i = 0; x_i < x_ar; x_i++) {
-            // P(x)
-            int[] r_x = dat.row_values[x][x_i];
-            double p_x = getFreq(r_x.length, x_ar);
+            for (int x_i = 0; x_i < x_ar; x_i++) {
+                // P(x)
+                int[] r_x = dat.row_values[x][x_i];
+                double p_x = getFreq(r_x.length, x_ar);
 
-            for (int y_i = 0; y_i < y_ar; y_i++) {
-                // P(y)
-                int[] r_y = dat.row_values[y][y_i];
-                double p_y = getFreq(r_y.length, y_ar);
+                for (int y_i = 0; y_i < y_ar; y_i++) {
+                    // P(y)
+                    int[] r_y = dat.row_values[y][y_i];
+                    double p_y = getFreq(r_y.length, y_ar);
 
-                int r_xy[] = ArrayUtils.intersect(r_x, r_y);
+                    int r_xy[] = ArrayUtils.intersect(r_x, r_y);
 
                     // P(x, y)
                     double p_xyz = getFreq(ArrayUtils.intersectN(r_xy, r_z),
@@ -175,12 +174,11 @@ if (n_xy == 0)
 
                     mi += p_xyz
                             * ((FastMath.log(p_z) + FastMath.log(p_xyz))
-                                    - (FastMath.log(p_xz) + FastMath.log(p_yz)));
+                            - (FastMath.log(p_xz) + FastMath.log(p_yz)));
 
 
-
-                     pf(" %.5f * log ( (%.5f * %.5f) / (%.5f * %.5f) ) -> %.5f \n",
-                     p_xyz, p_z, p_xyz, p_xz, p_yz, mi);
+                    pf(" %.5f * log ( (%.5f * %.5f) / (%.5f * %.5f) ) -> %.5f \n",
+                            p_xyz, p_z, p_xyz, p_xz, p_yz, mi);
 
 
                 }
@@ -262,13 +260,7 @@ if (n_xy == 0)
         if (z.length == 1)
             return dat.row_values[z[0]];
 
-        if (cache_z_rows == null)
-            return computeParentSetValues(z);
-
-            SIntSet key = new SIntSet(z);
-            if (!cache_z_rows.containsKey(key))
-                cache_z_rows.put(key, computeParentSetValues(z));
-            return cache_z_rows.get(key);
+        return computeParentSetValues(z);
     }
 
     /**
@@ -541,10 +533,10 @@ if (n_xy == 0)
 
         // Computes degree of freedom
         int df = (dat.l_n_arity[x] - 1) * (dat.l_n_arity[y] - 1);
-        for (int c:z)
+        for (int c : z)
             df *= dat.l_n_arity[c];
 
-       df = Math.min(df, maxDF);
+        df = Math.min(df, maxDF);
 
         double p_value = ChiSquare.pochisq(est_I, df);
 

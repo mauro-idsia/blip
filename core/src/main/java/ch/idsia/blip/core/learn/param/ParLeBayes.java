@@ -38,7 +38,7 @@ public class ParLeBayes extends ParLe {
 
         TIntIntHashMap conf = new TIntIntHashMap();
         conf.put(var, 0);
-        for (int p:parents) {
+        for (int p : parents) {
             conf.put(p, 0);
         }
 
@@ -53,7 +53,7 @@ public class ParLeBayes extends ParLe {
                 n_j += n_ij[v];
             }
 
-            int ix = j*ar;
+            int ix = j * ar;
             for (int v = 0; v < ar; v++) {
                 potent[ix++] = (n_ij[v] + alpha_ij) / (n_j + alpha_j);
             }
@@ -61,6 +61,7 @@ public class ParLeBayes extends ParLe {
 
         return potent;
     }
+
 
     public double[] computePotentialsSimple(int var) {
         int ar = bn.arity(var);

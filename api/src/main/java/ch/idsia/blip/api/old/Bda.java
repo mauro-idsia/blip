@@ -5,13 +5,14 @@ import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.score.BDeu;
-import ch.idsia.blip.core.utils.IncorrectCallException;
+import ch.idsia.blip.core.utils.other.IncorrectCallException;
+import ch.idsia.blip.core.utils.data.SIntSet;
 import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getBayesianNetwork;
-import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getBayesianNetwork;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
 
 
 /**
@@ -22,13 +23,13 @@ public class Bda extends Api {
 
     private static final Logger log = Logger.getLogger(Bda.class.getName());
 
-    @Option(name="-n", required = true, usage="Bayesian network file path")
+    @Option(name = "-n", required = true, usage = "Bayesian network file path")
     private String ph;
 
-    @Option(name="-d", required = true, usage="Datafile path (.dat format)")
+    @Option(name = "-d", required = true, usage = "Datafile path (.dat format)")
     private String s_datafile;
 
-    @Option(name="-a", required = true, usage="Equivalent sample size")
+    @Option(name = "-a", required = true, usage = "Equivalent sample size")
     private double alpha = 1;
 
 
@@ -36,7 +37,7 @@ public class Bda extends Api {
      * Command line execution
      *
      * @param args parameters provided
-     * @throws ch.idsia.blip.core.utils.IncorrectCallException if there is a problem with parameters
+     * @throws IncorrectCallException if there is pa problem with parameters
      */
     public static void main(String[] args) throws IncorrectCallException {
         defaultMain(args, new Bda(), log);

@@ -4,6 +4,7 @@ package ch.idsia.blip.core.common.score;
 import ch.idsia.blip.core.common.DataSet;
 
 import java.util.Arrays;
+import java.util.Map;
 
 
 /**
@@ -29,7 +30,7 @@ public class MIT extends Score {
     }
 
     @Override
-    public double computeScore(int n, int[] set_p) {
+    public double computeScore(int n, int[] set_p, int[][] p_values) {
 /*
         numEvaluated++;
 
@@ -103,7 +104,7 @@ public class MIT extends Score {
         return sk;
         */
 
-return -Double.MAX_VALUE;
+        return -Double.MAX_VALUE;
     }
 
     private double penalizationTerm(int n, int[] set_p) {
@@ -139,23 +140,6 @@ return -Double.MAX_VALUE;
     }
 
     @Override
-    public double inter(int n, int[] set, int p2) {
-
-        return 0;
-
-        /*
-         int[] n_set = new int[set.length + 1];
-
-         cloneArray(set, n_set);
-         n_set[set.length] = p2;
-         Arrays.sort(n_set);
-
-         return penalizationTerm(n, set) + penalizationTerm(n, new int[] { p2})
-         - penalizationTerm(n, n_set);
-         */
-    }
-
-    @Override
     public String descr() {
         return "MIT";
     }
@@ -183,4 +167,10 @@ return -Double.MAX_VALUE;
 
         return 0;
     }
+
+    @Override
+    public double computePrediction(int n, int[] p1, int p2, Map<int[], Double> scores) {
+        return scores.get(p1) + scores.get(new int[]{p2});
+    }
+
 }

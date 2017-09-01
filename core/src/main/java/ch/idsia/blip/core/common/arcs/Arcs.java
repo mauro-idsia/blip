@@ -7,8 +7,8 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
 import static ch.idsia.blip.core.utils.cmd.RunTimeout.cmdTimeout;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 
 public abstract class Arcs {

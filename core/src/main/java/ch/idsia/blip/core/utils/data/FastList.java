@@ -13,7 +13,7 @@ public class FastList<K> {
 
 
     public FastList(Random rnd) {
-        this.rnd = rnd ;
+        this.rnd = rnd;
         reset();
     }
 
@@ -24,15 +24,15 @@ public class FastList<K> {
 
     public K rand() {
         int ix = rnd.nextInt(ar.size());
-        return  ar.get(ix);
+        return ar.get(ix);
     }
 
     public void delete(K obj) {
         int i = hm.get(obj);
-        swap(ar, i, ar.size()-1);
+        swap(ar, i, ar.size() - 1);
         hm.remove(obj);
         hm.put(ar.get(i), i);
-        ar.remove(ar.size()-1);
+        ar.remove(ar.size() - 1);
     }
 
     public void swap(ArrayList<K> v, int i, int j) {

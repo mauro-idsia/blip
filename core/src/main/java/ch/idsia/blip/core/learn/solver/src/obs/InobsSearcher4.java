@@ -2,18 +2,16 @@ package ch.idsia.blip.core.learn.solver.src.obs;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.FastList;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.exp.CyclicGraphException;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.Arrays;
-import java.util.BitSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.p;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
-import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
 
 public class InobsSearcher4 extends ObsSearcher {
 
@@ -31,8 +29,8 @@ public class InobsSearcher4 extends ObsSearcher {
 
         for (int i = 0; i < n_var; i++) {
             TIntHashSet l = new TIntHashSet();
-            for (ParentSet ps: scores[i])
-                for (int p: ps.parents)
+            for (ParentSet ps : scores[i])
+                for (int p : ps.parents)
                     l.add(p);
 
             cand[i] = l.toArray();
@@ -43,7 +41,7 @@ public class InobsSearcher4 extends ObsSearcher {
     /**
      * Select a variable, try to improve the score moving it on the list
      *
-     * @param vars     old variable order
+     * @param vars old variable order
      * @return if an improvement was possible
      */
     public boolean greedy(int[] vars, int ix) {
@@ -65,9 +63,9 @@ public class InobsSearcher4 extends ObsSearcher {
         for (int i = 0; i < n_var; i++)
             new_vars[i] = vars[i];
 
-        BitSet forbidden = new BitSet(n_var);
+        forbidden = new boolean[n_var];
         for (int i = 0; i < ix; i++) {
-            forbidden.set(vars[i]);
+            forbidden[vars[i]] = true;
         }
 
         int lim;
@@ -76,7 +74,7 @@ public class InobsSearcher4 extends ObsSearcher {
                 break;
         }
 
-        for (int ix2 = ix; ix2>= lim +1; ix2--) {
+        for (int ix2 = ix; ix2 >= lim + 1; ix2--) {
             // Switch in the order ix2 and ix
             varSwitch(ix2, new_str, new_vars, forbidden);
             double sk = skore(new_str);
@@ -92,7 +90,7 @@ public class InobsSearcher4 extends ObsSearcher {
 
         // If no best gain, return false
         if (best_str == null)
-        return false;
+            return false;
 
         // Save best
         last_str = best_str;
@@ -105,8 +103,8 @@ public class InobsSearcher4 extends ObsSearcher {
     private void checkCorrect(ParentSet[] new_str, int[] new_vars) {
         for (int i = 0; i < n_var; i++) {
             int jx = ArrayUtils.index(i, new_vars);
-            for (int p: new_str[i].parents) {
-                int jx2 =  ArrayUtils.index(p, new_vars);
+            for (int p : new_str[i].parents) {
+                int jx2 = ArrayUtils.index(p, new_vars);
                 if (jx2 < jx)
                     p("Cdgfgfgdf");
             }
@@ -129,11 +127,11 @@ public class InobsSearcher4 extends ObsSearcher {
         return new_s;
     }
 
-    private void varSwitch(int ix, ParentSet[] str, int[] vars, BitSet forbidden) {
+    private void varSwitch(int ix, ParentSet[] str, int[] vars, boolean[] forbidden) {
         int a = vars[ix];
         int b = vars[ix - 1];
 
-        forbidden.set(a);
+        forbidden[a] = true;
 
         // pf("Old parent set for %d: %s \n", b, str[b]);
 
@@ -147,17 +145,17 @@ public class InobsSearcher4 extends ObsSearcher {
         //  pf("Old parent set for %d: %s \n", a, str[a]);
 
         // Find new best parent set for a, now that b is available
-        forbidden.clear(b);
+        forbidden[b] = false;
         if (find(b, cand[a]))
             bests(a, str, forbidden);
 
         // pf("New parent set for %d: %s \n", a, str[a]);
         // p("");
 
-        ArrayUtils.swapArray(vars, ix, ix-1);
+        ArrayUtils.swapArray(vars, ix, ix - 1);
     }
 
-    private void bests(int a, ParentSet[] str, BitSet forbidden) {
+    private void bests(int a, ParentSet[] str, boolean[] forbidden) {
         for (ParentSet pSet : m_scores[a]) {
             if (acceptable(pSet.parents, forbidden)) {
                 str[a] = pSet;
@@ -167,24 +165,26 @@ public class InobsSearcher4 extends ObsSearcher {
     }
 
     private double skore(ParentSet[] s) {
-            double check = 0.0;
+        double check = 0.0;
 
-            for (ParentSet p : s) {
-                    check += p.sk;
-            }
-            return check;
+        for (ParentSet p : s) {
+            check += p.sk;
+        }
+        return check;
 
     }
 
 
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
+
+        vars = smp.sample();
 
         if (solver.verbose > 2)
             solver.log("going! \n");
 
         // Find initial structure!
-        super.search(vars);
+        super.search();
 
         if (solver.verbose > 2) {
             solver.logf("Initial: %.5f (check: %.5f) \n",
@@ -201,12 +201,11 @@ public class InobsSearcher4 extends ObsSearcher {
             // Choose a random variable
             int ix = todo.rand();
 
-            if(greedy(vars, ix)) {
-             if (todo.size() != n_var -1)
-                 initT(todo);
-            }
-            else
-               todo.delete(ix);
+            if (greedy(vars, ix)) {
+                if (todo.size() != n_var - 1)
+                    initT(todo);
+            } else
+                todo.delete(ix);
 
             if (todo.size() == 0) {
                 break;

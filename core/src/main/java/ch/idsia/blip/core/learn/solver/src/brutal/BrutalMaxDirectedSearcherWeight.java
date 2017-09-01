@@ -2,19 +2,19 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
-import ch.idsia.blip.core.utils.Pair;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.data.common.TIntIterator;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.exp.CyclicGraphException;
+import ch.idsia.blip.core.utils.other.Pair;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
 
 public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
 
@@ -39,7 +39,7 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
         maxSk = new double[n_var];
 
         for (int i = 0; i < n_var; i++) {
-            int j = m_scores[i].length -1;
+            int j = m_scores[i].length - 1;
             minSk[i] = m_scores[i][j].sk;
             maxSk[i] = m_scores[i][0].sk;
         }
@@ -48,8 +48,8 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
 
         for (int i = 0; i < n_var; i++) {
             TIntHashSet l = new TIntHashSet();
-            for (ParentSet ps: scores[i])
-                for (int p: ps.parents)
+            for (ParentSet ps : scores[i])
+                for (int p : ps.parents)
                     l.add(p);
 
             parents[i] = l.toArray();
@@ -59,9 +59,9 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
 
     // Maximize a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        this.vars = smp.sample();
 
         // clear all
         clear();
@@ -129,7 +129,7 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
                     cands = expandArray(cands, p);
         }
 
-        cloneArray(init.toArray(), vars, tw+1);
+        cloneArray(init.toArray(), vars, tw + 1);
 
         //  pf("INITIAL CLIQUE: %s \n", Arrays.toString(vars));
     }
@@ -139,7 +139,7 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
         if (bests[v] == null)
             p("cdfjds");
         // totWeight -= tryFirst[v].sk;
-        bests[v] =null;
+        bests[v] = null;
     }
 
     private void initCand() {
@@ -149,7 +149,7 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
 
         for (int v = 0; v < n_var; v++) {
             todo.add(v);
-            Result r = new Result(v, m_scores[v][m_scores[v].length -1], new SIntSet(), -1);
+            Result r = new Result(v, m_scores[v][m_scores[v].length - 1], new SIntSet(), -1);
             bests[v] = r;
         }
     }
@@ -157,14 +157,14 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
     @Override
     protected void initClique() {
         // Initial handler: best DAG with (1..tw+1) variables
-        initCl = new int[tw+1];
-        System.arraycopy(vars, 0, initCl, 0, tw +1);
+        initCl = new int[tw + 1];
+        System.arraycopy(vars, 0, initCl, 0, tw + 1);
 
         // Find best, do some asobs iterations
         ParentSet[] best_str = exploreAll();
 
         // Update parent se
-        for (int v: initCl) {
+        for (int v : initCl) {
             update(v, best_str[v]);
             done(v);
         }
@@ -172,7 +172,7 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
         // Add new handlers
         ArrayList<SIntSet> l_a = new ArrayList<SIntSet>();
         for (int v : initCl) {
-            SIntSet s = new SIntSet(reduceArray(initCl,v));
+            SIntSet s = new SIntSet(reduceArray(initCl, v));
             addHandler(s);
             l_a.add(s);
         }
@@ -280,7 +280,7 @@ public class BrutalMaxDirectedSearcherWeight extends BrutalGreedySearcher {
                 continue;
 
             double s = bests[v].sk / totWeight;
-             if (r <= s)
+            if (r <= s)
                 sel = v;
             r -= s;
         }

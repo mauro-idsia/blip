@@ -2,9 +2,10 @@ package ch.idsia.blip.core.old;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.inference.ve.BayesianFactor;
-import ch.idsia.blip.core.inference.ve.Inference;
+import ch.idsia.blip.core.inference.ve.VariableElimination;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
+import static ch.idsia.blip.core.utils.data.ArrayUtils.pos;
 
 /**
  * KL divergence
@@ -21,8 +22,8 @@ public class KLDiv {
      * Verbose flag
      */
     public boolean verbose;
-    private Inference inf_Q;
-    private Inference inf_P;
+    private VariableElimination inf_Q;
+    private VariableElimination inf_P;
 
     /**
      * Compute the Kullback-Liebler Divergence between the two bayesian networks.
@@ -37,15 +38,15 @@ public class KLDiv {
         double v = 0;
         double k;
 
-        inf_Q = new Inference(bn_Q, false);
-        inf_P = new Inference(bn_P, false);
+        inf_Q = new VariableElimination(bn_Q, false);
+        inf_P = new VariableElimination(bn_P, false);
 
         boolean sameStructure = bn_P.equalStructure(bn_Q);
 
         for (int i = 0; i < bn_P.n_var; i++) {
 
             if (verbose) {
-                System.out.printf("\nVar: %s (%d)\n", bn_P.name( i), i);
+                System.out.printf("\nVar: %s (%d)\n", bn_P.name(i), i);
             }
 
             // Get joint distribution over P: P(X_i, pa_i)
@@ -89,7 +90,7 @@ public class KLDiv {
         // If the variable has no parents in bn_P
         if (bn_P.parents(v).length == 0) {
             query.add(v);
-            BayesianFactor j_inf = inf_Q.query(query);
+            BayesianFactor j_inf = inf_Q.query(query.toArray());
 
             return j_inf.getPotent();
         }
@@ -98,12 +99,12 @@ public class KLDiv {
         for (int p : bn_P.parents(v)) {
             query.add(p);
         }
-        BayesianFactor p_inf = inf_Q.query(query);
+        BayesianFactor p_inf = inf_Q.query(query.toArray());
         double[] parents = p_inf.getPotent();
 
         // Get Q(X_i, pa_i) in joint
         query.add(v);
-        BayesianFactor j_inf = inf_Q.query(query);
+        BayesianFactor j_inf = inf_Q.query(query.toArray());
         double[] joint = j_inf.getPotent();
         double[] cond = new double[joint.length];
 
@@ -112,8 +113,8 @@ public class KLDiv {
         int l = 0;
         int j = 0;
 
-        int v_card = j_inf.card.get(j_inf.dom.indexOf(v));
-        int v_stride = j_inf.stride.get(j_inf.dom.indexOf(v));
+        int v_card = j_inf.card[pos(v, j_inf.dom)];
+        int v_stride = j_inf.stride[pos(v, j_inf.dom)];
 
         int p = parents.length;
 
@@ -164,7 +165,7 @@ public class KLDiv {
             q.add(p);
         }
 
-        BayesianFactor fact = inf_P.query(q);
+        BayesianFactor fact = inf_P.query(q.toArray());
 
         return fact.getPotent();
     }

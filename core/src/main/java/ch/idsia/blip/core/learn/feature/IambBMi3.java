@@ -3,12 +3,12 @@ package ch.idsia.blip.core.learn.feature;
 
 import ch.idsia.blip.core.common.io.dat.DatFileReader;
 import ch.idsia.blip.core.common.score.BDeu;
-import ch.idsia.blip.core.utils.Gamma;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
+import ch.idsia.blip.core.utils.other.Gamma;
 
 import java.io.IOException;
 
-import static ch.idsia.blip.core.utils.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 
 
 /**
@@ -87,7 +87,7 @@ public class IambBMi3 extends IambBMi {
         double best_sk = -Double.MAX_VALUE;
         double best_a = -1;
 
-        for (double a: alphas) {
+        for (double a : alphas) {
             double sk = computeScore(n_z, z_ar, n_w, w_ar, a);
             if (sk > best_sk) {
                 best_sk = sk;

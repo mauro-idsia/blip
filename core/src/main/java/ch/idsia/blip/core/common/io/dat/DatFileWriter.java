@@ -1,14 +1,14 @@
 package ch.idsia.blip.core.common.io.dat;
 
 import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.utils.StringUtils;
+import ch.idsia.blip.core.utils.other.StringUtils;
 
 import java.io.IOException;
 import java.io.Writer;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
-import static ch.idsia.blip.core.utils.RandomStuff.wf;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
 
 public class DatFileWriter {
 
@@ -32,7 +32,7 @@ public class DatFileWriter {
                         v = k;
                 }
                 if (v != -1)
-                    g = String.valueOf(v);
+                    g = value(dat, n, v);
                 else
                     g = "?";
                 if (n > 0)
@@ -45,8 +45,12 @@ public class DatFileWriter {
         }
     }
 
+    public String value(DataSet dat, int n, int v) {
+        return String.valueOf(v);
+    }
+
     protected void writeMetaData(DataSet dat, Writer wr) throws IOException {
-        wf(wr, "%s\n", StringUtils.join(dat.l_s_names, separator));
+        wf(wr, "%s\n", StringUtils.join(dat.l_nm_var, separator));
         wf(wr, "%s\n", StringUtils.join(dat.l_n_arity, separator));
     }
 }

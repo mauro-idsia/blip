@@ -1,6 +1,6 @@
 package ch.idsia.blip.core.learn.solver.ps;
 
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class MaxScoreProvider extends SimpleProvider {
         ParentSet[][] newPSets = new ParentSet[sc.length][];
         for (int i = 0; i < sc.length; i++) {
             List<ParentSet> aux = new ArrayList<ParentSet>();
-            for (ParentSet ps: sc[i]) {
+            for (ParentSet ps : sc[i]) {
                 if (ps.parents.length <= max_size)
                     aux.add(ps);
             }

@@ -6,16 +6,13 @@ import ch.idsia.blip.core.common.BnBuilder;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
-import static ch.idsia.blip.core.utils.RandomStuff.p;
-import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 
 /**
@@ -87,13 +84,13 @@ public class BnNetReader {
                 log.info(
                         String.format(
                                 "Invalid (< 0.0) potential! ix_var: %d, %s, ix_prob: %d, getPotential: %.2f",
-                                ix_var, bn.l_nm_var.get( ix_var), i, probs[i]));
+                                ix_var, bn.l_nm_var.get(ix_var), i, probs[i]));
             }
             if (probs[i] > 1.0) {
                 log.severe(
                         String.format(
                                 "Invalid (> 1.0) potential! ix_var: %d, %s, ix_prob: %d, getPotential: %.2f",
-                                ix_var, bn.l_nm_var.get( ix_var), i, probs[i]));
+                                ix_var, bn.l_nm_var.get(ix_var), i, probs[i]));
             }
             tot_probs += probs[i];
         }
@@ -106,7 +103,7 @@ public class BnNetReader {
             log.severe(
                     String.format(
                             "Different potential sum! ix_var: %d, %s, tot: %.10f, check:%.10f",
-                            ix_var, bn.l_nm_var.get( ix_var), tot_probs,
+                            ix_var, bn.l_nm_var.get(ix_var), tot_probs,
                             check_tot));
         }
 
@@ -169,43 +166,9 @@ public class BnNetReader {
             log.severe(String.format("Error reading bn: %s", e.getMessage()));
         }
 
-        BayesianNetwork b =  bn.toBn();
-
-        for (int i = 0; i < bn.n_var; i++) {
-            reorganizeCPT(b, i);
-        }
+        BayesianNetwork b = bn.toBn();
 
         return b;
-    }
-
-    private void reorganizeCPT(BayesianNetwork bn, int v) {
-        double[] orig_probs = bn.potentials(v);
-        double[] new_probs = new double[orig_probs.length];
-
-        int[] new_ps = bn.parents(v);
-
-        int[] orig_ps = new int[new_ps.length + 1];
-        cloneArray(new_ps, orig_ps);
-        orig_ps[new_ps.length] = v;
-        Arrays.sort(new_ps);
-        bn.setParents(v, new_ps);
-
-        int[] aux_ps = new int[new_ps.length + 1];
-        cloneArray(new_ps, aux_ps);
-        aux_ps[new_ps.length] = v;
-
-
-        for (int i = 0; i < orig_probs.length; i++) {
-            short[] sample = bn.getAssignmentFromIndex(orig_ps, bn.n_var, i);
-            int new_i = bn.potentialIndex(v, sample);
-            new_i *= bn.arity(v);
-            new_i +=  sample[v];
-           //  short[] sample2 = bn.getAssignmentFromIndex(aux_ps, bn.n_var, i);
-           //  pf("%d -> %d \n", i, new_i);
-            new_probs[new_i] = orig_probs[i];
-        }
-
-        bn.setPotential(v, new_probs);
     }
 
     /**
@@ -289,9 +252,9 @@ public class BnNetReader {
         String nm_var;
         String aux = mtch_parents.group(1);
 
-            String[] aux2 = aux.split("\\|");
+        String[] aux2 = aux.split("\\|");
 
-            nm_var = aux2[0].trim();
+        nm_var = aux2[0].trim();
         if (aux2.length == 1 || "".equals(aux2[1].trim()))
             par = new int[0];
         else {

@@ -14,9 +14,9 @@ public class MIBSampler extends MISampler {
         if (turn == 0) {
             turn += 1;
             return sampleWeighted(n, weight);
-        } else if (turn == 1){
+        } else if (turn == 1) {
             turn += 1;
-            return  sampleWeighted(n, weight_r);
+            return sampleWeighted(n, weight_r);
         } else {
             turn = 0;
             return sample();

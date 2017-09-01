@@ -7,8 +7,6 @@ import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
-
 public class MarkovSampler extends BaseSampler {
 
     private final MarkovNetwork mn;
@@ -47,30 +45,31 @@ public class MarkovSampler extends BaseSampler {
             if (sample(freedom)) continue;
 
             sol = new short[query.length];
-        for(int i = 0; i < query.length; i++)
-            sol[i] = sample[query[i]];
+            for (int i = 0; i < query.length; i++)
+                sol[i] = sample[query[i]];
 
-        MpeSol s = new MpeSol(sol);
+            MpeSol s = new MpeSol(sol);
 
-        if (cache.containsKey(s))
-            cache.put(s, cache.get(s) + 1);
-        else if (cache.size() < max_size)
-            cache.put(s, 1);
-        // Update in cache count
-    }
-
-    int max = 0;
-    MpeSol best = null;
-    for (MpeSol s: cache.keySet()) {
-        // pf("%s %d \n", Arrays.toString(s.set), cache.get(s));
-        if (cache.get(s) > max) {
-            max = cache.get(s);
-            best = s;
+            if (cache.containsKey(s))
+                cache.put(s, cache.get(s) + 1);
+            else if (cache.size() < max_size)
+                cache.put(s, 1);
+            // Update in cache count
         }
+
+        int max = 0;
+        MpeSol best = null;
+        for (MpeSol s : cache.keySet()) {
+            // pf("%s %d \n", Arrays.toString(s.set), cache.get(s));
+            if (cache.get(s) > max) {
+                max = cache.get(s);
+                best = s;
+            }
+        }
+
+        return best.set;
     }
 
-    return  best.set;
-}
     @Override
     public short[] MAP(TIntIntHashMap evidence, double max_time) {
 
@@ -102,7 +101,7 @@ public class MarkovSampler extends BaseSampler {
 
         int max = 0;
         MpeSol best = null;
-        for (MpeSol s: cache.keySet()) {
+        for (MpeSol s : cache.keySet()) {
             // pf("%s %d \n", Arrays.toString(s.set), cache.get(s));
             if (cache.get(s) > max) {
                 max = cache.get(s);
@@ -110,14 +109,14 @@ public class MarkovSampler extends BaseSampler {
             }
         }
 
-        return  best.set;
+        return best.set;
     }
 
     private boolean sample(int[] freedom) {
         if (cnt_new == 0) {
             ShuffleArray(freedom);
 
-            for (int v: freedom) {
+            for (int v : freedom) {
                 sample[v] = (short) rand.nextInt(mn.l_ar_var[v]);
             }
 
@@ -125,7 +124,7 @@ public class MarkovSampler extends BaseSampler {
             cnt_start = 100;
         }
 
-        for (int v: freedom) {
+        for (int v : freedom) {
             // Resample it
             mn.resample(sample, v, rand);
         }
@@ -179,7 +178,7 @@ public class MarkovSampler extends BaseSampler {
 
         for (int i = 0; i < mn.n_var; i++) {
             for (int v = 0; v < mn.l_ar_var[i]; v++)
-            cnt[i][v] /= tot;
+                cnt[i][v] /= tot;
         }
 
         return cnt;
@@ -240,11 +239,9 @@ public class MarkovSampler extends BaseSampler {
         cnt_start = 100;
     }
 
-    private void ShuffleArray(int[] array)
-    {
+    private void ShuffleArray(int[] array) {
         int index, temp;
-        for (int i = array.length - 1; i > 0; i--)
-        {
+        for (int i = array.length - 1; i > 0; i--) {
             index = rand.nextInt(i + 1);
             temp = array[index];
             array[index] = array[i];

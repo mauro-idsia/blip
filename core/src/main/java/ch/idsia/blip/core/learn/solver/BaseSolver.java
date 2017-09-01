@@ -1,33 +1,35 @@
 package ch.idsia.blip.core.learn.solver;
 
-import ch.idsia.blip.core.Base;
-import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.App;
+import ch.idsia.blip.core.common.TopologicalOrder;
 import ch.idsia.blip.core.common.arcs.Directed;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.array.TDoubleArrayList;
+import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.sameArray;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
-public abstract class BaseSolver extends Base {
+public abstract class BaseSolver extends App {
 
     private final Logger log = Logger.getLogger(BaseSolver.class.getName());
 
-    protected ParentSet[][] sc;
+    public ParentSet[][] sc;
 
     //Best structure found yet
-    public double best_sk;
+    public double best_sk = -Double.MAX_VALUE;
 
     // Best structure found yet
     public ParentSet[] best_str;
@@ -56,16 +58,17 @@ public abstract class BaseSolver extends Base {
 
     public TreeSet<Solution> tryFirst;
 
+    private int[][] test_parent;
+
+    public boolean write_solutions = true;
+
     protected abstract String name();
 
+    @Override
     protected void prepare() {
 
-        if (thread_pool_size == 0) {
-            thread_pool_size = Runtime.getRuntime().availableProcessors();
-        }
+        super.prepare();
 
-        if (start == 0)
-            start = System.currentTimeMillis();
         last_improvement = start;
 
         if (verbose > 0) {
@@ -79,36 +82,33 @@ public abstract class BaseSolver extends Base {
 
         best_sk = -Double.MAX_VALUE;
         best_str = new ParentSet[n_var];
-        for (int i = 0; i < n_var; i++) {
-            best_str[i] = new ParentSet(0, new int[0]);
-        }
 
         if (out_solutions > 1)
             open = new TreeSet<Solution>();
 
         counter = System.currentTimeMillis();
 
+        test_parent = new int[n_var][];
     }
 
-    public void go(String path) throws Exception {
+    public ParentSet[] go(String path) throws Exception {
         this.res_path = path;
 
-        go();
-
-        writeStructure(res_path);
+        return go();
     }
 
     protected void writeStructure(String res_path) {
-        writeStructure(res_path, best_sk, best_str);
-        if (out_solutions > 1) {
-            int i = 0;
-            for (Solution s: open) {
-                writeStructure(f("%s-%d", res_path, i++), s.sk, s.str);
+        writeStructure(res_path, this.best_sk, this.best_str);
+        int i;
+        if ((this.out_solutions > 1) && (this.write_solutions)) {
+            i = 0;
+            for (Solution s : this.open) {
+                writeStructure(RandomStuff.f("%s-%d", res_path, i++), s.sk, s.str);
             }
         }
     }
 
-    public void go()  {
+    public ParentSet[] go() {
 
         prepare();
 
@@ -117,7 +117,7 @@ public abstract class BaseSolver extends Base {
         smp = getSampler();
         smp.init();
 
-        // Obtains the parent set to optimize
+        // Obtains the parent set to winasobs
         if (verbose > 0)
             log("Read scores... \n");
         sc = pro.getParentSets();
@@ -141,6 +141,9 @@ public abstract class BaseSolver extends Base {
             logExp(log, e);
         }
 
+        writeStructure(this.res_path);
+
+        return this.best_str;
 
     }
 
@@ -148,26 +151,24 @@ public abstract class BaseSolver extends Base {
         if (tryFirst == null)
             return;
 
-        for (Solution s: tryFirst) {
+        for (Solution s : tryFirst) {
             tryNow(s);
         }
     }
 
     protected void tryNow(Solution s) {
-        ParentSet[] t = new ParentSet[n_var];
-
-        for (int i = 0; i < n_var; i++) {
-            int[] p = s.str[i].parents;
-            t[i] = findParSet(p, sc[i]);
-            if (t[i] == null)
+        ParentSet[] t = new ParentSet[this.n_var];
+        for (int i = 0; i < this.n_var; i++) {
+            t[i] = findParSet(s.str[i].parents, this.sc[i]);
+            if (t[i] == null) {
                 return;
+            }
         }
-
-        newStructure(t);
+        newStructure(s.str);
     }
 
     private ParentSet findParSet(int[] pset, ParentSet[] sc) {
-        for (ParentSet p: sc) {
+        for (ParentSet p : sc) {
             if (sameArray(p.parents, pset))
                 return p;
         }
@@ -175,7 +176,7 @@ public abstract class BaseSolver extends Base {
         return null;
     }
 
-    protected abstract Sampler getSampler();
+    public abstract Sampler getSampler();
 
     protected abstract Searcher getSearcher();
 
@@ -204,11 +205,11 @@ public abstract class BaseSolver extends Base {
 
     protected void conclude() {
 
-            if (verbose > 0) {
-                log( "... Ended! \n");
-                logf( "Num Iterations total: %d \n", numIter);
-                logf("Scores statistics: \n%s \n", sk_proposed.stats());
-            }
+        if (verbose > 0) {
+            log("... Ended! \n");
+            logf("Num Iterations total: %d \n", numIter);
+            logf("Scores statistics: \n%s \n", sk_proposed.stats());
+        }
     }
 
     public void writeGraph(String s, String[] nm) {
@@ -237,27 +238,27 @@ public abstract class BaseSolver extends Base {
             w = getWriter(s);
 
 
-        // writer.graph("Quick Structure: " + printQuick(best_str));
+            // writer.graph("Quick Structure: " + printQuick(best_str));
 
-        // writer.graph("\n\nExpanded Structure: \n\n");
-        if (str != null && str.length > 0) {
-            for (int i = 0; i < str.length; i++) {
+            // writer.graph("\n\nExpanded Structure: \n\n");
+            if (str != null && str.length > 0) {
+                for (int i = 0; i < str.length; i++) {
 
-                ParentSet pSet = str[i];
+                    ParentSet pSet = str[i];
 
-                if (pSet != null)
-                wf(w, "%d: %.2f %s\n", i, pSet.sk,
-                        (pSet.parents.length > 0
-                                ? " (" + combine(pSet.parents, ",") + ")"
-                                : ""));
-                else
-                    wf(w, "%d: 0 0\n", i);
+                    if (pSet != null)
+                        wf(w, "%d: %.2f %s\n", i, pSet.sk,
+                                (pSet.parents.length > 0
+                                        ? " (" + combine(pSet.parents, ",") + ")"
+                                        : ""));
+                    else
+                        wf(w, "%d: 0 0\n", i);
+                }
             }
-        }
 
-        wf(w, "\nScore: %.3f \n", sk);
+            wf(w, "\nScore: %.3f \n", sk);
 
-        w.flush();
+            w.flush();
             w.close();
         } catch (IOException e) {
             logExp(log, e);
@@ -310,17 +311,15 @@ public abstract class BaseSolver extends Base {
      * @return if the network is acyclic
      */
     public boolean testAcyclic(ParentSet[] new_str) {
-        BayesianNetwork bn = new BayesianNetwork(new_str.length);
 
-        // System.out.println(Arrays.toString(new_str));
-        int i = 0;
-        for (ParentSet aStr : new_str) {
-            // System.out.println(thread + " " + aStr);
-            bn.l_parent_var[i++] = aStr.parents;
+        synchronized (lock) {
+            for (int i = 0; i < n_var; i++)
+                test_parent[i] = new_str[i].parents;
         }
-        return bn.isAcyclic();
-    }
+        int[] res = TopologicalOrder.find(n_var, test_parent);
 
+        return ((res != null) && (res.length == n_var));
+    }
 
     public void newStructure(ParentSet[] new_str) {
 
@@ -330,9 +329,6 @@ public abstract class BaseSolver extends Base {
         synchronized (lock) {
 
             numIter++;
-
-            if (new_str == null)
-                p("ciao");
 
             double new_sk = getSk(new_str);
 
@@ -351,17 +347,18 @@ public abstract class BaseSolver extends Base {
 
                 checkTime();
 
-                    logf(0, "New improvement! %.5f (after %.1f s.)\n", new_sk,
+                if (verbose > 0)
+                    logf("New improvement! %.5f (after %.1f s.)\n", new_sk,
                             elapsed);
 
                 best_sk = new_sk;
 
-                best_str = new_str.clone();
+                cloneStr(new_str, best_str);
 
                 atLeastOne = true;
 
                 if (res_path != null) {
-                    writeStructure(res_path, best_sk, best_str);
+                    writeStructure(res_path, best_sk, new_str);
                 }
 
                 // best_order = vars.clone();
@@ -380,11 +377,29 @@ public abstract class BaseSolver extends Base {
             if (out_solutions > 1) {
                 propose(new_sk, new_str);
             }
+
+            /*
+            p(new_sk);
+            p(best_sk);
+            for (ParentSet p: new_str)
+            p(p);
+            */
         }
     }
 
+    public ParentSet[] getPSetArray(int[] new_str, ParentSet[][] pps) {
+        ParentSet[] ps = new ParentSet[new_str.length];
+        for (int v = 0; v < new_str.length; v++)
+            ps[v] = getPSet(new_str, v, pps);
+        return ps;
+    }
+
+    public ParentSet[] getPSetArray(int[] new_str) {
+        return getPSetArray(new_str, sc);
+    }
+
     private boolean testComplete(ParentSet[] new_str) {
-        for (int i = 0; i <n_var; i++) {
+        for (int i = 0; i < n_var; i++) {
             ParentSet ps = new_str[i];
             if (ps == null)
                 return false;
@@ -408,7 +423,7 @@ public abstract class BaseSolver extends Base {
             toDropWorst = true;
         }
 
-        for (Solution s: open) {
+        for (Solution s : open) {
             if (s.same(new_str))
                 return;
         }
@@ -428,7 +443,7 @@ public abstract class BaseSolver extends Base {
 
     protected double getSk(ParentSet[] new_str) {
         double new_sk = 0;
-        for (ParentSet p: new_str) {
+        for (ParentSet p : new_str) {
             new_sk += p.sk;
         }
         return new_sk;
@@ -440,6 +455,10 @@ public abstract class BaseSolver extends Base {
 
     public BaseSearcher getNewSearcher(int i) {
         return new BaseSearcher(this, i);
+    }
+
+    public ParentSet getPSet(int[] last_str, int var) {
+        return getPSet(last_str, var, sc);
     }
 
     public class BaseSearcher implements Runnable {
@@ -464,10 +483,8 @@ public abstract class BaseSolver extends Base {
 
             while (still_time) {
 
-                // Get a new ordering
-                int[] vars = smp.sample();
                 // Obtains a new candidate solution
-                ParentSet[] str = src.search(vars);
+                ParentSet[] str = src.search();
                 // Propose the new solution
                 newStructure(str);
 
@@ -477,7 +494,7 @@ public abstract class BaseSolver extends Base {
         }
     }
 
-    public static class Solution implements Comparable<Solution>{
+    public static class Solution implements Comparable<Solution> {
         public final ParentSet[] str;
         private final double sk;
 
@@ -497,7 +514,7 @@ public abstract class BaseSolver extends Base {
         public boolean same(ParentSet[] o_str) {
 
             if (str.length != o_str.length)
-                return  false;
+                return false;
 
             for (int i = 0; i < str.length; i++) {
                 if (!sameArray(str[i].parents, o_str[i].parents))
@@ -507,4 +524,18 @@ public abstract class BaseSolver extends Base {
             return true;
         }
     }
+
+    public ParentSet getPSet(int[] str, int var, ParentSet[][] pps) {
+        return pps[var][str[var]];
+    }
+
+    @Override
+    public void init(HashMap<String, String> options) {
+        super.init(options);
+        delta = gInt("delta", 0);
+        out_solutions = gInt("out_solutions", 0);
+        res_path = gStr("res_path", null);
+    }
+
 }
+

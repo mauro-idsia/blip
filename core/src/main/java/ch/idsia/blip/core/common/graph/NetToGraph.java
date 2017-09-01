@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class NetToGraph {
 
@@ -38,10 +38,10 @@ public class NetToGraph {
         }
 
         try {
-        if (meth == Method.Png)
-            png(bn, s);
-        else if (meth == Method.Plain)
-            plain(bn, s);
+            if (meth == Method.Png)
+                png(bn, s);
+            else if (meth == Method.Plain)
+                plain(bn, s);
         } catch (Exception e) {
             logExp(e);
         }
@@ -66,7 +66,7 @@ public class NetToGraph {
         PrintWriter w = new PrintWriter(s + "/excluded", "UTF-8");
 
         Map<BayesianNetwork, Integer> sized = new HashMap<BayesianNetwork, Integer>();
-        for (BayesianNetwork b: ls) {
+        for (BayesianNetwork b : ls) {
             sized.put(b, b.n_var);
         }
         sized = sortInvByValues(sized);
@@ -74,7 +74,7 @@ public class NetToGraph {
 
         int i = 0;
         // Print each bn separated
-        for (BayesianNetwork b: sized.keySet()) {
+        for (BayesianNetwork b : sized.keySet()) {
 
             if (b.n_var <= 1) {
                 wf(w, twoIsBetter(b));
@@ -105,12 +105,12 @@ public class NetToGraph {
     private String twoIsBetter(BayesianNetwork b) {
 
         if (b.n_var == 1)
-            return f("%s \n", b.name( 0));
+            return f("%s \n", b.name(0));
 
         if (b.l_parent_var.length > 0)
-            return f("%s -> %s \n", b.name( 1), b.name( 0));
+            return f("%s -> %s \n", b.name(1), b.name(0));
 
-        else return f("%s -> %s \n", b.name( 0), b.name( 1));
+        else return f("%s -> %s \n", b.name(0), b.name(1));
     }
 
     private void pngSingle(BayesianNetwork bn, String s) throws IOException {

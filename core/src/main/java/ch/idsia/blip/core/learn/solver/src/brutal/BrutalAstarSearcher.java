@@ -1,15 +1,14 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.learn.solver.BaseSolver;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.SIntSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.Arrays;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.doubleEquals;
-import static ch.idsia.blip.core.utils.RandomStuff.f;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class BrutalAstarSearcher extends BrutalOldSearcher {
 
@@ -33,11 +32,11 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
 
 
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        vars = smp.sample();
 
-        // prepare everything
+        // init everything
         clear();
 
         // Build the vector with the heuristic estimation for each variable
@@ -63,7 +62,7 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
             }
 
             if (solver.verbose > 1)
-                solver.logf ("considering state: %s \n", st);
+                solver.logf("considering state: %s \n", st);
 
             // get new variable to work on
             int v = vars[st.index];
@@ -88,13 +87,13 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
                 n_st.updateSk();
 
                 // add to candidates
-                    candidates.add(n_st);
+                candidates.add(n_st);
             }
 
 
             if (exp_limit == 0 || st.index <= tw + exp_limit)
                 // put everything
-                for (State c: candidates)
+                for (State c : candidates)
                     addSuccessorState(c);
             else
                 // If we are over the treeshold, put only the best
@@ -113,11 +112,11 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
 
     ParentSet getBestParentSet(int v, SIntSet h) {
         // find best parent set for handler in this successor state
-        for (ParentSet p : m_scores[v]) {
+        for (ParentSet pSet : m_scores[v]) {
             // if parent set is available
-            if (containsAll(p.parents, h.set)) {
+            if (containsAll(pSet.parents, h.set)) {
                 // set parent set
-                return p;
+                return pSet;
             }
         }
 
@@ -199,8 +198,8 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
         public State(int index, ParentSet[] new_str, TreeSet<SIntSet> new_handles) {
             this.index = index;
 
-            str = new ParentSet[new_str.length];
-            System.arraycopy(new_str, 0, str, 0, new_str.length);
+            str = new ParentSet[n_var];
+            cloneStr(new_str, str);
 
             handles = new TreeSet<SIntSet>();
             for (SIntSet s : new_handles)
@@ -225,8 +224,10 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
             f_sk = 0;
 
             // Exact part
-            for (int i = 0; i < index; i++)
-                f_sk += str[vars[i]].sk;
+            for (int i = 0; i < index; i++) {
+                int v = vars[i];
+                f_sk += str[v].sk;
+            }
 
             // Heuristic part
             for (int i = index; i < n_var; i++)

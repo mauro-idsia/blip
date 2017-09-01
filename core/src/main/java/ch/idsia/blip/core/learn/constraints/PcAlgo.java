@@ -5,17 +5,17 @@ import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.common.io.dat.DatFileReader;
 import ch.idsia.blip.core.learn.constraints.oracle.Oracle;
-import ch.idsia.blip.core.utils.Pair;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
+import ch.idsia.blip.core.utils.other.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static ch.idsia.blip.core.utils.RandomStuff.f;
-import static ch.idsia.blip.core.utils.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 
 
 /**
@@ -38,10 +38,10 @@ public class PcAlgo {
     private DataSet dat;
 
     public void execute(DatFileReader dr) throws IOException {
-execute(dr.read());
+        execute(dr.read());
     }
 
-        public void execute(DataSet dat) throws IOException {
+    public void execute(DataSet dat) throws IOException {
 
         if (oracle == null)
             return;
@@ -66,8 +66,8 @@ execute(dr.read());
             if (skeleton.check(i)) {
                 int[] v = skeleton.r_index(i);
 
-                System.out.printf("%s - %s \n", dat.l_s_names[v[0]],
-                        dat.l_s_names[v[1]]);
+                System.out.printf("%s - %s \n", dat.l_nm_var[v[0]],
+                        dat.l_nm_var[v[1]]);
             }
         }
 
@@ -151,7 +151,7 @@ execute(dr.read());
 
                     if (oracle.condInd(i, j, s)) {
                         if (verbose > 0)
-                        pf("delete edge %s - %s on conditioning set %s \n", h(i), h(j), h(s));
+                            pf("delete edge %s - %s on conditioning set %s \n", h(i), h(j), h(s));
                         // delete edge X_i - X_j
                         skeleton.empty(i, j);
                         // let sepset(X_i, X_j) = sepset(X_j, X_i) = S
@@ -184,21 +184,22 @@ execute(dr.read());
     }
 
     private String h(int s) {
-        return dat.l_s_names[s];
+        return dat.l_nm_var[s];
     }
 
     private List<String> h(int[] s) {
         List<String> g = new ArrayList<String>();
 
-        for (int e: s) {
-            g.add(dat.l_s_names[e]);
+        for (int e : s) {
+            g.add(dat.l_nm_var[e]);
         }
         return g;
     }
 
     public Undirected skeleton(DatFileReader dr) throws IOException {
-    return skeleton(dr.read());
+        return skeleton(dr.read());
     }
+
     public Undirected skeleton(DataSet dat) throws IOException {
         this.dat = dat;
         return adjancencySearch().getFirst();

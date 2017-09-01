@@ -1,23 +1,32 @@
 package ch.idsia.blip.core.learn.scorer.utils;
 
 
-import ch.idsia.blip.core.utils.data.ArrayUtils;
-import ch.idsia.blip.core.utils.data.SIntSet;
-
-
 /**
  * Entry of a parent set in the linked-list queue.
  */
 public class OpenParentSet implements Comparable<OpenParentSet> {
 
-    private final SIntSet p1;
-    public final int p2;
+    // Parent set to evaluate
+    public final int[] s;
+
+    // New parent variable added
+    public final int new_p;
+
+    // Prediction
     public final double sk;
 
-    public OpenParentSet(SIntSet p1, int p2, double sk) {
-        this.p1 = p1;
-        this.p2 = p2;
+    // Previous counts
+    public final int[][] p_values;
+
+    public OpenParentSet(int[] s, int new_p, double sk, int[][] p_values) {
+        this.s = s;
+        this.new_p = new_p;
         this.sk = sk;
+        this.p_values = p_values;
+    }
+
+    public OpenParentSet(int n, int new_p, double sk, int[][] p_values) {
+        this(new int[]{n}, new_p, sk, p_values);
     }
 
     @Override
@@ -28,12 +37,9 @@ public class OpenParentSet implements Comparable<OpenParentSet> {
         return -1;
     }
 
-    public String toString() {
+   /* public String toString() {
         return String.format("(%s %d %.3f)", p1.toString(), p2, sk);
     }
-
-    public int[] getNewParentSet() {
-        return ArrayUtils.expandArray(p1.set, p2);
-    }
+    */
 }
 

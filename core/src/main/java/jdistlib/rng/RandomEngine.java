@@ -19,28 +19,35 @@ package jdistlib.rng;
 
 /**
  * @author Roby Joehanes
- *
  */
-public abstract class RandomEngine
-{
-	long mSeed;
+public abstract class RandomEngine {
+    long mSeed;
 
-	public void setSeed(long seed)
-	{	mSeed = seed; }
+    public void setSeed(long seed) {
+        mSeed = seed;
+    }
 
-	public long getSeed()
-	{	return mSeed; }
+    public long getSeed() {
+        return mSeed;
+    }
 
-	public abstract double nextGaussian();
-	public abstract double nextDouble();
-	public abstract float nextFloat();
-	public abstract int nextInt();
-	public abstract int nextInt(int n);
-	public abstract long nextLong();
-	public abstract long nextLong(long l);
+    public abstract double nextGaussian();
 
-	public double random()
-	{	return nextDouble(); }
+    public abstract double nextDouble();
 
-	public abstract RandomEngine clone();
+    public abstract float nextFloat();
+
+    public abstract int nextInt();
+
+    public abstract int nextInt(int n);
+
+    public abstract long nextLong();
+
+    public abstract long nextLong(long l);
+
+    public double random() {
+        return nextDouble();
+    }
+
+    public abstract RandomEngine clone();
 }

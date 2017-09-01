@@ -8,8 +8,8 @@ import java.io.Writer;
 import java.text.DecimalFormat;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
-import static ch.idsia.blip.core.utils.RandomStuff.wf;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
 
 
 /**
@@ -29,7 +29,7 @@ public class BnNetWriter extends BnWriter {
      * @param bn bayesian network to save
      */
     @Override
-    public void go(Writer wr, BayesianNetwork bn) throws IOException{
+    public void go(Writer wr, BayesianNetwork bn) throws IOException {
 
         try {
             wr.write("net { }\n\n");
@@ -51,10 +51,10 @@ public class BnNetWriter extends BnWriter {
      * @throws IOException if there is any problem in the writing
      */
     private void writePotentials(Writer rd_wr, BayesianNetwork bn)
-        throws IOException {
+            throws IOException {
 
         for (int i = 0; i < bn.n_var; i++) {
-            wf(rd_wr, "potential ( %s", bn.name( i));
+            wf(rd_wr, "potential ( %s", bn.name(i));
             int[] ps = bn.parents(i);
 
             if (ps.length == 0) {
@@ -97,7 +97,7 @@ public class BnNetWriter extends BnWriter {
         // Write for variables with parents
         wf(rd_wr, " |");
         for (int p : ps) {
-            wf(rd_wr, " %s", bn.name( p));
+            wf(rd_wr, " %s", bn.name(p));
         }
 
         // Write potentials
@@ -150,10 +150,10 @@ public class BnNetWriter extends BnWriter {
      * @throws IOException if there is a problem in the writing
      */
     private static void writeNodes(Writer rd_wr, BayesianNetwork bn)
-        throws IOException {
+            throws IOException {
 
         for (int i = 0; i < bn.n_var; i++) {
-            String nm = bn.name( i);
+            String nm = bn.name(i);
             wf(rd_wr, "node %s { \n states = ( ", nm);
             for (String v : bn.values(i)) {
                 wf(rd_wr, "\"%s\" ", v);
@@ -161,8 +161,8 @@ public class BnNetWriter extends BnWriter {
             wf(rd_wr, "); \n");
 
             wf(rd_wr, " parents = ( ");
-            for (int j: bn.parents(i)) {
-                wf(rd_wr, "\"%s\" ", bn.name( j));
+            for (int j : bn.parents(i)) {
+                wf(rd_wr, "\"%s\" ", bn.name(j));
             }
             wf(rd_wr, ");\n");
 

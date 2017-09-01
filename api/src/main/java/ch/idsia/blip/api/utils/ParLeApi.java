@@ -10,7 +10,7 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 
 /**
@@ -21,22 +21,22 @@ public class ParLeApi extends Api {
 
     private static final Logger log = Logger.getLogger(ParLeApi.class.getName());
 
-    @Option(name="-r", required = true, usage="Network structure")
+    @Option(name = "-r", required = true, usage = "Network structure")
     protected String ph_res;
 
-    @Option(name="-d", required = true, usage="Training dataset")
+    @Option(name = "-d", required = true, usage = "Training dataset")
     protected String ph_dat;
 
-    @Option(name="-n", required = true, usage="Output path")
+    @Option(name = "-n", required = true, usage = "Output path")
     protected String ph_network;
 
-    @Option(name="-a", usage="Equivalent sample size")
+    @Option(name = "-a", usage = "Equivalent sample size")
     protected double d_alpha = 1.0;
 
-    @Option(name="-e", usage="Epsilon")
+    @Option(name = "-e", usage = "Epsilon")
     protected double epsilon = 0.5;
 
-    @Option(name="-t", usage="Method for learning")
+    @Option(name = "-t", usage = "Method for learning")
     protected String s_method = "bayes";
 
     public static void main(String[] args) {
@@ -44,7 +44,7 @@ public class ParLeApi extends Api {
     }
 
     /**
-     * Get the correct value for the algorithm to use from a description.
+     * Get the correct value for the algorithm to use from pa description.
      *
      * @param t description of the method
      * @return correct method enum

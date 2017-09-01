@@ -14,7 +14,7 @@ public class Und extends Arcs {
         this.n = n;
         neigh = new int[n][];
         for (int i = 0; i < n; i++)
-            neigh[i] =  new int[0];
+            neigh[i] = new int[0];
     }
 
     public void mark(int i1, int i2) {
@@ -22,8 +22,8 @@ public class Und extends Arcs {
 //            p("sfasfa");
 //        if (find(i2, neigh[i1]))
 //            p("sfasfa");
-            neigh[i1] = expandArray(neigh[i1], i2);
-            neigh[i2] = expandArray(neigh[i2], i1);
+        neigh[i1] = expandArray(neigh[i1], i2);
+        neigh[i2] = expandArray(neigh[i2], i1);
     }
 
     @Override
@@ -45,11 +45,11 @@ public class Und extends Arcs {
         StringBuilder s = new StringBuilder();
         Formatter fm = new Formatter(s);
 
-        fm.format("graph G {\n");
+        fm.format("graph Base {\n");
         for (int v1 = 0; v1 < n; v1++) {
             fm.format("%s \n", name(v1));
-            for (int v2: neigh[v1])
-            if (v2 > v1)
+            for (int v2 : neigh[v1])
+                if (v2 > v1)
                     fm.format("%s -- %s \n", name(v1), name(v2));
         }
 

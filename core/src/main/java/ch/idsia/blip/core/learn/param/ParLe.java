@@ -1,14 +1,14 @@
 package ch.idsia.blip.core.learn.param;
 
-import ch.idsia.blip.core.Base;
+import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 
-import static ch.idsia.blip.core.utils.RandomStuff.p;
-import static ch.idsia.blip.core.utils.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 
-public abstract class ParLe extends Base {
+public abstract class ParLe extends App {
 
     public BayesianNetwork bn;
 
@@ -20,22 +20,22 @@ public abstract class ParLe extends Base {
 
         this.dat = dat;
 
-            prepareBn(res);
+        prepareBn(res);
 
-            n_datapoints = this.dat.n_datapoints;
+        n_datapoints = this.dat.n_datapoints;
 
-            // Compute potential for each variable
-            for (int i = 0; i < bn.n_var; i++) {
-                double[] potent;
+        // Compute potential for each variable
+        for (int i = 0; i < bn.n_var; i++) {
+            double[] potent;
 
-                if (bn.parents(i).length == 0) {
-                    potent = computePotentialsSimple(i);
-                } else {
-                    potent = computePotentials(i);
-                }
-
-                bn.l_potential_var[i] = potent;
+            if (bn.parents(i).length == 0) {
+                potent = computePotentialsSimple(i);
+            } else {
+                potent = computePotentials(i);
             }
+
+            bn.l_potential_var[i] = potent;
+        }
 
         return bn;
     }
@@ -52,7 +52,7 @@ public abstract class ParLe extends Base {
      conv = new int[bn.n_var];
 
      for (int thread = 0; thread < dat.n_var; thread++) {
-     String nm = clean(dat.l_s_names[thread]);
+     String nm = clean(dat.l_nm_var[thread]);
      int index = -1;
 
      for (int tw = 0; tw < bn.n_var; tw++) {
@@ -87,7 +87,7 @@ public abstract class ParLe extends Base {
         int ix = 0;
 
         for (int i = 0; i < dat.n_var; i++) {
-            String s = dat.l_s_names[i];
+            String s = dat.l_nm_var[i];
 
             bn.l_nm_var[i] = s;
 
@@ -111,19 +111,23 @@ public abstract class ParLe extends Base {
 
     protected abstract double[] computePotentialsSimple(int i);
 
-    int[] computeCardinalities(int var, int[] parents, int j) {
+    protected int[] computeCardinalities(int var, int[] parents, int j) {
+        return computeCardinalities(var, parents, j, dat.row_values);
+    }
+
+    protected int[] computeCardinalities(int var, int[] parents, int j, int[][][] rows) {
 
         int n = j;
 
-        int[] parents_var = getParentsConf(parents, n);
+        int[] parents_var = getParentsConf(parents, n, rows);
 
         int ar = bn.arity(var);
         int[] n_ij = new int[ar];
 
-        int[][] vl_var = this.dat.row_values[var];
+        int[][] vl_var = rows[var];
 
         // System.out.println(var + " ... " + ar + " .... " + vl_var.length);
-        if (verbose > 1 && parents_var.length < 50 )
+        if (verbose > 1 && parents_var.length < 50)
             pf("WARNING! Variable %s, less than 50 datapoints in parent configuration! There are: %d \n", bn.name(var), parents_var.length);
 
         // For every variable configuration, compute the n's
@@ -137,10 +141,14 @@ public abstract class ParLe extends Base {
     }
 
     protected int[] getParentsConf(int[] parents, int n) {
+        return getParentsConf(parents, n, dat.row_values);
+    }
+
+    protected int[] getParentsConf(int[] parents, int n, int[][][] rows) {
         // Get a parents configuration
         int[] parents_var = null;
 
-        for (int i = parents.length-1; i >= 0; i--) {
+        for (int i = parents.length - 1; i >= 0; i--) {
 
             int par = parents[i];
 
@@ -152,7 +160,7 @@ public abstract class ParLe extends Base {
             // Update set containing sample rows for the chosen configuration
             int[] par_var = null;
             try {
-                par_var = dat.row_values[par][val];
+                par_var = rows[par][val];
             } catch (ArrayIndexOutOfBoundsException ex) {
                 p("cia");
             }

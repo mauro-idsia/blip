@@ -8,14 +8,15 @@ import ch.idsia.blip.core.common.tw.KTree;
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
-import ch.idsia.blip.core.utils.ParentSet;
-import ch.idsia.blip.core.utils.StreamGobbler;
+import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.other.StreamGobbler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 
 /**
@@ -31,9 +32,10 @@ public class BaseS2Solver extends ScoreSolver {
 
     public String ph_gobnilp;
 
-    public void init(ParentSet[][] sc, int max_exec, int treewidth) {
-        super.init(sc, max_exec);
-        this.tw = treewidth;
+    @Override
+    public void init(HashMap<String, String> options) {
+        super.init(options);
+        this.tw = gInt("tw", 5);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class BaseS2Solver extends ScoreSolver {
     }
 
     @Override
-    protected void prepare()  {
+    protected void prepare() {
         super.prepare();
         if (verbose > 0) {
             log("tw: " + tw + "\n");
@@ -123,7 +125,8 @@ public class BaseS2Solver extends ScoreSolver {
 
                 g.go(out);
 
-                newStructure(g.new_str);
+                // TODO
+                // newStructure(g.new_str);
 
                 iter++;
                 checkTime();

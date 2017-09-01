@@ -2,12 +2,12 @@ package ch.idsia.blip.core.common.score;
 
 
 import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.utils.Gamma;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
+import ch.idsia.blip.core.utils.other.Gamma;
 
-import java.util.Arrays;
+import java.util.Map;
 
-import static ch.idsia.blip.core.utils.RandomStuff.f;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
 
 
 /**
@@ -18,7 +18,7 @@ public class BDeu extends Score {
     /**
      * Equivalent sample size
      */
-    private double alpha = 10;
+    protected double alpha = 10;
 
     /**
      * Default constructor.
@@ -45,25 +45,17 @@ public class BDeu extends Score {
                 - Gamma.lgamma(a_ij + dat.n_datapoints);
 
         for (int v = 0; v < arity; v++) {
-            skore += Gamma.lgamma(a_ijk + dat.row_values[n][v].length)
+            int weight = dat.row_values[n][v].length;
+            skore += Gamma.lgamma(a_ijk + weight)
                     - Gamma.lgamma(a_ijk);
         }
         return skore;
     }
 
     @Override
-    public double computeScore(int n, int[] set_p) {
-
-        Arrays.sort(set_p);
-
-        if (check(set_p))
-            return -Double.MAX_VALUE;
-
-        int[][] p_values = computeParentSetValues(set_p);
+    public double computeScore(int n, int[] set_p, int[][] p_values) {
 
         numEvaluated++;
-
-        Arrays.sort(set_p);
 
         int arity = dat.l_n_arity[n];
 
@@ -81,7 +73,14 @@ public class BDeu extends Score {
         skore += (Gamma.lgamma(a_ij) * p_arity)
                 - (Gamma.lgamma(a_ijk) * p_arity * arity);
 
+        /*
         int i = 0;
+
+        boolean gh = false;
+        if (n==6 && Arrays.toString(set_p).equals("[0, 3, 5]"))
+            gh = true;
+        */
+
 
         for (int p_v = 0; p_v < p_values.length; p_v++) {
 
@@ -94,13 +93,25 @@ public class BDeu extends Score {
 
             int valcount;
 
+            /*
+            if (gh) {
+                p("");
+                p(p_values[p_v].length);
+            }
+            */
+
             for (int v = 0; v < arity; v++) {
                 valcount = ArrayUtils.intersectN(dat.row_values[n][v], p_values[p_v]);
 
                 skore += Gamma.lgamma(a_ijk + valcount);
+
+                /*
+                if (gh)
+                    p(valcount);
+                    */
             }
 
-            i++;
+
         }
 
         // System.out.println(p_arity + " " + thread + " " + p_values.length);
@@ -108,14 +119,15 @@ public class BDeu extends Score {
         return skore;
     }
 
-    @Override
-    public double inter(int n, int[] set, int p2) {
-        return 0;
-    }
 
     @Override
     public String descr() {
         return f("BDeu (alpha: %.2f)", alpha);
+    }
+
+    @Override
+    public double computePrediction(int n, int[] p1, int p2, Map<int[], Double> scores) {
+        return scores.get(p1) + scores.get(new int[]{p2});
     }
 
 

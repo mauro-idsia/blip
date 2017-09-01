@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * An implementation of the <tt>Set</tt> interface that uses an
  * open-addressed hash table to store its contents.
- *
+ * <p>
  * Created: Sat Nov  3 10:38:17 2001
  *
  * @author Eric D. Friedman, Rob Eden, Jeff Randall
@@ -70,12 +70,12 @@ public interface TIntSet extends TIntCollection {
      * If this set makes any guarantees as to what order its elements
      * are returned by its iterator, this method must return the
      * elements in the same order.
-     *
+     * <p>
      * <p>The returned array will be "safe" in that no references to it
      * are maintained by this set.  (In other words, this method must
      * allocate a new array even if this set is backed by an array).
      * The caller is thus free to modify the returned array.
-     *
+     * <p>
      * <p>This method acts as bridge between array-based and collection-based
      * APIs.
      *
@@ -86,24 +86,24 @@ public interface TIntSet extends TIntCollection {
 
     /**
      * Returns an array containing elements in this set.
-     *
+     * <p>
      * <p>If this set fits in the specified array with room to spare
      * (thread.e., the array has more elements than this set), the element in
      * the array immediately following the end of the set is set to
      * <tt>{@link #getNoEntryValue()}</tt>.  (This is useful in determining
      * the length of this set <thread>only</thread> if the caller knows that this
      * set does not contain any elements representing null.)
-     *
+     * <p>
      * <p>If the native array is smaller than the set size,
      * the array will be filled with elements in Iterator order
      * until it is full and exclude the remainder.
-     *
+     * <p>
      * <p>If this set makes any guarantees as to what order its elements
      * are returned by its iterator, this method must return the elements
      * in the same order.
      *
      * @param dest the array into which the elements of this set are to be
-     *        stored.
+     *             stored.
      * @return an <tt>int[]</tt> containing all the elements in this set
      * @throws NullPointerException if the specified array is null
      */

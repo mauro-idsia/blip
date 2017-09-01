@@ -1,23 +1,26 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
+import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.common.arcs.Und;
 import ch.idsia.blip.core.learn.solver.brtl.BrutalUndirectedSolver;
+import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.SIntSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.f;
-import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
 
 /**
  * Brutal on Undirected
  */
-public class BrutalUndirectedSearcher implements Searcher {
+public class BrutalUndirectedSearcher extends Base implements Searcher {
 
     protected final BrutalUndirectedSolver solver;
 
@@ -27,6 +30,8 @@ public class BrutalUndirectedSearcher implements Searcher {
 
     protected final int n_var;
     protected final int thread;
+
+    private final Sampler smp;
 
     protected int[] vars;
 
@@ -49,9 +54,10 @@ public class BrutalUndirectedSearcher implements Searcher {
 
         this.n_var = und.n;
 
-            this.thread = solver.thread;
-            solver.thread += 1;
+        this.thread = solver.thread;
+        solver.thread += 1;
 
+        this.smp = solver.getSampler();
     }
 
     @Override
@@ -61,9 +67,9 @@ public class BrutalUndirectedSearcher implements Searcher {
 
     // Greedily optimize a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        vars = smp.sample();
 
         start = System.currentTimeMillis();
         cnt = 1;
@@ -77,22 +83,21 @@ public class BrutalUndirectedSearcher implements Searcher {
         Result res;
 
 
+        // Greedy behaviour (follow sampling)
+        for (int i = tw + 1; i < n_var; i++) {
+            int v = vars[i];
 
-            // Greedy behaviour (follow sampling)
-            for (int i = tw + 1; i < n_var; i++) {
-                int v = vars[i];
+            res = bestSubset(v);
 
-                res = bestSubset(v);
+            // pf("Chosen %d \n", res.v);
+            finalize(res);
 
-                // pf("Chosen %d \n", res.v);
-                finalize(res);
-
-                solver.checkTime();
-                if (!solver.still_time) {
-                    return null;
-                }
-
+            solver.checkTime();
+            if (!solver.still_time) {
+                return null;
             }
+
+        }
 
         solver.newUndirected(new_sk, new_und);
 
@@ -113,7 +118,7 @@ public class BrutalUndirectedSearcher implements Searcher {
     }
 
     protected void update(int v, int[] fin) {
-        for (int f: fin) {
+        for (int f : fin) {
             new_und.mark(v, f);
             new_sk += 1;
             // pf("Marking %d %d \n", v, f);
@@ -122,8 +127,8 @@ public class BrutalUndirectedSearcher implements Searcher {
     }
 
     protected void initClique() {
-        initCl = new int[tw+1];
-        System.arraycopy(vars, 0, initCl, 0, tw +1);
+        initCl = new int[tw + 1];
+        System.arraycopy(vars, 0, initCl, 0, tw + 1);
 
         // Update parent set
         for (int i1 = 0; i1 < initCl.length; i1++) {
@@ -141,7 +146,7 @@ public class BrutalUndirectedSearcher implements Searcher {
 
         // Add new handlers
         for (int v : initCl) {
-            addHandler(new SIntSet(reduceArray(initCl,v)));
+            addHandler(new SIntSet(reduceArray(initCl, v)));
         }
     }
 
@@ -168,15 +173,15 @@ public class BrutalUndirectedSearcher implements Searcher {
         int max_sk = 0;
         SIntSet max_h = null;
 
-            for (SIntSet h : handles) {
+        for (SIntSet h : handles) {
 
-                int sk = getSk(und.neigh[v], h.set);
+            int sk = getSk(und.neigh[v], h.set);
 
-                if (sk > max_sk) {
-                    max_h = h;
-                    max_sk = sk;
-                }
+            if (sk > max_sk) {
+                max_h = h;
+                max_sk = sk;
             }
+        }
 
 
         if (max_sk == 0)
@@ -225,7 +230,7 @@ public class BrutalUndirectedSearcher implements Searcher {
                 return -1;
 
             if (v < o.v)
-                 return 1;
+                return 1;
             if (v > o.v)
                 return -1;
 

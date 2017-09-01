@@ -1,25 +1,25 @@
 package ch.idsia.blip.core.learn.param;
 
-import ch.idsia.blip.core.Base;
+import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.learn.scorer.concurrency.NotifyingThread;
 import ch.idsia.blip.core.learn.scorer.concurrency.ThreadCompleteListener;
-import ch.idsia.blip.core.utils.LLEval;
-import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.utils.other.LLEval;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getDataSetReader;
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSetReader;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
-public class ParLeSmooth extends Base {
+public class ParLeSmooth extends App {
 
     private static final Logger log = Logger.getLogger(
             ParLeSmooth.class.getName());
 
-    private double[] scale = new double[] {
+    private double[] scale = new double[]{
             0.001,
             0.01,
             0.05,
@@ -148,7 +148,9 @@ public class ParLeSmooth extends Base {
             BayesianNetwork newBn = p.go(res, train);
             LLEval l = new LLEval();
             l.go(newBn, getDataSetReader(valid));
-            logf(0, "Propose new ll: %.4f for alpha: %.4f \n", l.ll, alpha);
+            if (verbose > 0) {
+                logf("Propose new ll: %.4f for alpha: %.4f \n", l.ll, alpha);
+            }
             propose(l.ll, newBn);
         }
     }

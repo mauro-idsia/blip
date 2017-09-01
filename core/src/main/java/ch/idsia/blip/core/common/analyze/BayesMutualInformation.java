@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class BayesMutualInformation extends MutualInformation {
 
@@ -27,7 +27,7 @@ public class BayesMutualInformation extends MutualInformation {
 
     @Override
     public double computeCMI(int x, int y, int z) {
-            return this.computeCMI(x, y, new int[]{z});
+        return this.computeCMI(x, y, new int[]{z});
     }
 
     @Override
@@ -37,7 +37,7 @@ public class BayesMutualInformation extends MutualInformation {
 
     /**
      * Bayesian PR of CMI: MI(X, Y | Z)
-     *  percentile to compute
+     * percentile to compute
      */
     public double computeCMI(int x, int y, int[] z, double percentile) {
         if (z.length == 0) {
@@ -66,12 +66,12 @@ public class BayesMutualInformation extends MutualInformation {
         samps = new double[mcsamples];
 
         // start sampling          
-        for (int s_i = 0; s_i < mcsamples; s_i ++) {
+        for (int s_i = 0; s_i < mcsamples; s_i++) {
 
             double mi = 0;
 
             // Get dirichlet samples for Z counts
-            double[] th_Z =  drch(n_z);
+            double[] th_Z = drch(n_z);
 
             for (int z_i = 0; z_i < z_ar; z_i++) {
 
@@ -82,7 +82,7 @@ public class BayesMutualInformation extends MutualInformation {
                 double[] th_x = new double[x_ar];
                 double[] th_y = new double[y_ar];
                 for (int i = 0; i < th_w.length; i++) {
-                    th_x[i/y_ar] += th_w[i];
+                    th_x[i / y_ar] += th_w[i];
                     th_y[i % y_ar] += th_w[i];
                 }
 
@@ -112,7 +112,7 @@ public class BayesMutualInformation extends MutualInformation {
                         // double p_yz_c = getFreq(yc, z_ar * y_ar);
 
                         mi += p_z * p_xyz
-                                * ( FastMath.log(p_xyz)
+                                * (FastMath.log(p_xyz)
                                 - (FastMath.log(p_xz) + FastMath.log(p_yz)));
 
 /*
@@ -123,14 +123,14 @@ public class BayesMutualInformation extends MutualInformation {
                 }
             }
 
-             // pf(" %.5f \n", mi);
+            // pf(" %.5f \n", mi);
 
             samps[s_i] = mi;
         }
 
         Arrays.sort(samps);
 
-        return samps[(int) (mcsamples*percentile)];
+        return samps[(int) (mcsamples * percentile)];
     }
 
     double[][] getCondJointCounts(int[][] x_r, int x_ar, int[][] y_r, int y_ar, int w_ar, int[][] z_r, int z_ar, double ess) {
@@ -248,10 +248,10 @@ public class BayesMutualInformation extends MutualInformation {
         Writer w = getWriter(basePath + s + ".dat");
         double[][] hist = getHist(80);
         double max = 0;
-        for (double[] h: hist) {
+        for (double[] h : hist) {
             wf(w, "%.7f %.7f\n", Math.exp(h[0]), h[1]);
             if (h[1] > max)
-                    max = h[1];
+                max = h[1];
         }
         w.close();
 
@@ -271,11 +271,11 @@ public class BayesMutualInformation extends MutualInformation {
     private double[][] getHist(int t) {
         Arrays.sort(samps);
         double s = Math.log(samps[0]);
-        double e = Math.log(samps[samps.length-1]);
+        double e = Math.log(samps[samps.length - 1]);
 
         double step = (e - s) / t;
-        double[][] hist = new double[t+1][];
-        double r = s - step/2;
+        double[][] hist = new double[t + 1][];
+        double r = s - step / 2;
         int t_i = -1;
         for (double samp : samps) {
             double c = Math.log(samp);

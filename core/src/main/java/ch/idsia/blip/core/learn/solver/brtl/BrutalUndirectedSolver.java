@@ -8,18 +8,19 @@ import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.samp.SimpleSampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
-import ch.idsia.blip.core.learn.solver.src.brutal.BrutalMaxUndirectedSearcherOld;
 import ch.idsia.blip.core.learn.solver.src.brutal.BrutalMaxUndirectedSearcher;
+import ch.idsia.blip.core.learn.solver.src.brutal.BrutalMaxUndirectedSearcherOld;
 import ch.idsia.blip.core.learn.solver.src.brutal.BrutalUndirectedSearcher;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.sameArray;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 /**
  * BRTL approach, Greedy
@@ -32,7 +33,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
     private Und best_und;
 
-    public int thread = 0;
+    public int thread;
 
     TreeSet<Solution2> open;
 
@@ -40,21 +41,25 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
     public int behaviour;
 
-    public void init(int time, Und und, int threads, int maxTw) {
-        this.tw = maxTw;
-        this.thread_pool_size = threads;
-        this.max_exec_time = time;
+    @Override
+    public void init(HashMap<String, String> options) {
+        super.init(options);
+        this.tw = gInt("maxTw");
+    }
+
+    public void setUnd(Und und) {
         this.und = und;
         this.n_var = und.n;
-
-        this.open=new TreeSet<Solution2>();
     }
 
     @Override
     protected void prepare() {
         super.prepare();
 
-        logf(0, "treewidth: %d \n", tw);
+        if (verbose > 0)
+            logf("treewidth: %d \n", tw);
+
+        this.open = new TreeSet<Solution2>();
     }
 
     @Override
@@ -63,7 +68,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
     }
 
     @Override
-    protected Sampler getSampler() {
+    public Sampler getSampler() {
         return new SimpleSampler(n_var, rand);
     }
 
@@ -75,7 +80,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
             return new BrutalMaxUndirectedSearcherOld(this, tw, und);
         } else if (behaviour == 2) {
             return new BrutalMaxUndirectedSearcher(this, tw, und);
-        }else {
+        } else {
             // Stochastic behaviour (follow sampling)
             return new BrutalUndirectedSearcher(this, tw, und);
         }
@@ -161,7 +166,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
             toDropWorst = true;
         }
 
-        for (Solution2 s: open) {
+        for (Solution2 s : open) {
             if (s.same(new_str))
                 return;
         }
@@ -186,12 +191,12 @@ public class BrutalUndirectedSolver extends BaseSolver {
     public void writeUndirected(String s, int sk, Und str) {
 
         str.names = new String[str.n];
-        for (int i =0; i < str.n; i++)
+        for (int i = 0; i < str.n; i++)
             str.names[i] = f("MM%s", und.names[i]);
         List<Und> components = UndSeparator.go(str);
         if (components.size() > 1) {
             p("NON COMPLETE!");
-                    return;
+            return;
         }
         //String path = f("%s/comp-%d/%d/", s, components, sk);
         String path = f("%s/%d/", s, sk);
@@ -213,7 +218,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
             PrintWriter w = new PrintWriter(y, "UTF-8");
             // wf(w, "%d\n", str.n );
             for (int v1 = 0; v1 < str.n; v1++) {
-                for (int v2: str.neigh[v1])
+                for (int v2 : str.neigh[v1])
                     if (v2 > v1)
                         wf(w, "%s %s\n", und.names[v1], und.names[v2]);
                 w.flush();
@@ -224,7 +229,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
         }
     }
 
-    private static class Solution2 implements Comparable<Solution2>{
+    private static class Solution2 implements Comparable<Solution2> {
         private final Und str;
         private final double sk;
 
@@ -244,7 +249,7 @@ public class BrutalUndirectedSolver extends BaseSolver {
         public boolean same(Und o_str) {
 
             if (str.n != o_str.n)
-                return  false;
+                return false;
 
             for (int i = 0; i < str.n; i++) {
                 if (!sameArray(str.neigh[i], o_str.neigh[i]))

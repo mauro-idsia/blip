@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.common.io.dat;
 
 
-import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

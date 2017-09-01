@@ -2,9 +2,9 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
-import ch.idsia.blip.core.utils.Pair;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.SIntSet;
+import ch.idsia.blip.core.utils.other.Pair;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.TreeSet;
 
@@ -29,11 +29,11 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
         already = new boolean[n_var];
     }
 
-    // Greedily optimize a network!
+    // Greedily winasobs a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        vars = smp.sample();
 
         // clear all
         clear();

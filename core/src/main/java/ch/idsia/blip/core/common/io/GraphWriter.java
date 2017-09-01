@@ -4,7 +4,7 @@ import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.arcs.NamedDirected;
 import ch.idsia.blip.core.common.io.bn.BnResReader;
 import ch.idsia.blip.core.common.io.dat.DatFileLineReader;
-import ch.idsia.blip.core.utils.IncorrectCallException;
+import ch.idsia.blip.core.utils.other.IncorrectCallException;
 
 import java.io.IOException;
 

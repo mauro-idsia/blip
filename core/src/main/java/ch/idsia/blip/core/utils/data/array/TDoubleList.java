@@ -6,7 +6,6 @@ import ch.idsia.blip.core.utils.data.common.TDoubleCollection;
 import java.util.Random;
 
 
-
 /**
  * Interface for Trove list implementations.
  */
@@ -59,22 +58,22 @@ public interface TDoubleList extends TDoubleCollection {
      * Adds a subset of the values in the array <tt>vals</tt> to the
      * end of the list, in order.
      *
-     * @param vals an <code>double[]</code> value
+     * @param vals   an <code>double[]</code> value
      * @param offset the offset at which to start copying
      * @param length the number of values to copy.
      */
     void add(double[] vals, int offset, int length);
 
 
-   /**
+    /**
      * Inserts <tt>value</tt> into the list at <tt>offset</tt>.  All
      * values including and to the right of <tt>offset</tt> are shifted
      * to the right.
      *
      * @param offset an <code>int</code> value
-     * @param value an <code>double</code> value
+     * @param value  an <code>double</code> value
      */
-   void insert(int offset, double value);
+    void insert(int offset, double value);
 
 
     /**
@@ -93,11 +92,11 @@ public interface TDoubleList extends TDoubleCollection {
      * at <tt>offset</tt>.  All values including and to the right of
      * <tt>offset</tt> are shifted to the right.
      *
-     * @param offset an <code>int</code> value
-     * @param values an <code>double[]</code> value
+     * @param offset    an <code>int</code> value
+     * @param values    an <code>double[]</code> value
      * @param valOffset the offset in the values array at which to
-     * start copying.
-     * @param len the number of values to copy from the values array
+     *                  start copying.
+     * @param len       the number of values to copy from the values array
      */
     void insert(int offset, double[] values, int valOffset, int len);
 
@@ -115,9 +114,8 @@ public interface TDoubleList extends TDoubleCollection {
      * Sets the value at the specified offset.
      *
      * @param offset an <code>int</code> value
-     * @param val an <code>double</code> value
-	 *
-	 * @return	The value previously at the given index.
+     * @param val    an <code>double</code> value
+     * @return The value previously at the given index.
      */
     double set(int offset, double val);
 
@@ -137,10 +135,10 @@ public interface TDoubleList extends TDoubleCollection {
      * <tt>length</tt> values from the <tt>values</tt> array, starting
      * at valOffset.
      *
-     * @param offset the first offset to replace
-     * @param values the source of the new values
+     * @param offset    the first offset to replace
+     * @param values    the source of the new values
      * @param valOffset the first value to copy from the values array
-     * @param length the number of values to copy
+     * @param length    the number of values to copy
      */
     void set(int offset, double[] values, int valOffset, int length);
 
@@ -150,7 +148,7 @@ public interface TDoubleList extends TDoubleCollection {
      * previously stored value.
      *
      * @param offset an <code>int</code> value
-     * @param val an <code>double</code> value
+     * @param val    an <code>double</code> value
      * @return the value previously stored at offset.
      */
     double replace(int offset, double val);
@@ -201,7 +199,7 @@ public interface TDoubleList extends TDoubleCollection {
      * Reverse the order of the elements in the range of the list.
      *
      * @param from the inclusive index at which to start reversing
-     * @param to the exclusive index at which to stop reversing
+     * @param to   the exclusive index at which to stop reversing
      */
     void reverse(int from, int to);
 
@@ -219,10 +217,10 @@ public interface TDoubleList extends TDoubleCollection {
      * Returns a sublist of this list.
      *
      * @param begin low endpoint (inclusive) of the subList.
-     * @param end high endpoint (exclusive) of the subList.
+     * @param end   high endpoint (exclusive) of the subList.
      * @return sublist of this list from begin, inclusive to end, exclusive.
      * @throws IndexOutOfBoundsException - endpoint out of range
-     * @throws IllegalArgumentException - endpoints out of order (end > begin)
+     * @throws IllegalArgumentException  - endpoints out of order (end > begin)
      */
     TDoubleList subList(int begin, int end);
 
@@ -239,7 +237,7 @@ public interface TDoubleList extends TDoubleCollection {
      * Copies a slice of the list into a native array.
      *
      * @param offset the offset at which to start copying
-     * @param len the number of values to copy.
+     * @param len    the number of values to copy.
      * @return an <code>double[]</code> value
      */
     double[] toArray(int offset, int len);
@@ -247,14 +245,14 @@ public interface TDoubleList extends TDoubleCollection {
 
     /**
      * Copies a slice of the list into a native array.
-     *
+     * <p>
      * <p>If the list fits in the specified array with room to spare (thread.e.,
      * the array has more elements than the list), the element in the array
      * immediately following the end of the list is set to
      * <tt>{@link #getNoEntryValue()}</tt>.
      * (This is useful in determining the length of the list <thread>only</thread> if
      * the caller knows that the list does not contain any "null" elements.)
-     *
+     * <p>
      * <p>NOTE: Trove does not allocate a new array if the array passed in is
      * not large enough to hold all of the data elements.  It will instead fill
      * the array passed in.
@@ -268,9 +266,9 @@ public interface TDoubleList extends TDoubleCollection {
     /**
      * Copies a slice of the list into a native array.
      *
-     * @param dest the array to copy into.
+     * @param dest   the array to copy into.
      * @param offset the offset where the first value should be copied
-     * @param len the number of values to copy.
+     * @param len    the number of values to copy.
      * @return the array passed in.
      */
     double[] toArray(double[] dest, int offset, int len);
@@ -279,10 +277,10 @@ public interface TDoubleList extends TDoubleCollection {
     /**
      * Copies a slice of the list into a native array.
      *
-     * @param dest the array to copy into.
+     * @param dest       the array to copy into.
      * @param source_pos the offset of the first value to copy
-     * @param dest_pos the offset where the first value should be copied
-     * @param len the number of values to copy.
+     * @param dest_pos   the offset where the first value should be copied
+     * @param len        the number of values to copy.
      * @return the array passed in.
      */
     double[] toArray(double[] dest, int source_pos, int dest_pos, int len);
@@ -301,7 +299,7 @@ public interface TDoubleList extends TDoubleCollection {
      * implementation.
      *
      * @param fromIndex the index at which to start sorting (inclusive)
-     * @param toIndex the index at which to stop sorting (exclusive)
+     * @param toIndex   the index at which to stop sorting (exclusive)
      * @see java.util.Arrays#sort
      */
     void sort(int fromIndex, int toIndex);
@@ -319,8 +317,8 @@ public interface TDoubleList extends TDoubleCollection {
      * Fills a range in the list with the specified value.
      *
      * @param fromIndex the offset at which to start filling (inclusive)
-     * @param toIndex the offset at which to stop filling (exclusive)
-     * @param val the value to use when filling
+     * @param toIndex   the offset at which to stop filling (exclusive)
+     * @param val       the value to use when filling
      */
     void fill(int fromIndex, int toIndex, double val);
 
@@ -342,9 +340,9 @@ public interface TDoubleList extends TDoubleCollection {
      * range.  Note that you <b>must</b> @{link #sort sort} the list
      * or the range before doing a search.
      *
-     * @param value the value to search for
+     * @param value     the value to search for
      * @param fromIndex the lower boundary of the range (inclusive)
-     * @param toIndex the upper boundary of the range (exclusive)
+     * @param toIndex   the upper boundary of the range (exclusive)
      * @return the absolute offset in the list of the value, or its
      * negative insertion point into the sorted list.
      */
@@ -368,8 +366,8 @@ public interface TDoubleList extends TDoubleCollection {
      * <tt>value</tt>, starting at <tt>offset</tt>.
      *
      * @param offset the offset at which to start the linear search
-     * (inclusive)
-     * @param value an <code>double</code> value
+     *               (inclusive)
+     * @param value  an <code>double</code> value
      * @return the first offset of the value, or -1 if it is not in
      * the list.
      * @see #binarySearch for faster searches on sorted lists
@@ -394,8 +392,8 @@ public interface TDoubleList extends TDoubleCollection {
      * <tt>value</tt>, starting at <tt>offset</tt>.
      *
      * @param offset the offset at which to start the linear search
-     * (exclusive)
-     * @param value an <code>double</code> value
+     *               (exclusive)
+     * @param value  an <code>double</code> value
      * @return the last offset of the value, or -1 if it is not in
      * the list.
      * @see #binarySearch for faster searches on sorted lists
@@ -415,7 +413,7 @@ public interface TDoubleList extends TDoubleCollection {
      * Finds the maximum value in the list.
      *
      * @return the largest value in the list.
-     * @exception IllegalStateException if the list is empty
+     * @throws IllegalStateException if the list is empty
      */
     double max();
 
@@ -424,7 +422,7 @@ public interface TDoubleList extends TDoubleCollection {
      * Finds the minimum value in the list.
      *
      * @return the smallest value in the list.
-     * @exception IllegalStateException if the list is empty
+     * @throws IllegalStateException if the list is empty
      */
     double min();
 

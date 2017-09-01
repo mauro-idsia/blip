@@ -7,7 +7,7 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getBayesianNetwork;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getBayesianNetwork;
 
 
 /**
@@ -19,10 +19,10 @@ public class HammingDist extends Api {
     private static final Logger log = Logger.getLogger(
             HammingDist.class.getName());
 
-    @Option(name="-n1", required = true, usage="First Bayesian network path")
+    @Option(name = "-n1", required = true, usage = "First Bayesian network path")
     private String s_f_bn;
 
-    @Option(name="-n2", required = true, usage="Second Bayesian network path")
+    @Option(name = "-n2", required = true, usage = "Second Bayesian network path")
     private String s_s_bn;
 
     /**

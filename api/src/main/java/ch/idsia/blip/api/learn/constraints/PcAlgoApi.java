@@ -8,16 +8,16 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
 
 public class PcAlgoApi extends Api {
 
     private static final Logger log = Logger.getLogger(PcAlgoApi.class.getName());
 
-    @Option(name="-d", required = true, usage="Datafile path (.dat format)")
+    @Option(name = "-d", required = true, usage = "Datafile path (.dat format)")
     private static String ph_dat;
 
-    @Option(name="-n", required = true, usage="Bayesian network file path")
+    @Option(name = "-n", required = true, usage = "Bayesian network file path")
     private static String ph_net;
 
     private final PcAlgo pc;

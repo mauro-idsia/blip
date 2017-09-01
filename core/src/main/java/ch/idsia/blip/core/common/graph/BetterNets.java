@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 public class BetterNets extends NetToGraph {
 
@@ -38,8 +38,8 @@ public class BetterNets extends NetToGraph {
                     continue;
                 String[] g = content.split(" ");
                 double[] p = new double[2];
-                p[0] = Double.valueOf(g[2])*100;
-                p[1] = Double.valueOf(g[3])*100;
+                p[0] = Double.valueOf(g[2]) * 100;
+                p[1] = Double.valueOf(g[3]) * 100;
                 bn.positions.put(g[1], p);
             }
         } catch (Exception e) {

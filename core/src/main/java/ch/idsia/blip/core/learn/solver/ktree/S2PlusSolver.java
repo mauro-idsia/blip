@@ -26,7 +26,7 @@ public class S2PlusSolver extends S2Solver {
     protected void almost() {
         vars = new int[n_var];
         for (int j = 0; j < n_var; j++)
-            vars[j] = j+1;
+            vars[j] = j + 1;
 
         sampler = new AstarKtree(n_var, tw, this);
     }

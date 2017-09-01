@@ -1,9 +1,10 @@
 package ch.idsia.blip.core.common.io.dat;
 
 
-import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 
@@ -60,7 +61,6 @@ public class DatFileLineReader extends BaseFileLineReader {
 
         return samp;
     }
-
 
 
     public boolean readMetaData() {

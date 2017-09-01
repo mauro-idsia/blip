@@ -11,16 +11,16 @@ public class MatrixArcVisualizerApi extends Api {
     private static final Logger log = Logger.getLogger(MatrixArcVisualizerApi.class.getName());
 
 
-    @Option(name="-m", required = true, usage="Matrix arcs file path")
+    @Option(name = "-m", required = true, usage = "Matrix arcs file path")
     private static String ph_mtx;
 
-    @Option(name="-d", required = true, usage="Datafile path")
+    @Option(name = "-d", required = true, usage = "Datafile path")
     private static String ph_dat;
 
-    @Option(name="-e", usage="Epsilon value")
+    @Option(name = "-e", usage = "Epsilon value")
     private static Double eps = 1.0;
 
-    @Option(name="-o", required = true, usage="Output path")
+    @Option(name = "-o", required = true, usage = "Output path")
     private static String ph_out;
 
     public static void main(String[] args) {

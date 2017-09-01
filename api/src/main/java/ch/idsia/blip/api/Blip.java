@@ -7,8 +7,8 @@ import java.lang.reflect.Method;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.closeIt;
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.closeIt;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 
 /**

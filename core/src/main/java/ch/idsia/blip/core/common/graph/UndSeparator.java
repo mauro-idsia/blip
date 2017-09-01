@@ -13,7 +13,7 @@ public class UndSeparator {
     public static List<Und> go(Und u) {
         List<Und> l_U = new ArrayList<Und>();
         List<TIntSet> sep = getSeparated(u);
-        for (TIntSet s: sep) {
+        for (TIntSet s : sep) {
             l_U.add(getSubUnd(u, s));
         }
         return l_U;
@@ -31,8 +31,8 @@ public class UndSeparator {
 
             for (int j = 0; j < ps.length; j++) {
                 int n_j = Arrays.binarySearch(ar, ps[j]);
-                if (n_j >i)
-                n_u.mark(i,n_j );
+                if (n_j > i)
+                    n_u.mark(i, n_j);
             }
 
             n_u.names[i] = u.names[a];
@@ -67,7 +67,7 @@ public class UndSeparator {
                 int t = pop(todo);
                 proc.remove(t);
 
-                for (int p: u.neigh[t])
+                for (int p : u.neigh[t])
                     if (!n_set.contains(p)) {
                         n_set.add(p);
                         todo.add(p);

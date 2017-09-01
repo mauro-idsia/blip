@@ -2,17 +2,18 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.common.arcs.Und;
 import ch.idsia.blip.core.learn.solver.brtl.BrutalUndirectedSolver;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.data.common.TIntIterator;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 
 public class BrutalMaxUndirectedSearcherOld extends BrutalUndirectedSearcher {
 
@@ -28,7 +29,7 @@ public class BrutalMaxUndirectedSearcherOld extends BrutalUndirectedSearcher {
 
     // Maximize a network!
     @Override
-    public ParentSet[] search(int[] bakaro) {
+    public ParentSet[] search() {
 
         // clear all
         clear();

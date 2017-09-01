@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 
 /**
@@ -94,8 +94,8 @@ public class BnResReader {
         }
 
         BayesianNetwork bn = new BayesianNetwork(p.size());
-for (int i = 0; i < p.size(); i++)
-        bn.l_parent_var[i] = p.get(i);
+        for (int i = 0; i < p.size(); i++)
+            bn.l_parent_var[i] = p.get(i);
 
         return bn;
     }

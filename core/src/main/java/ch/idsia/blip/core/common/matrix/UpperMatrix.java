@@ -1,13 +1,13 @@
 package ch.idsia.blip.core.common.matrix;
 
-import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getReader;
-import static ch.idsia.blip.core.utils.RandomStuff.wf;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getReader;
+import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
 
 public class UpperMatrix {
 
@@ -15,7 +15,7 @@ public class UpperMatrix {
     public final int size;
 
     // matrix
-    public  double[] vec;
+    public double[] vec;
 
     // number of variables
     public int n;
@@ -45,7 +45,7 @@ public class UpperMatrix {
 
     public void inc(int i, double v) {
         if (i >= 0 && i < size)
-            vec[i]+= v;
+            vec[i] += v;
     }
 
     public double value(int i) {
@@ -56,7 +56,7 @@ public class UpperMatrix {
 
     public void write(Writer w) throws IOException {
         wf(w, "%d \n", n);
-        for (int v1 = 0; v1 <n; v1++) {
+        for (int v1 = 0; v1 < n; v1++) {
             for (int v2 = v1 + 1; v2 < n; v2++) {
                 wf(w, "%d - %d - %.3f\n", v1, v2, Math.abs(value(v1, v2)));
             }

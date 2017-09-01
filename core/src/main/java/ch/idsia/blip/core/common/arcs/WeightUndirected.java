@@ -8,7 +8,7 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static ch.idsia.blip.core.utils.RandomStuff.wf;
+import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
 
 
 /**
@@ -62,7 +62,7 @@ public class WeightUndirected extends Undirected {
     }
 
     public void write(Writer w) throws IOException {
-        wf(w, "graph G {\n");
+        wf(w, "graph Base {\n");
         int j = 0;
         for (int v1 = 0; v1 < n; v1++) {
             for (int v2 = v1 + 1; v2 < n; v2++) {
@@ -88,7 +88,7 @@ public class WeightUndirected extends Undirected {
         for (int i = 0; i < ar.length; i++) {
             int a = ar[i];
 
-            n_u.names[i] = name( a);
+            n_u.names[i] = name(a);
 
             int[] adj = adj(a);
             for (int j = 0; j < adj.length; j++) {

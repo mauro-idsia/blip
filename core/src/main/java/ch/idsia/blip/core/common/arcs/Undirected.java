@@ -2,10 +2,10 @@ package ch.idsia.blip.core.common.arcs;
 
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.data.set.TIntSet;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,9 +13,9 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Formatter;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.zeros;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 
 /**
@@ -241,7 +241,7 @@ public class Undirected extends Arcs {
         StringBuilder s = new StringBuilder();
         Formatter fm = new Formatter(s);
 
-        fm.format("graph G {\n");
+        fm.format("graph Base {\n");
         for (int v1 = 0; v1 < n; v1++) {
             fm.format("%s \n", name(v1));
             for (int v2 = v1 + 1; v2 < n; v2++) {
@@ -265,7 +265,7 @@ public class Undirected extends Arcs {
 
     public int n_adj(int j) {
         int t = 0;
-        for (int i = 0; i <n; i++)
+        for (int i = 0; i < n; i++)
             if ((i != j) && (check(i, j)))
                 t++;
         return t;
@@ -273,10 +273,10 @@ public class Undirected extends Arcs {
 
     public int[] adj(int j) {
         TIntArrayList t = new TIntArrayList();
-        for (int i = 0; i <n; i++)
+        for (int i = 0; i < n; i++)
             if ((i != j) && (check(i, j)))
                 t.add(i);
-        return  t.toArray();
+        return t.toArray();
     }
 
     public static Undirected read(String s) throws IOException {
@@ -293,27 +293,27 @@ public class Undirected extends Arcs {
 
     public Undirected getSubUndirected(TIntSet s) {
 
-            int[] ar = s.toArray();
-            Arrays.sort(ar);
-            Undirected n_u = new Undirected(ar.length);
-            n_u.names = new String[ar.length];
-            for (int i = 0; i < ar.length; i++) {
-                int a = ar[i];
+        int[] ar = s.toArray();
+        Arrays.sort(ar);
+        Undirected n_u = new Undirected(ar.length);
+        n_u.names = new String[ar.length];
+        for (int i = 0; i < ar.length; i++) {
+            int a = ar[i];
 
-                n_u.names[i] = name( a);
+            n_u.names[i] = name(a);
 
-                int[] adj = adj(a);
-                for (int j = 0; j < adj.length; j++) {
-                    int n_adj = Arrays.binarySearch(ar, adj[j]);
-                    n_u.mark(i, n_adj);
-                }
+            int[] adj = adj(a);
+            for (int j = 0; j < adj.length; j++) {
+                int n_adj = Arrays.binarySearch(ar, adj[j]);
+                n_u.mark(i, n_adj);
             }
-
-            return n_u;
         }
 
+        return n_u;
+    }
+
     public void write(Writer w) throws IOException {
-        wf(w, "graph G {\n");
+        wf(w, "graph Base {\n");
         // wf(w, "ratio=\"0.7\"; \n");
         // wf(w, "node[fontsize=20];\n");
         // wf(w, "overlap=false;\n");
@@ -344,8 +344,8 @@ public class Undirected extends Arcs {
     public int numEdges() {
         int t = 0;
         for (int i = 0; i < n; i++) {
-            for (int n: neigh[i].toArray()) {
-                if (n>i)
+            for (int n : neigh[i].toArray()) {
+                if (n > i)
                     t++;
             }
         }

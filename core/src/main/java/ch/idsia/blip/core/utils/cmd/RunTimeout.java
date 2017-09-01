@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 public class RunTimeout {
 
 
-
     public static int cmdTimeout(final String commandLine,
                                  final boolean printOutput, final boolean printError, final long timeout) throws IOException {
 
@@ -40,7 +39,7 @@ public class RunTimeout {
 
             return worker.exit;
 
-        } catch(InterruptedException ex) {
+        } catch (InterruptedException ex) {
             worker.interrupt();
             Thread.currentThread().interrupt();
         } finally {
@@ -53,9 +52,11 @@ public class RunTimeout {
     private static class Worker extends Thread {
         private final Process process;
         private Integer exit;
+
         private Worker(Process process) {
             this.process = process;
         }
+
         public void run() {
             try {
                 exit = process.waitFor();

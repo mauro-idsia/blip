@@ -7,14 +7,14 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getBayesianNetwork;
-import static ch.idsia.blip.core.utils.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getBayesianNetwork;
+import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 
 public class Analyze extends Api {
 
     private static final Logger log = Logger.getLogger(Analyze.class.getName());
 
-    @Option(name="-n", required = true, usage="Bayesian network file path")
+    @Option(name = "-n", required = true, usage = "Bayesian network file path")
     private String ph;
 
     public static void main(String[] args) {
@@ -28,7 +28,7 @@ public class Analyze extends Api {
 
         pf("Number of nodes: %d \n", bn.n_var);
         pf("Number of edges: %d \n", bn.numEdges());
-        pf("Check: is acyclic? %b \n", bn.isAcyclic());
+        pf("Check: is acyclic? %pb \n", bn.isAcyclic());
         pf("Check treediwth: %d \n", bn.treeWidth());
     }
 }

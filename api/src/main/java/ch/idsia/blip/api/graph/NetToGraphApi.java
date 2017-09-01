@@ -7,10 +7,10 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 /**
- * Generate a graph from a network (requires graphviz)
+ * Generate pa graph from pa network (requires graphviz)
  */
 
 public class NetToGraphApi extends Api {
@@ -19,10 +19,10 @@ public class NetToGraphApi extends Api {
 
     protected NetToGraph ntg;
 
-    @Option(name="-n", required = true, usage="Bayesian network file path")
+    @Option(name = "-n", required = true, usage = "Bayesian network file path")
     private String path_bn;
 
-    @Option(name="-t", usage="maximum execution time (seconds)")
+    @Option(name = "-t", usage = "maximum execution time (seconds)")
     private int max_time;
 
     public NetToGraphApi() {

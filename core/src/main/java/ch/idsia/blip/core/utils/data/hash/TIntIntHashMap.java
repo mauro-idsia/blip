@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Map;
 
-import static ch.idsia.blip.core.utils.RandomStuff.f;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
 
 /**
  * An open addressed Map implementation for int keys and int values.
@@ -216,7 +216,7 @@ public class TIntIntHashMap extends TIntIntHash implements TIntIntMap {
      */
     public void putAll(Map<? extends Integer, ? extends Integer> map) {
         ensureCapacity(map.size());
-        // could optimize this for cases when map instanceof THashMap
+        // could winasobs this for cases when map instanceof THashMap
         for (Map.Entry<? extends Integer, ? extends Integer> entry : map.entrySet()) {
             this.put(entry.getKey(), entry.getValue());
         }

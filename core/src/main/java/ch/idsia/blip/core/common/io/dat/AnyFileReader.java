@@ -4,7 +4,7 @@ package ch.idsia.blip.core.common.io.dat;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,28 +17,11 @@ import static ch.idsia.blip.core.utils.data.ArrayUtils.index;
 /**
  * Reads the content of a datapoints file
  */
-public class AnyFileReader implements Closeable {
+public class AnyFileReader extends DatFileReader {
 
     // logger
     private static final Logger log = Logger.getLogger(
             AnyFileReader.class.getName());
-
-    // Reader structure.
-    private BufferedReader rd_dat;
-
-    public String path;
-
-    private boolean done = false;
-
-    private DataSet dSet;
-
-    public boolean readMissing = false;
-
-
-    public AnyFileReader(String s) throws FileNotFoundException {
-        this.rd_dat = new BufferedReader(new FileReader(s));
-        this.path = s;
-    }
 
     static public int[][] clone(int[][] a) {
         int[][] b = new int[a.length][];
@@ -54,6 +37,7 @@ public class AnyFileReader implements Closeable {
      *
      * @throws IOException if there is a problem in the reading.
      */
+    @Override
     public void readValuesCache() throws IOException {
 
         /*
@@ -113,7 +97,7 @@ public class AnyFileReader implements Closeable {
         TIntArrayList missing_aux_l = new TIntArrayList();
 
         String line;
-        String [] sp;
+        String[] sp;
         Integer v;
         List<TIntArrayList> lu;
         HashMap<String, Integer> lv;
@@ -123,13 +107,13 @@ public class AnyFileReader implements Closeable {
             if ("".equals(line))
                 continue;
 
-            if (readMissing && line.contains("?"))
+            if (!readMissing && line.contains("?"))
                 continue;
 
             sp = getSplit(line);
             if (sp.length != dSet.n_var) {
                 notifyError(dSet.n_datapoints + 1, sp.length);
-                return;
+
             }
 
             // For each variable
@@ -184,9 +168,6 @@ public class AnyFileReader implements Closeable {
     }
 
 
-
-
-
     /**
      * Copy values from list of Integer to array of int.
      *
@@ -203,11 +184,8 @@ public class AnyFileReader implements Closeable {
         return aux;
     }
 
-    private void notifyError(int line, int found) {
-        log.severe(String.format("Problem in file at line %d: found %d cardinalities, %d variables.", line, dSet.n_var, found));
-    }
-
-    private String[] getSplit(String ln) {
+    @Override
+    protected String[] getSplit(String ln) {
         return ln.split("\\s+");
     }
 
@@ -217,23 +195,23 @@ public class AnyFileReader implements Closeable {
         }
     }
 
-    public DataSet read() throws IOException {
-        
-            if (done) {
-                return dSet;
-            }
-            
-            dSet = new DataSet();
+    public DataSet read(boolean readMissing) throws Exception {
 
-            // Number of variables (necessary)
-            // dSet.n_var = Integer.parseInt(rd_dat.readLine().trim());
+        if (done) {
+            return dSet;
+        }
 
-            // Read names
-            String ln = rd_dat.readLine();
-            dSet.l_s_names = getSplit(ln);
-            dSet.n_var = dSet.l_s_names.length;
+        dSet = new DataSet();
 
-            // Read arities
+        // Number of variables (necessary)
+        // dSet.n_var = Integer.parseInt(rd_dat.readLine().trim());
+
+        // Read names
+        String ln = rd_dat.readLine();
+        dSet.l_nm_var = getSplit(ln);
+        dSet.n_var = dSet.l_nm_var.length;
+
+        // Read arities
         /*
         ln = rd_dat.readLine();
         String[] sp = getSplit(ln);
@@ -247,13 +225,13 @@ public class AnyFileReader implements Closeable {
         }
         */
 
-            dSet.n_datapoints = 0;
-            dSet.l_n_arity = new int[dSet.n_var];
-        
+        dSet.n_datapoints = 0;
+        dSet.l_n_arity = new int[dSet.n_var];
+
         readValuesCache();
 
         done = true;
-        
+
         return dSet;
     }
 

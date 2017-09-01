@@ -38,7 +38,7 @@ public class IambBMi1 extends IambBMi {
 
     void fixEss(int x, int y, int[] z) {
         bmi.ess = (dat.l_n_arity[x] - 1) * (dat.l_n_arity[y] - 1);
-        for (int p: z)
+        for (int p : z)
             bmi.ess *= dat.l_n_arity[p];
     }
 }

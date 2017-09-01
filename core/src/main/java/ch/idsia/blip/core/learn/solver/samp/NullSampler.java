@@ -5,7 +5,7 @@ public class NullSampler implements Sampler {
 
     @Override
     public int[] sample() {
-     return new int[0];
+        return new int[0];
     }
 
     @Override

@@ -4,13 +4,13 @@ import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.io.GobnilpReader;
 import ch.idsia.blip.core.learn.solver.ClOptSolver;
 import ch.idsia.blip.core.learn.solver.src.obs.ObsSearcher;
-import ch.idsia.blip.core.utils.ParentSet;
-import ch.idsia.blip.core.utils.StreamGobbler;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.FastList;
 import ch.idsia.blip.core.utils.data.common.TIntIterator;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.exp.CyclicGraphException;
+import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.other.StreamGobbler;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +21,9 @@ import java.util.BitSet;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
-import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
+import static ch.idsia.blip.core.utils.data.ArrayUtils.findAll;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class ClOptSearcher extends ObsSearcher {
 
@@ -78,7 +79,7 @@ public class ClOptSearcher extends ObsSearcher {
         maxSk = new double[n_var];
 
         for (int i = 0; i < n_var; i++) {
-            int j = m_scores[i].length -1;
+            int j = m_scores[i].length - 1;
             minSk[i] = m_scores[i][j].sk;
             maxSk[i] = m_scores[i][0].sk;
         }
@@ -180,7 +181,7 @@ public class ClOptSearcher extends ObsSearcher {
         // Find new best parent set for a, now that b is available
         acceptable.set(b);
         //if (find(b, availParents[a]))
-            str[a] = bests(a);
+        str[a] = bests(a);
 
         // pf("New parent set for %d: %s \n", a, str[a]);
         // p("");
@@ -218,7 +219,9 @@ public class ClOptSearcher extends ObsSearcher {
 
 
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
+
+        vars = smp.sample();
 
         if (solver.verbose > 2)
             solver.log("going! \n");
@@ -226,8 +229,9 @@ public class ClOptSearcher extends ObsSearcher {
         // Find initial structure!
         this.searchF(vars);
 
-        solver.logf(2, "Initial: %.5f (check: %.5f) \n",
-                last_sk, checkSk());
+        if (solver.verbose > 2)
+            solver.logf("Initial: %.5f (check: %.5f) \n",
+                    last_sk, checkSk());
 
         vars = new BayesianNetwork(last_str).getTopologicalOrder();
 
@@ -257,7 +261,8 @@ public class ClOptSearcher extends ObsSearcher {
         checkCorrect(last_str, vars);
 
 
-        solver.logf(2, "After greedy! %.5f - %.3f \n", solver.elapsed, skore(last_str));
+        if (solver.verbose > 2)
+            solver.logf("After greedy! %.5f - %.3f \n", solver.elapsed, skore(last_str));
 
         return last_str;
     }
@@ -324,7 +329,7 @@ public class ClOptSearcher extends ObsSearcher {
     private void done(int v) {
         todo.remove(v);
         cand.remove(bests[v]);
-        bests[v] =null;
+        bests[v] = null;
 
         // update available parents
         acceptable.set(v);
@@ -365,7 +370,7 @@ public class ClOptSearcher extends ObsSearcher {
         for (int i = w; i < n_var; i++) {
             int v = vars[i];
             todo.add(v);
-            Result r = new Result(1, v, m_scores[v][m_scores[v].length -1]);
+            Result r = new Result(1, v, m_scores[v][m_scores[v].length - 1]);
             cand.add(r);
             bests[v] = r;
         }
@@ -444,7 +449,7 @@ public class ClOptSearcher extends ObsSearcher {
         public final ParentSet p;
 
         public final double sk;
-        
+
         private final int v;
 
         public Result(double sk, int v, ParentSet p) {

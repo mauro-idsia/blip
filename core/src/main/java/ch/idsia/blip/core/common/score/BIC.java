@@ -3,7 +3,7 @@ package ch.idsia.blip.core.common.score;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 
-import java.util.Arrays;
+import java.util.Map;
 
 
 /**
@@ -50,7 +50,7 @@ public class BIC extends Score {
 
         double pen = getPenalization(arity);
 
-           skore -= pen;
+        skore -= pen;
 
         return skore;
     }
@@ -60,18 +60,9 @@ public class BIC extends Score {
     }
 
     @Override
-    public double computeScore(int n, int[] set_p) {
-
-        Arrays.sort(set_p);
-
-        if (check(set_p))
-            return -Double.MAX_VALUE;
-
-        int[][] p_values = computeParentSetValues(set_p);
+    public double computeScore(int n, int[] set_p, int[][] p_values) {
 
         numEvaluated++;
-
-        Arrays.sort(set_p);
 
         double skore = 0;
 
@@ -106,7 +97,7 @@ public class BIC extends Score {
 
                 skore += valcount
                         * (log(valcount + alpha_ij)
-                                - log(p_values[p_v].length + alpha_i));
+                        - log(p_values[p_v].length + alpha_i));
 
                 // System.out.printf("%d- %.2f, ", valcount[v], p);
 
@@ -135,7 +126,6 @@ public class BIC extends Score {
         return getPenalization(dat.l_n_arity[n], p_arity);
     }
 
-    @Override
     public double inter(int n, int[] set, int p2) {
 
         // Compute interaction
@@ -153,6 +143,11 @@ public class BIC extends Score {
     @Override
     public String descr() {
         return "BIC";
+    }
+
+    @Override
+    public double computePrediction(int n, int[] p1, int p2, Map<int[], Double> scores) {
+        return scores.get(p1) + scores.get(new int[]{p2}) + inter(n, p1, p2);
     }
 
 }

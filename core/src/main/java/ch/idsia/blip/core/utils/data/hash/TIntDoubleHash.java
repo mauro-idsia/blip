@@ -10,7 +10,7 @@ import java.io.ObjectOutput;
 
 /**
  * An open addressed hashing implementation for int/double primitive entries.
- *
+ * <p>
  * Created: Sun Nov  4 08:56:06 2001
  *
  * @author Eric D. Friedman
@@ -19,28 +19,28 @@ import java.io.ObjectOutput;
  * @version $Id: _K__V_Hash.template,v 1.1.2.6 2009/11/07 03:36:44 robeden Exp $
  */
 abstract public class TIntDoubleHash extends TPrimitiveHash {
-	static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-    /** the set of ints */
+    /**
+     * the set of ints
+     */
     transient int[] _set;
 
 
     /**
      * key that represents null
-     *
+     * <p>
      * NOTE: should not be modified after the Hash is created, but is
-     *       not final because of Externalization
-     *
+     * not final because of Externalization
      */
     int no_entry_key;
 
 
     /**
      * value that represents null
-     *
+     * <p>
      * NOTE: should not be modified after the Hash is created, but is
-     *       not final because of Externalization
-     *
+     * not final because of Externalization
      */
     double no_entry_value;
 
@@ -52,8 +52,8 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      */
     TIntDoubleHash() {
         super();
-        no_entry_key = ( int ) 0;
-        no_entry_value = ( double ) 0;
+        no_entry_key = (int) 0;
+        no_entry_value = (double) 0;
     }
 
 
@@ -65,9 +65,9 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      * @param initialCapacity an <code>int</code> value
      */
     TIntDoubleHash(int initialCapacity) {
-        super( initialCapacity );
-        no_entry_key = ( int ) 0;
-        no_entry_value = ( double ) 0;
+        super(initialCapacity);
+        no_entry_key = (int) 0;
+        no_entry_value = (double) 0;
     }
 
 
@@ -76,13 +76,13 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      * value at or near the specified capacity and load factor.
      *
      * @param initialCapacity used to find a prime capacity for the table.
-     * @param loadFactor used to calculate the threshold over which
-     * rehashing takes place.
+     * @param loadFactor      used to calculate the threshold over which
+     *                        rehashing takes place.
      */
     TIntDoubleHash(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
-        no_entry_key = ( int ) 0;
-        no_entry_value = ( double ) 0;
+        no_entry_key = (int) 0;
+        no_entry_value = (double) 0;
     }
 
 
@@ -91,9 +91,9 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      * value at or near the specified capacity and load factor.
      *
      * @param initialCapacity used to find a prime capacity for the table.
-     * @param loadFactor used to calculate the threshold over which
-     * rehashing takes place.
-     * @param no_entry_value value that represents null
+     * @param loadFactor      used to calculate the threshold over which
+     *                        rehashing takes place.
+     * @param no_entry_value  value that represents null
      */
     TIntDoubleHash(int initialCapacity, float loadFactor,
                    int no_entry_key, double no_entry_value) {
@@ -134,10 +134,10 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      * @param initialCapacity an <code>int</code> value
      * @return the actual capacity chosen
      */
-    protected int setUp( int initialCapacity ) {
+    protected int setUp(int initialCapacity) {
         int capacity;
 
-        capacity = super.setUp( initialCapacity );
+        capacity = super.setUp(initialCapacity);
         _set = new int[capacity];
         return capacity;
     }
@@ -154,15 +154,14 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
     }
 
 
-
     /**
      * Releases the element currently stored at <tt>index</tt>.
      *
      * @param index an <code>int</code> value
      */
-    protected void removeAt( int index ) {
+    protected void removeAt(int index) {
         _set[index] = no_entry_key;
-        super.removeAt( index );
+        super.removeAt(index);
     }
 
 
@@ -178,7 +177,7 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         final byte[] states = _states;
         final int[] set = _set;
         length = states.length;
-        hash = HashFunctions.hash( key ) & 0x7fffffff;
+        hash = HashFunctions.hash(key) & 0x7fffffff;
         index = hash % length;
         byte state = states[index];
 
@@ -225,108 +224,108 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      * @return an <code>int</code> value
      */
     int insertKey(int val) {
-             int hash, index;
+        int hash, index;
 
-             hash = HashFunctions.hash(val) & 0x7fffffff;
-             index = hash % _states.length;
-             byte state = _states[index];
+        hash = HashFunctions.hash(val) & 0x7fffffff;
+        index = hash % _states.length;
+        byte state = _states[index];
 
-             consumeFreeSlot = false;
+        consumeFreeSlot = false;
 
-             if (state == FREE) {
-                 consumeFreeSlot = true;
-                 insertKeyAt(index, val);
+        if (state == FREE) {
+            consumeFreeSlot = true;
+            insertKeyAt(index, val);
 
-                 return index;       // empty, all done
-             }
+            return index;       // empty, all done
+        }
 
-             if (state == FULL && _set[index] == val) {
-                 return -index - 1;   // already stored
-             }
+        if (state == FULL && _set[index] == val) {
+            return -index - 1;   // already stored
+        }
 
-             // already FULL or REMOVED, must probe
-             return insertKeyRehash(val, index, hash, state);
-         }
+        // already FULL or REMOVED, must probe
+        return insertKeyRehash(val, index, hash, state);
+    }
 
-         private int insertKeyRehash(int val, int index, int hash, byte state) {
-             // compute the double hash
-             final int length = _set.length;
-             int probe = 1 + (hash % (length - 2));
-             final int loopIndex = index;
-             int firstRemoved = -1;
+    private int insertKeyRehash(int val, int index, int hash, byte state) {
+        // compute the double hash
+        final int length = _set.length;
+        int probe = 1 + (hash % (length - 2));
+        final int loopIndex = index;
+        int firstRemoved = -1;
 
-             /**
-              * Look until FREE slot or we start to loop
-              */
-             do {
-                 // Identify first removed slot
-                 if (state == REMOVED && firstRemoved == -1)
-                     firstRemoved = index;
+        /**
+         * Look until FREE slot or we start to loop
+         */
+        do {
+            // Identify first removed slot
+            if (state == REMOVED && firstRemoved == -1)
+                firstRemoved = index;
 
-                 index -= probe;
-                 if (index < 0) {
-                     index += length;
-                 }
-                 state = _states[index];
+            index -= probe;
+            if (index < 0) {
+                index += length;
+            }
+            state = _states[index];
 
-                 // A FREE slot stops the search
-                 if (state == FREE) {
-                     if (firstRemoved != -1) {
-                         insertKeyAt(firstRemoved, val);
-                         return firstRemoved;
-                     } else {
-                         consumeFreeSlot = true;
-                         insertKeyAt(index, val);
-                         return index;
-                     }
-                 }
+            // A FREE slot stops the search
+            if (state == FREE) {
+                if (firstRemoved != -1) {
+                    insertKeyAt(firstRemoved, val);
+                    return firstRemoved;
+                } else {
+                    consumeFreeSlot = true;
+                    insertKeyAt(index, val);
+                    return index;
+                }
+            }
 
-                 if (state == FULL && _set[index] == val) {
-                     return -index - 1;
-                 }
+            if (state == FULL && _set[index] == val) {
+                return -index - 1;
+            }
 
-                 // Detect loop
-             } while (index != loopIndex);
+            // Detect loop
+        } while (index != loopIndex);
 
-             // We inspected all reachable slots and did not find a FREE one
-             // If we found a REMOVED slot we return the first one found
-             if (firstRemoved != -1) {
-                 insertKeyAt(firstRemoved, val);
-                 return firstRemoved;
-             }
+        // We inspected all reachable slots and did not find a FREE one
+        // If we found a REMOVED slot we return the first one found
+        if (firstRemoved != -1) {
+            insertKeyAt(firstRemoved, val);
+            return firstRemoved;
+        }
 
-             // Can a resizing strategy be found that resizes the set?
-             throw new IllegalStateException("No free or removed slots available. Key set full?!!");
-         }
+        // Can a resizing strategy be found that resizes the set?
+        throw new IllegalStateException("No free or removed slots available. Key set full?!!");
+    }
 
-         private void insertKeyAt(int index, int val) {
-             _set[index] = val;  // insert value
-             _states[index] = FULL;
-         }
+    private void insertKeyAt(int index, int val) {
+        _set[index] = val;  // insert value
+        _states[index] = FULL;
+    }
 
-    protected int XinsertKey( int key ) {
+    protected int XinsertKey(int key) {
         int hash, probe, index, length;
 
         final byte[] states = _states;
         final int[] set = _set;
         length = states.length;
-        hash = HashFunctions.hash( key ) & 0x7fffffff;
+        hash = HashFunctions.hash(key) & 0x7fffffff;
         index = hash % length;
         byte state = states[index];
 
         consumeFreeSlot = false;
 
-        if ( state == FREE ) {
+        if (state == FREE) {
             consumeFreeSlot = true;
             set[index] = key;
             states[index] = FULL;
 
             return index;       // empty, all done
-        } else if ( state == FULL && set[index] == key ) {
-            return -index -1;   // already stored
+        } else if (state == FULL && set[index] == key) {
+            return -index - 1;   // already stored
         } else {                // already FULL or REMOVED, must probe
             // compute the double hash
-            probe = 1 + ( hash % ( length - 2 ) );
+            probe = 1 + (hash % (length - 2));
 
             // if the slot we landed on is FULL (but not removed), probe
             // until we find an empty slot, a REMOVED slot, or an element
@@ -340,24 +339,24 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
             // finding a matching value means that we've found that our desired
             // key is already in the table
 
-            if ( state != REMOVED ) {
-				// starting at the natural offset, probe until we find an
-				// offset that isn't full.
-				do {
-					index -= probe;
-					if (index < 0) {
-						index += length;
-					}
-					state = states[index];
-				} while ( state == FULL && set[index] != key );
+            if (state != REMOVED) {
+                // starting at the natural offset, probe until we find an
+                // offset that isn't full.
+                do {
+                    index -= probe;
+                    if (index < 0) {
+                        index += length;
+                    }
+                    state = states[index];
+                } while (state == FULL && set[index] != key);
             }
 
             // if the index we found was removed: continue probing until we
             // locate a free location or an element which equal()s the
             // one we have.
-            if ( state == REMOVED) {
+            if (state == REMOVED) {
                 int firstRemoved = index;
-                while ( state != FREE && ( state == REMOVED || set[index] != key ) ) {
+                while (state != FREE && (state == REMOVED || set[index] != key)) {
                     index -= probe;
                     if (index < 0) {
                         index += length;
@@ -366,7 +365,7 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
                 }
 
                 if (state == FULL) {
-                    return -index -1;
+                    return -index - 1;
                 } else {
                     set[index] = key;
                     states[index] = FULL;
@@ -376,7 +375,7 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
             }
             // if it's full, the key is already stored
             if (state == FULL) {
-                return -index -1;
+                return -index - 1;
             } else {
                 consumeFreeSlot = true;
                 set[index] = key;
@@ -388,34 +387,38 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
     }
 
 
-    /** {@inheritDoc} */
-    public void writeExternal( ObjectOutput out ) throws IOException {
+    /**
+     * {@inheritDoc}
+     */
+    public void writeExternal(ObjectOutput out) throws IOException {
         // VERSION
-    	out.writeByte( 0 );
+        out.writeByte(0);
 
         // SUPER
-    	super.writeExternal( out );
+        super.writeExternal(out);
 
-    	// NO_ENTRY_KEY
-    	out.writeInt( no_entry_key );
+        // NO_ENTRY_KEY
+        out.writeInt(no_entry_key);
 
-    	// NO_ENTRY_VALUE
-    	out.writeDouble( no_entry_value );
+        // NO_ENTRY_VALUE
+        out.writeDouble(no_entry_value);
     }
 
 
-    /** {@inheritDoc} */
-    public void readExternal( ObjectInput in ) throws IOException, ClassNotFoundException {
+    /**
+     * {@inheritDoc}
+     */
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         // VERSION
-    	in.readByte();
+        in.readByte();
 
         // SUPER
-    	super.readExternal( in );
+        super.readExternal(in);
 
-    	// NO_ENTRY_KEY
-    	no_entry_key = in.readInt();
+        // NO_ENTRY_KEY
+        no_entry_key = in.readInt();
 
-    	// NO_ENTRY_VALUE
-    	no_entry_value = in.readDouble();
+        // NO_ENTRY_VALUE
+        no_entry_value = in.readDouble();
     }
 } // TIntDoubleHash

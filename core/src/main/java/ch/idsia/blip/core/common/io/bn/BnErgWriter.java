@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 
-import static ch.idsia.blip.core.utils.RandomStuff.wf;
-import static ch.idsia.blip.core.utils.StringUtils.join;
+import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
+import static ch.idsia.blip.core.utils.other.StringUtils.join;
 
 public class BnErgWriter extends BnWriter {
 
@@ -26,7 +26,7 @@ public class BnErgWriter extends BnWriter {
 
         // write parents
         for (int i = 0; i < bn.n_var; i++) {
-            int [] g = bn.parents(i);
+            int[] g = bn.parents(i);
             Arrays.sort(g);
             wf(wr, "%d\t%s\n", g.length, join(g, "\t"));
         }

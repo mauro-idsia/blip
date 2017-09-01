@@ -2,11 +2,12 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
+import ch.idsia.blip.core.learn.solver.FakeSolver;
 import ch.idsia.blip.core.learn.solver.src.ScoreSearcher;
-import ch.idsia.blip.core.utils.Pair;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.SIntSet;
-import ch.idsia.blip.core.utils.data.array.TIntArrayList;
+import ch.idsia.blip.core.utils.other.Pair;
+import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.util.Arrays;
 import java.util.TreeSet;
@@ -27,14 +28,14 @@ public class BrutalOldSearcher extends ScoreSearcher {
     // Near-maximal clique (size tw), for adding new variables
     protected TreeSet<SIntSet> handles;
 
-    private AuxObsSearcher aso;
+    private AuxSearcher aso;
 
-    @Override
     public void init(ParentSet[][] scores, int thread) {
         super.init(scores, thread);
 
-        aso = new AuxObsSearcher(solver, tw);
-        aso.init(scores);
+        this.aso = new AuxSearcher(new FakeSolver(this.solver), this.tw);
+
+        this.tw = Math.min(this.tw, this.n_var - 1);
     }
 
     // Variables in the initial clique
@@ -47,9 +48,9 @@ public class BrutalOldSearcher extends ScoreSearcher {
 
     // Greedily optimize a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
-        this.vars = vars;
+        vars = smp.sample();
 
         // clear all
         clear();
@@ -101,20 +102,20 @@ public class BrutalOldSearcher extends ScoreSearcher {
 
     void initClique() {
         // Initial handler: best DAG with (1..tw+1) variables
-        initCl = new int[tw+1];
-        System.arraycopy(vars, 0, initCl, 0, tw +1);
+        initCl = new int[tw + 1];
+        System.arraycopy(vars, 0, initCl, 0, tw + 1);
 
         // Find best, do some asobs iterations
         ParentSet[] best_str = exploreAll();
 
         // Update parent se
-        for (int v: initCl) {
+        for (int v : initCl) {
             update(v, best_str[v]);
         }
 
         // Add new handlers
         for (int v : initCl) {
-            addHandler(new SIntSet(reduceArray(initCl,v)));
+            addHandler(new SIntSet(reduceArray(initCl, v)));
         }
     }
 
@@ -124,33 +125,20 @@ public class BrutalOldSearcher extends ScoreSearcher {
 
     // DO ALL THE PERMUTATIONS!!
     protected ParentSet[] exploreAll() {
+        double best_sk = -1.7976931348623157E308D;
 
-        TIntArrayList init = new TIntArrayList(initCl.length);
-        for (int i : initCl)
-            init.add(i);
+        ParentSet[] best_str = new ParentSet[this.initCl.length];
 
-        double best_sk = -Double.MAX_VALUE;
-        double new_sk;
-
-        ParentSet[] best_str = null;
-        ParentSet[] new_str;
-
-        aso.setClique(initCl);
-
-        for (int i = 0; i < Math.pow(tw, 3); i++) {
-            init.shuffle(solver.rand);
-            // Search current
-            new_str = aso.search(init.toArray());
-             new_sk = checkSk(new_str);
-            //  p(Arrays.toString(initCl));
-
+        this.aso.setClique(this.m_scores, this.initCl);
+        for (int i = 0; i < this.tw; i++) {
+            ParentSet[] new_str = this.aso.search();
+            double new_sk = checkSk(new_str);
             if (new_sk > best_sk) {
-                best_str = new_str;
+                RandomStuff.cloneStr(new_str, best_str);
                 best_sk = new_sk;
             }
         }
-
-        return best_str;
+        return this.aso.getComplete(this.m_scores, best_str);
     }
 
     /*
@@ -217,7 +205,7 @@ public class BrutalOldSearcher extends ScoreSearcher {
 
     protected Pair<ParentSet, SIntSet> bestHandler(int v) {
 
-       //  p(m_scores[v][0]);
+        //  p(m_scores[v][0]);
 
         for (ParentSet p : m_scores[v]) {
 

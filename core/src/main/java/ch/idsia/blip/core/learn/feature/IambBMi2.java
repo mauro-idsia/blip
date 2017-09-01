@@ -23,7 +23,7 @@ public class IambBMi2 extends IambBMi1 {
     @Override
     protected boolean condInd(int x, int y, int[] z, double alpha) {
         fixEss(x, y, z);
-bmi.alpha = alpha;
+        bmi.alpha = alpha;
         return bmi.condInd(x, y, z);
 
     }

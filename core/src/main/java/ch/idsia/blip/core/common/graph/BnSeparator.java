@@ -16,7 +16,7 @@ class BnSeparator {
     public static List<BayesianNetwork> go(BayesianNetwork bn) {
         List<BayesianNetwork> l_bn = new ArrayList<BayesianNetwork>();
         List<TIntSet> sep = getSeparated(bn);
-        for (TIntSet s: sep) {
+        for (TIntSet s : sep) {
             l_bn.add(getSubBn(bn, s));
         }
         return l_bn;
@@ -29,12 +29,12 @@ class BnSeparator {
         for (int i = 0; i < ar.length; i++) {
             int a = ar[i];
 
-            n_bn.l_nm_var[i] = bn.name( a);
+            n_bn.l_nm_var[i] = bn.name(a);
             n_bn.l_values_var[i] = bn.values(a);
             n_bn.l_ar_var[i] = bn.arity(a);
 
             int[] ps = bn.parents(a);
-            int[]n_ps = new int[ps.length];
+            int[] n_ps = new int[ps.length];
             for (int j = 0; j < ps.length; j++) {
                 n_ps[j] = Arrays.binarySearch(ar, ps[j]);
             }
@@ -70,12 +70,12 @@ class BnSeparator {
                 int t = pop(todo);
                 proc.remove(t);
 
-                for (int p: bn.parents(t))
+                for (int p : bn.parents(t))
                     if (!n_set.contains(p)) {
                         n_set.add(p);
                         todo.add(p);
                     }
-                for (int c: bn.childrens(t))
+                for (int c : bn.childrens(t))
                     if (!n_set.contains(c)) {
                         n_set.add(c);
                         todo.add(c);

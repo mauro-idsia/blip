@@ -3,14 +3,13 @@ package ch.idsia.blip.core.common.io.dat;
 
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.f;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.index;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
 
 
 /**
@@ -20,11 +19,6 @@ public class DataFileReader extends DatFileReader {
 
     private static final Logger log = Logger.getLogger(
             DatFileLineReader.class.getName());
-
-
-    public DataFileReader(String s) throws FileNotFoundException {
-        super(s);
-    }
 
     @Override
     protected String[] getSplit(String ln) {
@@ -36,9 +30,9 @@ public class DataFileReader extends DatFileReader {
 
         nextLine = rd_dat.readLine();
         dSet.n_var = getSplit(nextLine).length;
-        dSet.l_s_names = new String[dSet.n_var];
+        dSet.l_nm_var = new String[dSet.n_var];
         for (int i = 0; i < dSet.n_var; i++) {
-            dSet.l_s_names[i] = f("N%d", i);
+            dSet.l_nm_var[i] = f("N%d", i);
         }
 
         dSet.n_datapoints = 0;
@@ -58,7 +52,7 @@ public class DataFileReader extends DatFileReader {
         List<TIntArrayList> missing_aux_v = new ArrayList<TIntArrayList>();
         TIntArrayList missing_aux_l = new TIntArrayList();
 
-        String [] sp;
+        String[] sp;
         short v;
         List<TIntArrayList> lu;
         dSet.n_datapoints = 0;

@@ -12,16 +12,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
 
 
 public class AdvK2 extends BaseScorer {
 
     private static final Logger log = Logger.getLogger(AdvK2.class.getName());
-
-    private AdvK2(int maxExec) {
-        super(maxExec);
-    }
 
     @Override
     protected String getName() {
@@ -60,9 +56,6 @@ public class AdvK2 extends BaseScorer {
     }
 
     @Override
-    protected void prepareSearch() {}
-
-    @Override
     public AdvK2Searcher getNewSearcher(int n) {
         return null;
     }
@@ -81,14 +74,14 @@ public class AdvK2 extends BaseScorer {
             if (verbose > 2) {
                 log.info(
                         String.format("Starting with max time: %.2f",
-                        max_exec_time));
+                                max_exec_time));
             }
 
             ThreadMXBean bean = ManagementFactory.getThreadMXBean();
             double start = bean.getCurrentThreadCpuTime();
             double elapsed = 0;
 
-            // Base ord
+            // App ord
             TIntArrayList ord = new TIntArrayList();
 
             for (int n1 = 0; n1 < dat.n_var; n1++) {

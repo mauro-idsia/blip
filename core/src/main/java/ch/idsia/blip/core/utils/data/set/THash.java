@@ -10,24 +10,24 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 
-
 /**
- * Base class for hashtables that use open addressing to resolve
+ * App class for hashtables that use open addressing to resolve
  * collisions.
- *
+ * <p>
  * Created: Wed Nov 28 21:11:16 2001
  *
  * @author Eric D. Friedman
  * @author Rob Eden (auto-compaction)
  * @author Jeff Randall
- *
  * @version $Id: THash.java,v 1.1.2.4 2010/03/02 00:55:34 robeden Exp $
  */
 abstract public class THash implements Externalizable {
-    @SuppressWarnings( { "UnusedDeclaration" } )
+    @SuppressWarnings({"UnusedDeclaration"})
     static final long serialVersionUID = -1792948471915530295L;
 
-    /** the load above which rehashing occurs. */
+    /**
+     * the load above which rehashing occurs.
+     */
     static final float DEFAULT_LOAD_FACTOR = Constants.DEFAULT_LOAD_FACTOR;
 
     /**
@@ -40,10 +40,14 @@ abstract public class THash implements Externalizable {
     protected static final int DEFAULT_CAPACITY = Constants.DEFAULT_CAPACITY;
 
 
-    /** the current number of occupied slots in the hash. */
+    /**
+     * the current number of occupied slots in the hash.
+     */
     protected transient int _size;
 
-    /** the current number of free slots in the hash. */
+    /**
+     * the current number of free slots in the hash.
+     */
     private transient int _free;
 
     /**
@@ -62,7 +66,9 @@ abstract public class THash implements Externalizable {
     private int _maxSize;
 
 
-    /** The number of removes that should be performed before an auto-compaction occurs. */
+    /**
+     * The number of removes that should be performed before an auto-compaction occurs.
+     */
     private int _autoCompactRemovesRemaining;
 
     /**
@@ -72,7 +78,9 @@ abstract public class THash implements Externalizable {
      */
     private float _autoCompactionFactor;
 
-    /** @see #tempDisableAutoCompaction */
+    /**
+     * @see #tempDisableAutoCompaction
+     */
     transient boolean _autoCompactTemporaryDisable = false;
 
 
@@ -81,7 +89,7 @@ abstract public class THash implements Externalizable {
      * capacity and load factor.
      */
     THash() {
-        this( DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR );
+        this(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR);
     }
 
 
@@ -92,8 +100,8 @@ abstract public class THash implements Externalizable {
      *
      * @param initialCapacity an <code>int</code> value
      */
-    public THash( int initialCapacity ) {
-        this( initialCapacity, DEFAULT_LOAD_FACTOR );
+    public THash(int initialCapacity) {
+        this(initialCapacity, DEFAULT_LOAD_FACTOR);
     }
 
 
@@ -114,7 +122,7 @@ abstract public class THash implements Externalizable {
         // found to be a pretty good starting auto-compaction factor.
         _autoCompactionFactor = loadFactor;
 
-        setUp( HashFunctions.fastCeil( initialCapacity / loadFactor ) );
+        setUp(HashFunctions.fastCeil(initialCapacity / loadFactor));
     }
 
 
@@ -138,7 +146,9 @@ abstract public class THash implements Externalizable {
     }
 
 
-    /** @return the current physical capacity of the hash table. */
+    /**
+     * @return the current physical capacity of the hash table.
+     */
     protected abstract int capacity();
 
 
@@ -151,10 +161,10 @@ abstract public class THash implements Externalizable {
      * @param desiredCapacity an <code>int</code> value
      */
     protected void ensureCapacity(int desiredCapacity) {
-        if ( desiredCapacity > ( _maxSize - size() ) ) {
-			rehash( PrimeFinder.nextPrime( Math.max( size() + 1,
-				HashFunctions.fastCeil( ( desiredCapacity + size() ) / _loadFactor ) + 1 ) ) );
-            computeMaxSize( capacity() );
+        if (desiredCapacity > (_maxSize - size())) {
+            rehash(PrimeFinder.nextPrime(Math.max(size() + 1,
+                    HashFunctions.fastCeil((desiredCapacity + size()) / _loadFactor) + 1)));
+            computeMaxSize(capacity());
         }
     }
 
@@ -178,13 +188,13 @@ abstract public class THash implements Externalizable {
      */
     private void compact() {
         // need at least one free spot for open addressing
-        rehash( PrimeFinder.nextPrime( Math.max( _size + 1,
-	        HashFunctions.fastCeil( size() / _loadFactor ) + 1 ) ) );
-        computeMaxSize( capacity() );
+        rehash(PrimeFinder.nextPrime(Math.max(_size + 1,
+                HashFunctions.fastCeil(size() / _loadFactor) + 1)));
+        computeMaxSize(capacity());
 
         // If auto-compaction is enabled, re-determine the compaction interval
-        if ( _autoCompactionFactor != 0 ) {
-            computeNextAutoCompactionAmount( size() );
+        if (_autoCompactionFactor != 0) {
+            computeNextAutoCompactionAmount(size());
         }
     }
 
@@ -200,9 +210,9 @@ abstract public class THash implements Externalizable {
      *
      * @param factor a <tt>float</tt> that indicates the auto-compaction factor
      */
-    public void setAutoCompactionFactor( float factor ) {
-        if ( factor < 0 ) {
-            throw new IllegalArgumentException( "Factor must be >= 0: " + factor );
+    public void setAutoCompactionFactor(float factor) {
+        if (factor < 0) {
+            throw new IllegalArgumentException("Factor must be >= 0: " + factor);
         }
 
         _autoCompactionFactor = factor;
@@ -210,9 +220,8 @@ abstract public class THash implements Externalizable {
 
 
     /**
-     * @see #setAutoCompactionFactor
-     *
      * @return a <<tt>float</tt> that represents the auto-compaction factor.
+     * @see #setAutoCompactionFactor
      */
     public float getAutoCompactionFactor() {
         return _autoCompactionFactor;
@@ -243,10 +252,10 @@ abstract public class THash implements Externalizable {
         _size--;
 
         // If auto-compaction is enabled, see if we need to compact
-        if ( _autoCompactionFactor != 0 ) {
+        if (_autoCompactionFactor != 0) {
             _autoCompactRemovesRemaining--;
 
-            if ( !_autoCompactTemporaryDisable && _autoCompactRemovesRemaining <= 0 ) {
+            if (!_autoCompactTemporaryDisable && _autoCompactRemovesRemaining <= 0) {
                 // Do the compact
                 // NOTE: this will cause the next compaction interval to be calculated
                 compact();
@@ -255,7 +264,9 @@ abstract public class THash implements Externalizable {
     }
 
 
-    /** Empties the collection. */
+    /**
+     * Empties the collection.
+     */
     protected void clear() {
         _size = 0;
         _free = capacity();
@@ -272,9 +283,9 @@ abstract public class THash implements Externalizable {
     int setUp(int initialCapacity) {
         int capacity;
 
-        capacity = PrimeFinder.nextPrime( initialCapacity );
-        computeMaxSize( capacity );
-        computeNextAutoCompactionAmount( initialCapacity );
+        capacity = PrimeFinder.nextPrime(initialCapacity);
+        computeMaxSize(capacity);
+        computeNextAutoCompactionAmount(initialCapacity);
 
         return capacity;
     }
@@ -285,7 +296,7 @@ abstract public class THash implements Externalizable {
      *
      * @param newCapacity an <code>int</code> value
      */
-    protected abstract void rehash( int newCapacity );
+    protected abstract void rehash(int newCapacity);
 
 
     /**
@@ -305,11 +316,11 @@ abstract public class THash implements Externalizable {
      *                             before returning. If false, no compaction will be
      *                             performed.
      */
-    public void reenableAutoCompaction( boolean check_for_compaction ) {
+    public void reenableAutoCompaction(boolean check_for_compaction) {
         _autoCompactTemporaryDisable = false;
 
-        if ( check_for_compaction && _autoCompactRemovesRemaining <= 0 &&
-             _autoCompactionFactor != 0 ) {
+        if (check_for_compaction && _autoCompactRemovesRemaining <= 0 &&
+                _autoCompactionFactor != 0) {
 
             // Do the compact
             // NOTE: this will cause the next compaction interval to be calculated
@@ -326,7 +337,7 @@ abstract public class THash implements Externalizable {
      */
     private void computeMaxSize(int capacity) {
         // need at least one free slot for open addressing
-        _maxSize = Math.min( capacity - 1, (int) ( capacity * _loadFactor ) );
+        _maxSize = Math.min(capacity - 1, (int) (capacity * _loadFactor));
         _free = capacity - _size; // reset the free element count
     }
 
@@ -338,11 +349,11 @@ abstract public class THash implements Externalizable {
      * @param size an <tt>int</tt> that sets the auto-compaction limit.
      */
     private void computeNextAutoCompactionAmount(int size) {
-        if ( _autoCompactionFactor != 0 ) {
+        if (_autoCompactionFactor != 0) {
             // NOTE: doing the round ourselves has been found to be faster than using
             //       Math.round.
             _autoCompactRemovesRemaining =
-                    (int) ( ( size * _autoCompactionFactor ) + 0.5f );
+                    (int) ((size * _autoCompactionFactor) + 0.5f);
         }
     }
 
@@ -353,20 +364,20 @@ abstract public class THash implements Externalizable {
      *
      * @param usedFreeSlot the slot
      */
-    protected final void postInsertHook( boolean usedFreeSlot ) {
-        if ( usedFreeSlot ) {
+    protected final void postInsertHook(boolean usedFreeSlot) {
+        if (usedFreeSlot) {
             _free--;
         }
 
         // rehash whenever we exhaust the available space in the table
-        if ( ++_size > _maxSize || _free == 0 ) {
+        if (++_size > _maxSize || _free == 0) {
             // choose a new capacity suited to the new state of the table
             // if we've grown beyond our maximum size, double capacity;
             // if we've exhausted the free spots, rehash to the same capacity,
             // which will free up any stale removed slots for reuse.
-            int newCapacity = _size > _maxSize ? PrimeFinder.nextPrime( capacity() << 1 ) : capacity();
-            rehash( newCapacity );
-            computeMaxSize( capacity() );
+            int newCapacity = _size > _maxSize ? PrimeFinder.nextPrime(capacity() << 1) : capacity();
+            rehash(newCapacity);
+            computeMaxSize(capacity());
         }
     }
 
@@ -376,19 +387,19 @@ abstract public class THash implements Externalizable {
     }
 
 
-    public void writeExternal( ObjectOutput out ) throws IOException {
+    public void writeExternal(ObjectOutput out) throws IOException {
         // VERSION
-        out.writeByte( 0 );
+        out.writeByte(0);
 
         // LOAD FACTOR
-        out.writeFloat( _loadFactor );
+        out.writeFloat(_loadFactor);
 
         // AUTO COMPACTION LOAD FACTOR
-        out.writeFloat( _autoCompactionFactor );
+        out.writeFloat(_autoCompactionFactor);
     }
 
 
-    public void readExternal( ObjectInput in )
+    public void readExternal(ObjectInput in)
             throws IOException, ClassNotFoundException {
 
         // VERSION
@@ -402,8 +413,8 @@ abstract public class THash implements Externalizable {
         _autoCompactionFactor = in.readFloat();
 
         // If we change the laod factor from the default, re-setup
-        if ( old_factor != _loadFactor ) {
-            setUp( (int) Math.ceil( DEFAULT_CAPACITY / _loadFactor ) );
+        if (old_factor != _loadFactor) {
+            setUp((int) Math.ceil(DEFAULT_CAPACITY / _loadFactor));
         }
     }
 }// THash

@@ -1,4 +1,3 @@
-
 package ch.idsia.blip.core.utils.data.hash;
 
 import ch.idsia.blip.core.utils.data.common.TIntCollection;
@@ -34,11 +33,10 @@ interface TIntIntMap {
     /**
      * Inserts a key/value pair into the map.
      *
-     * @param key an <code>int</code> value
+     * @param key   an <code>int</code> value
      * @param value an <code>int</code> value
-     *
      * @return the previous value associated with <tt>key</tt>, or the "no entry" value
-     *         if none was found (see {@link #getNoEntryValue}).
+     * if none was found (see {@link #getNoEntryValue}).
      */
     int put(int key, int value);
 
@@ -47,11 +45,10 @@ interface TIntIntMap {
      * Inserts a key/value pair into the map if the specified key is not already
      * associated with a value.
      *
-     * @param key an <code>int</code> value
+     * @param key   an <code>int</code> value
      * @param value an <code>int</code> value
-     *
      * @return the previous value associated with <tt>key</tt>, or the "no entry" value
-     *         if none was found (see {@link #getNoEntryValue}).
+     * if none was found (see {@link #getNoEntryValue}).
      */
     int putIfAbsent(int key, int value);
 
@@ -67,7 +64,7 @@ interface TIntIntMap {
     /**
      * Put all the entries from the given map into this map.
      *
-     * @param map   The map from which entries will be obtained to put into this map.
+     * @param map The map from which entries will be obtained to put into this map.
      */
     void putAll(TIntIntMap map);
 
@@ -76,9 +73,8 @@ interface TIntIntMap {
      * Retrieves the value for <tt>key</tt>
      *
      * @param key an <code>int</code> value
-     *
      * @return the previous value associated with <tt>key</tt>, or the "no entry" value
-     *         if none was found (see {@link #getNoEntryValue}).
+     * if none was found (see {@link #getNoEntryValue}).
      */
     int get(int key);
 
@@ -90,10 +86,10 @@ interface TIntIntMap {
 
 
     /**
-      * Returns <tt>true</tt> if this map contains no key-value mappings.
-      *
-      * @return <tt>true</tt> if this map contains no key-value mappings
-      */
+     * Returns <tt>true</tt> if this map contains no key-value mappings.
+     *
+     * @return <tt>true</tt> if this map contains no key-value mappings
+     */
     boolean isEmpty();
 
 
@@ -101,9 +97,8 @@ interface TIntIntMap {
      * Deletes a key/value pair from the map.
      *
      * @param key an <code>int</code> value
-     *
      * @return the previous value associated with <tt>key</tt>, or the "no entry" value
-     *         if none was found (see {@link #getNoEntryValue}).
+     * if none was found (see {@link #getNoEntryValue}).
      */
     int remove(int key);
 
@@ -135,9 +130,9 @@ interface TIntIntMap {
     /**
      * Returns the keys of the map.
      *
-     * @param array   the array into which the elements of the list are to be stored,
-     *                if it is big enough; otherwise, a new array of the same type is
-     *                allocated for this purpose.
+     * @param array the array into which the elements of the list are to be stored,
+     *              if it is big enough; otherwise, a new array of the same type is
+     *              allocated for this purpose.
      * @return the keys of the map as an array.
      */
     int[] keys(int[] array);
@@ -162,9 +157,9 @@ interface TIntIntMap {
     /**
      * Returns the values of the map using an existing array.
      *
-     * @param array   the array into which the elements of the list are to be stored,
-     *                if it is big enough; otherwise, a new array of the same type is
-     *                allocated for this purpose.
+     * @param array the array into which the elements of the list are to be stored,
+     *              if it is big enough; otherwise, a new array of the same type is
+     *              allocated for this purpose.
      * @return the values of the map as an array of <tt>#e#</tt> values.
      */
     int[] values(int[] array);
@@ -205,7 +200,7 @@ interface TIntIntMap {
     /**
      * Adjusts the primitive value mapped to key.
      *
-     * @param key the key of the value to increment
+     * @param key    the key of the value to increment
      * @param amount the amount to adjust the value by.
      * @return true if a mapping was found and modified.
      */
@@ -216,10 +211,9 @@ interface TIntIntMap {
      * Adjusts the primitive value mapped to the key if the key is present in the map.
      * Otherwise, the <tt>initial_value</tt> is put in the map.
      *
-     * @param key the key of the value to increment
+     * @param key           the key of the value to increment
      * @param adjust_amount the amount to adjust the value by
-     * @param put_amount the value put into the map if the key is not initial present
-     *
+     * @param put_amount    the value put into the map if the key is not initial present
      * @return the value present in the map after the adjustment or put operation
      */
     int adjustOrPutValue(int key, int adjust_amount, int put_amount);

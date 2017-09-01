@@ -1,13 +1,13 @@
 package ch.idsia.blip.core.common.tw;
 
 
-import ch.idsia.blip.core.Base;
+import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.common.analyze.MutualInformation;
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 
 public class KTreeSampler {
@@ -20,7 +20,7 @@ public class KTreeSampler {
     private final MutualInformation mi;
     private final ParentSet[][] m_scores;
 
-    public KTreeSampler(int n_var, int maxTreeWidth, MutualInformation mi, ParentSet[][] m_scores, Base base) {
+    public KTreeSampler(int n_var, int maxTreeWidth, MutualInformation mi, ParentSet[][] m_scores, App base) {
         this.n_var = n_var;
         this.maxTreeWidth = maxTreeWidth;
         this.mi = mi;
@@ -31,7 +31,7 @@ public class KTreeSampler {
 
     private double best_is = -Double.MAX_VALUE;
 
-    private final Base base;
+    private final App base;
 
     public KTree go() {
 

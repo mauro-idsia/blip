@@ -4,7 +4,7 @@ package ch.idsia.blip.core.learn.solver;
 import ch.idsia.blip.core.learn.solver.src.ClOptSearcher;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 
-import static ch.idsia.blip.core.utils.RandomStuff.f;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
 
 public class ClOptSolver extends ObsSolver {
 

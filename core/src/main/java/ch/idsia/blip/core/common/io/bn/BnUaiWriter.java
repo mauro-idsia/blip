@@ -6,8 +6,8 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import java.io.IOException;
 import java.io.Writer;
 
-import static ch.idsia.blip.core.utils.RandomStuff.wf;
-import static ch.idsia.blip.core.utils.StringUtils.join;
+import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
+import static ch.idsia.blip.core.utils.other.StringUtils.join;
 
 public class BnUaiWriter extends BnWriter {
 

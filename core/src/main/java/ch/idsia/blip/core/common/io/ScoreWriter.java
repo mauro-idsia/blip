@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.common.io;
 
 
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.io.Closeable;
 import java.io.FileNotFoundException;
@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 
 /**

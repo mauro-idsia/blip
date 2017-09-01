@@ -5,11 +5,11 @@ import ch.idsia.blip.core.common.analyze.Entropy;
 
 import java.util.Random;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
 
 public class EntropySampler implements Sampler {
 
-    protected  int n;
+    protected int n;
 
     protected Random r;
 
@@ -33,12 +33,12 @@ public class EntropySampler implements Sampler {
     @Override
     public void init() {
 
-            weight = new double[n];
-            Entropy e = new Entropy(dat);
+        weight = new double[n];
+        Entropy e = new Entropy(dat);
 
-            for (int i = 0; i < n; i++) {
-                weight[i] = e.computeH(i);
-            }
+        for (int i = 0; i < n; i++) {
+            weight[i] = e.computeH(i);
+        }
     }
 
     public int[] sampleWeighted(int n, double[] weights) {

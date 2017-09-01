@@ -8,8 +8,6 @@ import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
-
 public class BayesianSampler extends BaseSampler {
 
     private final BayesianNetwork bn;
@@ -43,21 +41,21 @@ public class BayesianSampler extends BaseSampler {
             if (cache.containsKey(s))
                 cache.put(s, cache.get(s) + 1);
             else if (cache.size() < max_size)
-            cache.put(s, 1);
+                cache.put(s, 1);
             // Update in cache count
         }
 
         int max = 0;
         MpeSol best = null;
-        for (MpeSol s: cache.keySet()) {
-           // pf("%s %d \n", Arrays.toString(s.set), cache.get(s));
+        for (MpeSol s : cache.keySet()) {
+            // pf("%s %d \n", Arrays.toString(s.set), cache.get(s));
             if (cache.get(s) > max) {
                 max = cache.get(s);
                 best = s;
             }
         }
 
-        return  best.set;
+        return best.set;
     }
 
     private void sample() {
@@ -82,7 +80,7 @@ public class BayesianSampler extends BaseSampler {
             sample();
 
             sol = new short[query.length];
-            for(int i = 0; i < query.length; i++)
+            for (int i = 0; i < query.length; i++)
                 sol[i] = sample[query[i]];
 
             MpeSol s = new MpeSol(sol);
@@ -96,7 +94,7 @@ public class BayesianSampler extends BaseSampler {
 
         int max = 0;
         MpeSol best = null;
-        for (MpeSol s: cache.keySet()) {
+        for (MpeSol s : cache.keySet()) {
             // pf("%s %d \n", Arrays.toString(s.set), cache.get(s));
             if (cache.get(s) > max) {
                 max = cache.get(s);
@@ -104,7 +102,7 @@ public class BayesianSampler extends BaseSampler {
             }
         }
 
-        return  best.set;
+        return best.set;
     }
 
     /* Marginal probability distribution over a variable given evidence (MAR inference) */
@@ -116,7 +114,7 @@ public class BayesianSampler extends BaseSampler {
 
         // Likelihood estimate of each Pr(x|e)
         double[][] P_x_w = new double[bn.n_var][];
-        for (int i =0 ; i < bn.n_var; i++)
+        for (int i = 0; i < bn.n_var; i++)
             P_x_w[i] = new double[bn.arity(i)];
 
         // Get sampling order (don't put evidence variables)
@@ -136,7 +134,7 @@ public class BayesianSampler extends BaseSampler {
                 double[] pt = bn.potentials(v);
                 int ix = bn.potentialIndex(v, sample);
                 int j = ix * bn.arity(v);
-                j +=  evid[i];
+                j += evid[i];
                 double p = pt[j];
                 w *= p;
             }
@@ -145,7 +143,7 @@ public class BayesianSampler extends BaseSampler {
             P_w += w;
 
             // Update likelihood of sampled values
-            for (int i =0 ; i < bn.n_var; i++) {
+            for (int i = 0; i < bn.n_var; i++) {
                 P_x_w[i][sample[i]] += w;
             }
 
@@ -153,17 +151,16 @@ public class BayesianSampler extends BaseSampler {
         }
 
         // Weight likelihood
-        for (int i =0 ; i < bn.n_var; i++) {
+        for (int i = 0; i < bn.n_var; i++) {
             for (int j = 0; j < bn.arity(i); j++) {
                 P_x_w[i][j] /= P_w;
             }
         }
 
-        double p_w  = P_w / cnt;
+        double p_w = P_w / cnt;
 
         return P_x_w;
     }
-
 
 
     /* Partition function and probability of evidence (PR inference) */
@@ -176,7 +173,7 @@ public class BayesianSampler extends BaseSampler {
             res[i] = evidence.get(vars[i]);
         }
 
-       ord = getSampleOrderPR();
+        ord = getSampleOrderPR();
 
         int tot = 0;
         double cnt = 0;
@@ -208,7 +205,7 @@ public class BayesianSampler extends BaseSampler {
         TIntArrayList barren = findBarren(bn, vars);
         int[] ord = bn.getTopologicalOrder();
         TIntArrayList newOrd = new TIntArrayList();
-        for (int o: ord) {
+        for (int o : ord) {
             if (!barren.contains(o))
                 newOrd.add(o);
         }
@@ -218,7 +215,7 @@ public class BayesianSampler extends BaseSampler {
     private int[] getSampleOrderMAR(BayesianNetwork bn, int[] vars) {
         int[] ord = bn.getTopologicalOrder();
         TIntArrayList newOrd = new TIntArrayList();
-        for (int o: ord) {
+        for (int o : ord) {
             if (!find(o, vars))
                 newOrd.add(o);
         }
@@ -231,26 +228,26 @@ public class BayesianSampler extends BaseSampler {
 
     private TIntArrayList findBarren(BayesianNetwork bn, int[] query, int[] ev_keys) {
 
-            TIntArrayList barren = new TIntArrayList();
+        TIntArrayList barren = new TIntArrayList();
 
-            Arrays.sort(ev_keys);
+        Arrays.sort(ev_keys);
 
-            TIntArrayList rev_topol = new TIntArrayList();
-            rev_topol.addAll(bn.getTopologicalOrder());
+        TIntArrayList rev_topol = new TIntArrayList();
+        rev_topol.addAll(bn.getTopologicalOrder());
 
-            rev_topol.reverse();
+        rev_topol.reverse();
 
-            for (int i = 0; i < rev_topol.size(); i++) {
-                int v = rev_topol.get(i);
+        for (int i = 0; i < rev_topol.size(); i++) {
+            int v = rev_topol.get(i);
 
-                if (isBarren(bn, query, ev_keys, barren, v)) {
-                    barren.add(v);
-                }
+            if (isBarren(bn, query, ev_keys, barren, v)) {
+                barren.add(v);
             }
+        }
 
-            barren.sort();
+        barren.sort();
 
-            return barren;
+        return barren;
 
     }
 
@@ -287,36 +284,36 @@ public class BayesianSampler extends BaseSampler {
         String[] aux = q.split("\\s+");
         int n = Integer.valueOf(aux[0]);
         int[] query = new int[n];
-        for(int i = 0; i < n; i++) {
-            query[i] = Integer.valueOf(aux[i+1]);
+        for (int i = 0; i < n; i++) {
+            query[i] = Integer.valueOf(aux[i + 1]);
         }
-        return  query;
+        return query;
     }
 
     /**
-    public double PR(BayesianNetwork bn, int v, int e) {
-        SamGe s = new SamGe();
-        s.bn = bn;
-        int[] ord = bn.getTopologicalOrder();
+     public double PR(BayesianNetwork bn, int v, int e) {
+     SamGe s = new SamGe();
+     s.bn = bn;
+     int[] ord = bn.getTopologicalOrder();
 
-        int tot = 10000;
-        short e2 = (short) e;
+     int tot = 10000;
+     short e2 = (short) e;
 
-        int cnt = 0;
-        for (int i = 0; i < tot; i++) {
-            short[] sample = new short[bn.n_var];
+     int cnt = 0;
+     for (int i = 0; i < tot; i++) {
+     short[] sample = new short[bn.n_var];
 
-            for (int n : ord) {
-                sample[n] = s.getVariableSample(n, sample);
-            }
+     for (int n : ord) {
+     sample[n] = s.getVariableSample(n, sample);
+     }
 
-            if (sample[v] == e2)
-                cnt += 1;
+     if (sample[v] == e2)
+     cnt += 1;
 
-            // p(Arrays.toString(sample).replace("[", "").replace("]", ""));
-        }
+     // p(Arrays.toString(sample).replace("[", "").replace("]", ""));
+     }
 
-        return (cnt + 1.0) / (tot + 1.0);
+     return (cnt + 1.0) / (tot + 1.0);
 
-    }*/
+     }*/
 }

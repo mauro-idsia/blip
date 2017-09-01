@@ -33,7 +33,7 @@ public class ParLeWeight extends ParLe {
         // For every variable configuration, compute the n's
         for (int v = 0; v < ar; v++) {
             int[] lg = ArrayUtils.intersect(parents_var, vl_var[v]);
-            for (int g: lg)
+            for (int g : lg)
                 n_ij[v] += weight[g];
         }
         return n_ij;
@@ -100,7 +100,7 @@ public class ParLeWeight extends ParLe {
 
         double[] n_i = new double[ar];
         for (int v = 0; v < ar; v++) {
-            for (int g: vl_var[v]) {
+            for (int g : vl_var[v]) {
                 n_i[v] += weight[g];
                 sum += weight[g];
             }

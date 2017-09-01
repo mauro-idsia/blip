@@ -13,7 +13,7 @@ public class UndirectedSeparator {
     public static List<Undirected> go(Undirected u) {
         List<Undirected> l_U = new ArrayList<Undirected>();
         List<TIntSet> sep = getSeparated(u);
-        for (TIntSet s: sep) {
+        for (TIntSet s : sep) {
             l_U.add(getSubUndirected(u, s));
         }
         return l_U;
@@ -27,7 +27,7 @@ public class UndirectedSeparator {
             int a = ar[i];
 
             int[] ps = u.neighbours(a);
-            int[]n_ps = new int[ps.length];
+            int[] n_ps = new int[ps.length];
             for (int j = 0; j < ps.length; j++) {
                 n_u.mark(i, Arrays.binarySearch(ar, ps[j]));
             }
@@ -64,7 +64,7 @@ public class UndirectedSeparator {
                 int t = pop(todo);
                 proc.remove(t);
 
-                for (int p: u.neighbours(t))
+                for (int p : u.neighbours(t))
                     if (!n_set.contains(p)) {
                         n_set.add(p);
                         todo.add(p);

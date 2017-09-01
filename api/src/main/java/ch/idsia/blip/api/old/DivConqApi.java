@@ -4,9 +4,9 @@ package ch.idsia.blip.api.old;
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.io.ScoreReader;
-import ch.idsia.blip.core.utils.DivConq;
-import ch.idsia.blip.core.utils.IncorrectCallException;
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.DivConq;
+import ch.idsia.blip.core.utils.other.IncorrectCallException;
+import ch.idsia.blip.core.utils.other.ParentSet;
 import org.kohsuke.args4j.Option;
 
 import java.io.Writer;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 
 /**
@@ -29,7 +29,7 @@ public class DivConqApi extends Api {
 
     private final DivConq dv;
 
-    @Option(name="-d", required = true, usage="Datafile path (.dat format)")
+    @Option(name = "-d", required = true, usage = "Datafile path (.dat format)")
     private String ph_dat;
 
     private String ph_cluster;
@@ -90,7 +90,7 @@ public class DivConqApi extends Api {
          @Option(name="f", ph_dat, null, true,
                 "datapoints input file");
 
-         @Option(name="s", ph_scores, null, true,
+         @Option(name="set", ph_scores, null, true,
                 "scores input file");
 
          @Option(name="o", ph_cluster, null, true,

@@ -5,7 +5,7 @@ import ch.idsia.blip.core.common.DataSet;
 import java.io.*;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class BayesMutualInformationMatlab extends BayesMutualInformation {
 
@@ -26,7 +26,7 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
 
     @Override
     public double computeCMI(int x, int y, int z) {
-            return computeCMI(x, y, new int[]{z});
+        return computeCMI(x, y, new int[]{z});
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
         }
 
         int[][] x_r = dat.row_values[x];
-         x_ar = dat.l_n_arity[x];
+        x_ar = dat.l_n_arity[x];
 
         int[][] y_r = dat.row_values[y];
         y_ar = dat.l_n_arity[y];
@@ -92,7 +92,7 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
         if (new File(path + "out").exists()) {
 
             BufferedReader br = new BufferedReader(new FileReader(path + "out"));
-           cmi = Double.valueOf(br.readLine().trim());
+            cmi = Double.valueOf(br.readLine().trim());
         }
 
         return cmi;
@@ -105,7 +105,7 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
 
         wf(w, "n_z = zeros(%d, 1); \n", n_z.length);
         for (int i = 0; i < n_z.length; i++) {
-            wf(w, "n_z(%d) = %.8f; \n", i+1, n_z[i]);
+            wf(w, "n_z(%d) = %.8f; \n", i + 1, n_z[i]);
         }
 
 

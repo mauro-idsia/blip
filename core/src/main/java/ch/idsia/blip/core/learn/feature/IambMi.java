@@ -30,7 +30,6 @@ public class IambMi extends Iamb {
 
     @Override
     protected void prepare() {
-        mi.resetCache();
     }
 
     @Override
@@ -51,8 +50,8 @@ public class IambMi extends Iamb {
     List<String> fgh(DataSet dat, int[] s) {
         List<String> g = new ArrayList<String>();
 
-        for (int e: s) {
-            g.add(dat.l_s_names[e]);
+        for (int e : s) {
+            g.add(dat.l_nm_var[e]);
         }
         return g;
     }
@@ -61,7 +60,6 @@ public class IambMi extends Iamb {
     public String getName() {
         return "iambMi";
     }
-
 
 
 }

@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.learn.scorer;
 
 
-import ch.idsia.blip.core.utils.Pair;
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.Pair;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.logging.Logger;
 
@@ -117,22 +117,22 @@ public class RankerScores {
             }
 
             switch (r) {
-            case 1:
-                f_ix++;
-                f_skore += s_l - s_ix;
-                break;
+                case 1:
+                    f_ix++;
+                    f_skore += s_l - s_ix;
+                    break;
 
-            case 0:
-                f_ix++;
-                s_ix++;
-                f_skore += 0.5 + s_l - s_ix;
-                s_skore += 0.5 + f_l - f_ix;
-                break;
+                case 0:
+                    f_ix++;
+                    s_ix++;
+                    f_skore += 0.5 + s_l - s_ix;
+                    s_skore += 0.5 + f_l - f_ix;
+                    break;
 
-            case -1:
-                s_ix++;
-                s_skore += f_l - f_ix;
-                break;
+                case -1:
+                    s_ix++;
+                    s_skore += f_l - f_ix;
+                    break;
             }
         }
 

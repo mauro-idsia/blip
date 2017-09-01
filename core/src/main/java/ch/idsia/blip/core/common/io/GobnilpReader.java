@@ -2,7 +2,7 @@ package ch.idsia.blip.core.common.io;
 
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,8 +13,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ch.idsia.blip.core.utils.RandomStuff.closeIt;
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.closeIt;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 
 /**

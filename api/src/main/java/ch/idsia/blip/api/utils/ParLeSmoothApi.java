@@ -8,7 +8,7 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 
 /**
@@ -19,7 +19,7 @@ public class ParLeSmoothApi extends ParLeApi {
 
     private static final Logger log = Logger.getLogger(ParLeSmoothApi.class.getName());
 
-    @Option(name="-va", required = true, usage="Validation dataset")
+    @Option(name = "-va", required = true, usage = "Validation dataset")
     protected String ph_valid;
 
     public static void main(String[] args) {

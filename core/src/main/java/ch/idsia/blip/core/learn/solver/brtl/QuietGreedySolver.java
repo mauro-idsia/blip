@@ -2,11 +2,11 @@ package ch.idsia.blip.core.learn.solver.brtl;
 
 
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
-import ch.idsia.blip.core.learn.solver.src.brutal.BrutalOldSearcher;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
-import ch.idsia.blip.core.utils.Pair;
-import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.learn.solver.src.brutal.BrutalOldSearcher;
 import ch.idsia.blip.core.utils.data.SIntSet;
+import ch.idsia.blip.core.utils.other.Pair;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 /**
  * Adds check to out_degree of each node
@@ -48,13 +48,13 @@ public class QuietGreedySolver extends BrutalSolver {
         protected void update(int v, ParentSet ps) {
             super.update(v, ps);
 
-            for (int p: ps.parents) {
+            for (int p : ps.parents) {
                 out_degree[p]++;
             }
         }
 
         @Override
-        protected  Pair<ParentSet, SIntSet> bestHandler(int v) {
+        protected Pair<ParentSet, SIntSet> bestHandler(int v) {
 
             for (ParentSet p : m_scores[v]) {
 
@@ -73,7 +73,7 @@ public class QuietGreedySolver extends BrutalSolver {
 
         protected boolean check(ParentSet p) {
 
-            for (int v: p.parents)
+            for (int v : p.parents)
                 if (out_degree[v] > max_out_degree) {
                     // remove_handles(v);
                     return false;

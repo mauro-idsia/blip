@@ -28,14 +28,18 @@ import java.util.NoSuchElementException;
  */
 public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
 
-    /** the data structure this iterator traverses */
+    /**
+     * the data structure this iterator traverses
+     */
     protected final TPrimitiveHash _hash;
     /**
      * the number of elements this iterator believes are in the
      * data structure it accesses.
      */
     protected int _expectedSize;
-    /** the index used for iteration. */
+    /**
+     * the index used for iteration.
+     */
     protected int _index;
 
 
@@ -44,7 +48,7 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
      *
      * @param hash the <tt>TPrimitiveHash</tt> we want to iterate over.
      */
-    public THashPrimitiveIterator( TPrimitiveHash hash ) {
+    public THashPrimitiveIterator(TPrimitiveHash hash) {
         _hash = hash;
         _expectedSize = _hash.size();
         _index = _hash.capacity();
@@ -56,18 +60,17 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
      * or a negative value if the iterator is exhausted.
      *
      * @return an <code>int</code> value
-     * @throws java.util.ConcurrentModificationException
-     *          if the underlying collection's
-     *          size has been modified since the iterator was created.
+     * @throws java.util.ConcurrentModificationException if the underlying collection's
+     *                                                   size has been modified since the iterator was created.
      */
     private int nextIndex() {
-        if ( _expectedSize != _hash.size() ) {
+        if (_expectedSize != _hash.size()) {
             throw new ConcurrentModificationException();
         }
 
         byte[] states = _hash._states;
         int i = _index;
-        while ( i-- > 0 && ( states[i] != TPrimitiveHash.FULL ) ) {
+        while (i-- > 0 && (states[i] != TPrimitiveHash.FULL)) {
         }
         return i;
     }
@@ -99,9 +102,8 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
         try {
             _hash.tempDisableAutoCompaction();
             _hash.removeAt(_index);
-        }
-        finally {
-            _hash.reenableAutoCompaction( false );
+        } finally {
+            _hash.reenableAutoCompaction(false);
         }
 
         _expectedSize--;
@@ -115,7 +117,7 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
     protected final void moveToNextIndex() {
         // doing the assignment && < 0 in one line shaves
         // 3 opcodes...
-        if ( ( _index = nextIndex() ) < 0 ) {
+        if ((_index = nextIndex()) < 0) {
             throw new NoSuchElementException();
         }
     }

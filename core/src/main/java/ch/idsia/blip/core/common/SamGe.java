@@ -1,19 +1,19 @@
 package ch.idsia.blip.core.common;
 
 
-import ch.idsia.blip.core.Base;
-import ch.idsia.blip.core.common.io.dat.ArffFileWriter;
+import ch.idsia.blip.core.App;
+import ch.idsia.blip.core.common.io.dat.ArffFileLineWriter;
 import ch.idsia.blip.core.common.io.dat.BaseFileLineWriter;
 import ch.idsia.blip.core.common.io.dat.DatFileLineWriter;
-import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.*;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
-public class SamGe extends Base {
+public class SamGe extends App {
 
     private static final Logger log = Logger.getLogger(SamGe.class.getName());
 
@@ -73,7 +73,7 @@ public class SamGe extends Base {
     public void go(BayesianNetwork in_bn, String in_wr_path, int in_n_sample, String format)
             throws FileNotFoundException, UnsupportedEncodingException {
 
-        init();
+        prepare();
 
         bn = in_bn;
         n_sample = in_n_sample;
@@ -89,7 +89,7 @@ public class SamGe extends Base {
             if (format.equals("dat"))
                 wr = new DatFileLineWriter(in_bn, bf_wr);
             else
-            wr = new ArffFileWriter(in_bn, bf_wr, "new");
+                wr = new ArffFileLineWriter(in_bn, bf_wr, "new");
 
 
             /*
@@ -122,7 +122,7 @@ public class SamGe extends Base {
     private void writeSample() {
 
         try {
-            wr.writeMetaData(n_sample);
+            wr.writeMetaData();
 
             // wr_dataframe.writeMetaData(n_sample);
 
@@ -136,7 +136,7 @@ public class SamGe extends Base {
                     missSample(samp);
                 }
 
-                wr.next(i, samp);
+                wr.next(samp);
 
                 if (fill_tab) {
                     //    wr_dataframe.next(thread, samp);
@@ -218,7 +218,7 @@ public class SamGe extends Base {
         double r = rand.nextDouble() - Math.pow(2, -10); // Get a random number in (0, 1)
         short i = 0;
 
-        while ((i < ar) && j < pt.length && (pt[j] < r) ) { // Select a value from the probabilities given the random
+        while ((i < ar) && j < pt.length && (pt[j] < r)) { // Select a value from the probabilities given the random
             r -= pt[j];
             j++;
             i++;
@@ -232,7 +232,7 @@ public class SamGe extends Base {
         }*/
 
         if (i >= ar) {
-            i = (short) (ar -1);
+            i = (short) (ar - 1);
         }
 
         return i;

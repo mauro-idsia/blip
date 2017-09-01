@@ -22,7 +22,7 @@ public class EntropyBSampler extends EntropySampler {
 
         if (v > 0.33) {
             // p("inverse");
-            return  sampleWeighted(n, weight_r);
+            return sampleWeighted(n, weight_r);
         }
 
         // p("normal");
@@ -30,14 +30,14 @@ public class EntropyBSampler extends EntropySampler {
     }
 
     private int[] sampleSimple() {
-            int[] nv;
+        int[] nv;
 
-            synchronized (lock) {
-                vars.shuffle(r);
-                nv = vars.toArray().clone();
-            }
+        synchronized (lock) {
+            vars.shuffle(r);
+            nv = vars.toArray().clone();
+        }
 
-            return  nv;
+        return nv;
     }
 
     public EntropyBSampler(String ph_dat, int n, Random r) {

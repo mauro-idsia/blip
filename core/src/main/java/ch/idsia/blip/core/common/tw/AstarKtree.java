@@ -3,12 +3,12 @@ package ch.idsia.blip.core.common.tw;
 import ch.idsia.blip.core.common.analyze.MutualInformation;
 import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.learn.solver.ktree.S2PlusSolver;
-import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.*;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class AstarKtree {
 
@@ -79,7 +79,7 @@ public class AstarKtree {
             KTree k = readKtree(f2);
 
             update("done");
-            pf ("%d\n", ++count);
+            pf("%d\n", ++count);
             return k;
 
         } catch (IOException e) {
@@ -88,8 +88,9 @@ public class AstarKtree {
 
         return null;
     }
+
     private void update(String s) {
-        pf("%s %.2f \n", s, (System.currentTimeMillis()-start) / 1000.0);
+        pf("%s %.2f \n", s, (System.currentTimeMillis() - start) / 1000.0);
     }
 
     private KTree readKtree(File f) throws IOException {
@@ -102,7 +103,7 @@ public class AstarKtree {
         while ((s = br.readLine()) != null) {
             String[] aux = s.split(",");
 
-            for (int i2 = i1+1; i2 < n; i2++)
+            for (int i2 = i1 + 1; i2 < n; i2++)
                 if (aux[i2].equals("1"))
                     u.mark(i1, i2);
             i1++;
@@ -122,8 +123,8 @@ public class AstarKtree {
         c.write("M = zeros(n); \n");
         for (int i1 = 0; i1 < n; i1++) {
 
-            for (int i2 = i1+1; i2 < n; i2++) {
-                    c.write(f("M(%d, %d) = %.8f; \n", i2+1, i1+1, mi.getMI(i1, i2)));
+            for (int i2 = i1 + 1; i2 < n; i2++) {
+                c.write(f("M(%d, %d) = %.8f; \n", i2 + 1, i1 + 1, mi.getMI(i1, i2)));
             }
         }
         c.write("M=tril(M,-1)+tril(M)';\n");

@@ -5,13 +5,13 @@ import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.analyze.MutualInformation;
 import ch.idsia.blip.core.common.tw.KTree;
 import ch.idsia.blip.core.common.tw.KTreeSampler;
-import ch.idsia.blip.core.utils.IncorrectCallException;
+import ch.idsia.blip.core.utils.other.IncorrectCallException;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
-import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
 
 /**
@@ -31,7 +31,7 @@ public class S2Solver extends BaseS2Solver {
     private final Object lock = new Object();
 
     @Override
-    protected void prepare()  {
+    protected void prepare() {
         super.prepare();
 
         if (mi == null) {
@@ -48,7 +48,7 @@ public class S2Solver extends BaseS2Solver {
                 this);
     }
 
-    private void prepareMI()  {
+    private void prepareMI() {
 
         try {
             if (ph_dat == null) {

@@ -1,30 +1,31 @@
 package ch.idsia.blip.core.common;
 
 
-        import ch.idsia.blip.core.common.arcs.NamedDirected;
-        import ch.idsia.blip.core.common.arcs.Undirected;
-        import ch.idsia.blip.core.common.tw.TreeWidth;
-        import ch.idsia.blip.core.utils.ParentSet;
-        import ch.idsia.blip.core.utils.data.array.TIntArrayList;
-        import ch.idsia.blip.core.utils.data.set.TIntHashSet;
-        import ch.idsia.blip.core.utils.exp.CyclicGraphException;
-        import ch.idsia.blip.core.utils.exp.TreeWidthExceededException;
+import ch.idsia.blip.core.Base;
+import ch.idsia.blip.core.common.arcs.NamedDirected;
+import ch.idsia.blip.core.common.arcs.Undirected;
+import ch.idsia.blip.core.common.tw.TreeWidth;
+import ch.idsia.blip.core.utils.data.array.TIntArrayList;
+import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
+import ch.idsia.blip.core.utils.data.set.TIntHashSet;
+import ch.idsia.blip.core.utils.exp.CyclicGraphException;
+import ch.idsia.blip.core.utils.exp.TreeWidthExceededException;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
-        import java.io.File;
-        import java.io.IOException;
-        import java.io.PrintWriter;
-        import java.io.Serializable;
-        import java.util.*;
-        import java.util.logging.Logger;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.util.*;
+import java.util.logging.Logger;
 
-        import static ch.idsia.blip.core.utils.RandomStuff.*;
-        import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
+import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 
 /**
  * A Bayesian network, and the main operations to do on them.
  */
-public class BayesianNetwork implements Serializable {
+public class BayesianNetwork extends Base implements Serializable {
 
     /**
      * Logger.
@@ -106,6 +107,21 @@ public class BayesianNetwork implements Serializable {
         }
     }
 
+    public double getLogLik10(short[] sample) {
+        assert (sample.length == this.n_var);
+
+        double logLik = 0.0D;
+        double l = 0.0D;
+        for (int i = 0; i < this.n_var; i++) {
+            double p = getPotential(i, sample);
+
+            l = Math.log10(p);
+
+            logLik += l;
+        }
+        return logLik;
+    }
+
     /**
      * Get the log likelihood for a complete sample
      *
@@ -118,13 +134,12 @@ public class BayesianNetwork implements Serializable {
         double logLik = 0.0;
         double l = 0;
 
+        // System.out.println(Arrays.toString(sample));
+
         for (int i = 0; i < n_var; i++) {
             double p = getPotential(i, sample);
-
-            if (p < eps) {
-                p = eps;
-            }
-            l= Math.log(p);
+            //  pf("%d | %.5f \n", i, p);
+            l = Math.log(p);
 
             logLik += l;
         }
@@ -135,7 +150,7 @@ public class BayesianNetwork implements Serializable {
     /**
      * Get the probability of the assignment for a variable
      *
-     * @param n    index of the variable
+     * @param n      index of the variable
      * @param sample complete assignment of all variables
      * @return probability of assignment
      */
@@ -143,12 +158,19 @@ public class BayesianNetwork implements Serializable {
 
         int ix = potentialIndex(n, sample);
         ix *= arity(n);
-        ix+= sample[n];
+        ix += sample[n];
         double[] p = potential(n);
+        double ps;
         if (ix >= p.length)
-            return 0;
+            ps = 0;
         else
-            return p[ix];
+            ps = p[ix];
+
+        if (ps < eps) {
+            ps = eps;
+        }
+
+        return ps;
     }
 
     /**
@@ -165,7 +187,7 @@ public class BayesianNetwork implements Serializable {
         int[] ps = parents(n);
 
         // for (int n : order) {
-        for (int i = ps.length-1; i >= 0; i--) {
+        for (int i = ps.length - 1; i >= 0; i--) {
             int p = ps[i];
             ix += sample[p] * ix_ml; // Shift index
             ix_ml *= arity(p); // Compute cumulative shifter
@@ -186,21 +208,19 @@ public class BayesianNetwork implements Serializable {
      * @param index index of the CPT of the variable
      * @return List of values for each variable, associated with the given index.
      */
-    public short[] getAssignmentFromIndex(int[] order, int n_var, int index) {
-        short[] sample = new short[n_var];
+    public TIntIntHashMap getAssignmentFromIndex(int[] order, int n_var, int index) {
+        TIntIntHashMap t = new TIntIntHashMap();
 
-        for (int i = 0; i < n_var; i++) {
-            sample[i] = 0;
-        }
+        // for (int i = order.length-1; i >= 0; i--) {
 
-        for (int i = order.length-1; i >= 0; i--) {
-            int n = order[i];
+        //     int n = order[i];
+        for (int n : order) {
             int ar = arity(n);
 
-            sample[n] = (short) (index % ar);
+            t.put(n, (index % ar));
             index /= ar;
         }
-        return sample;
+        return t;
     }
 
     /**
@@ -220,7 +240,7 @@ public class BayesianNetwork implements Serializable {
         str.append("# Variables\n");
         for (int i = 0; i < n_var; i++) {
             if (l_nm_var != null) {
-                str.append("   ").append(name( i));
+                str.append("   ").append(name(i));
             }
             if (l_ar_var != null) {
                 str.append(" (").append(arity(i)).append(") ");
@@ -272,13 +292,14 @@ public class BayesianNetwork implements Serializable {
 
         try {
 
-            wf(w, "digraph G {\n");
+            wf(w, "digraph Base {\n");
             wf(w, "labelloc=\"t\"\n");
-            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
+            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());
+            ;
             for (int v1 = 0; v1 < n_var; v1++) {
-                wf(w, "\"%s\" \n", name( v1));
+                wf(w, "\"%s\" \n", name(v1));
                 for (int v2 : parents(v1)) {
-                    wf(w, "\"%s\" -> \"%s\" \n", name( v2), name( v1));
+                    wf(w, "\"%s\" -> \"%s\" \n", name(v2), name(v1));
                 }
             }
             wf(w, "}\n");
@@ -293,9 +314,9 @@ public class BayesianNetwork implements Serializable {
         str.append(" [");
         if (p.length > 0) {
 
-            str.append(name( p[0]));
+            str.append(name(p[0]));
             for (int j = 1; j < p.length; j++) {
-                str.append(", ").append(name( p[j]));
+                str.append(", ").append(name(p[j]));
             }
         }
         str.append("]");
@@ -573,7 +594,7 @@ public class BayesianNetwork implements Serializable {
     public int numEdges() {
         int t = 0;
 
-        for (int[] p: l_parent_var) {
+        for (int[] p : l_parent_var) {
             t += p.length;
         }
         return t;
@@ -602,9 +623,10 @@ public class BayesianNetwork implements Serializable {
     public void toGraph(PrintWriter w, TreeSet<String> highligth) {
         try {
 
-            wf(w, "digraph G {\n");
+            wf(w, "digraph Base {\n");
             wf(w, "labelloc=\"t\"\n");
-            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
+            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());
+            ;
             for (int v1 = 0; v1 < n_var; v1++) {
                 String v = name(v1);
                 if (highligth != null && highligth.contains(v))
@@ -612,7 +634,7 @@ public class BayesianNetwork implements Serializable {
                 else
                     wf(w, "\"%s\" \n", v);
                 for (int v2 : parents(v1)) {
-                    wf(w, "\"%s\" -> \"%s\" \n", name( v2), v);
+                    wf(w, "\"%s\" -> \"%s\" \n", name(v2), v);
                 }
             }
             wf(w, "}\n");
@@ -626,9 +648,10 @@ public class BayesianNetwork implements Serializable {
             if (keys != null)
                 Arrays.sort(keys);
 
-            wf(w, "digraph G {\n");
+            wf(w, "digraph Base {\n");
             wf(w, "labelloc=\"t\"\n");
-            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());;
+            wf(w, "label=\"Nodes: %d, arcs: %s\"\n", n_var, numEdges());
+            ;
             for (int v1 = 0; v1 < n_var; v1++) {
                 String v = name(v1);
                 if (keys != null && find(v1, keys))
@@ -636,7 +659,7 @@ public class BayesianNetwork implements Serializable {
                 else
                     wf(w, "\"%s\" \n", v);
                 for (int v2 : parents(v1)) {
-                    wf(w, "\"%s\" -> \"%s\" \n", name( v2), v);
+                    wf(w, "\"%s\" -> \"%s\" \n", name(v2), v);
                 }
             }
             wf(w, "}\n");
@@ -654,15 +677,8 @@ public class BayesianNetwork implements Serializable {
             toGraph(w, keys);
             w.close();
 
-            String h = String.format("./dot -Tpng %s.dot -o %s.png", s, s);
-
-            Process proc = Runtime.getRuntime().exec(h, new String[0], new File(System.getProperty("user.home") + "/Tools"));
-            exec(proc);
-
-            // To close them
-            proc.getInputStream().close();
-            proc.getOutputStream().close();
-            proc.getErrorStream().close();
+            dot(f("./dot -Tpng %s.dot -o %s.png", s, s));
+            dot(f("./dot -Tpdf %s.dot -o %s.pdf", s, s));
 
         } catch (IOException e) {
             logExp(e);
@@ -674,11 +690,37 @@ public class BayesianNetwork implements Serializable {
 
     }
 
+    private void dot(String h) throws IOException, InterruptedException {
+        Process proc = Runtime.getRuntime().exec(h, new String[0], new File(System.getProperty("user.home") + "/Tools"));
+        exec(proc);
+
+        // To close them
+        proc.getInputStream().close();
+        proc.getOutputStream().close();
+        proc.getErrorStream().close();
+    }
+
     public void writeGraph(String s) {
         writeGraph(s, null);
     }
 
     public void setPotential(int v, double[] new_probs) {
         l_potential_var[v] = new_probs;
+    }
+
+    public int getIndexFromAssignment(int[] new_ord, TIntIntHashMap t) {
+        int ix = 0;
+        // Add parents index value
+        int ix_ml = 1;
+
+        // for (int n : order) {
+        // for (int i = new_ord.length-1; i >= 0; i--) {
+        //   int p = new_ord[i];
+        for (int p : new_ord) {
+            ix += t.get(p) * ix_ml; // Shift index
+            ix_ml *= arity(p); // Compute cumulative shifter
+            // log.severe("P:" + par + " - v: " + sample[par] + " - " + arity(par) + " - " + ix );
+        }
+        return ix;
     }
 }

@@ -2,21 +2,22 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
-import ch.idsia.blip.core.utils.Clique;
-import ch.idsia.blip.core.utils.Pair;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.data.common.TIntIterator;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.exp.CyclicGraphException;
+import ch.idsia.blip.core.utils.other.Clique;
+import ch.idsia.blip.core.utils.other.Pair;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.*;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
+import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
 
 public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
 
@@ -45,7 +46,7 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
         maxSk = new double[n_var];
 
         for (int i = 0; i < n_var; i++) {
-            int j = m_scores[i].length -1;
+            int j = m_scores[i].length - 1;
             minSk[i] = m_scores[i][j].sk;
             maxSk[i] = m_scores[i][0].sk;
         }
@@ -54,8 +55,8 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
 
         for (int i = 0; i < n_var; i++) {
             TIntHashSet l = new TIntHashSet();
-            for (ParentSet ps: scores[i])
-                for (int p: ps.parents)
+            for (ParentSet ps : scores[i])
+                for (int p : ps.parents)
                     l.add(p);
 
             parents[i] = l.toArray();
@@ -68,12 +69,12 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
     protected void clear() {
         super.clear();
 
-        junctTree  =new ArrayList<Clique>();
+        junctTree = new ArrayList<Clique>();
     }
 
     // Maximize a network!
     @Override
-    public ParentSet[] search(int[] vars) {
+    public ParentSet[] search() {
 
         // clear all
         clear();
@@ -132,9 +133,8 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
     }
 
     private void chooseClique() {
-        // int theChosen = randInt(0, n_var - 1);
 
-        int theChosen = 8;
+        int theChosen = randInt(0, n_var - 1);
 
         TIntHashSet init = new TIntHashSet();
         init.add(theChosen);
@@ -173,7 +173,7 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
         if (bests[v] == null)
             p("cdfjds");
         cand.remove(bests[v]);
-        bests[v] =null;
+        bests[v] = null;
     }
 
     private void initCand() {
@@ -184,7 +184,7 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
 
         for (int v = 0; v < n_var; v++) {
             todo.add(v);
-            Result r = new Result(v, m_scores[v][m_scores[v].length -1], new SIntSet(), 1, null);
+            Result r = new Result(v, m_scores[v][m_scores[v].length - 1], new SIntSet(), 1, null);
             cand.add(r);
             bests[v] = r;
         }
@@ -198,7 +198,7 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
         ParentSet[] best_str = exploreAll();
 
         // Update parent se
-        for (int v: initCl) {
+        for (int v : initCl) {
             update(v, best_str[v]);
             done(v);
         }
@@ -209,7 +209,7 @@ public class BrutalMaxDirectedSearcher extends BrutalOldSearcher {
         // Add new handlers
         ArrayList<SIntSet> l_a = new ArrayList<SIntSet>();
         for (int v : initCl) {
-            SIntSet s = new SIntSet(reduceArray(initCl,v));
+            SIntSet s = new SIntSet(reduceArray(initCl, v));
             addHandler(s);
             l_a.add(s);
         }

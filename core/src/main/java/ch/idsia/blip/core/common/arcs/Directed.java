@@ -2,9 +2,9 @@ package ch.idsia.blip.core.common.arcs;
 
 
 import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.utils.Pair;
-import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
+import ch.idsia.blip.core.utils.other.Pair;
+import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.Formatter;
 
@@ -169,14 +169,14 @@ public class Directed extends Arcs {
         StringBuilder s = new StringBuilder();
         Formatter fm = new Formatter(s);
 
-        fm.format("digraph G {\n");
+        fm.format("digraph Base {\n");
 
         for (int v1 = 0; v1 < n; v1++) {
             // fm.format("%s \n", name(v1));
             for (int v2 = 0; v2 < n; v2++) {
                 if (check(v1, v2)) {
                     fm.format(" \"%s\" -> \"%s\" \n", name(v1), name(v2));
-                  //  fm.format(" %s -> %s \n", name(v1), name(v2));
+                    //  fm.format(" %s -> %s \n", name(v1), name(v2));
                 }
             }
         }

@@ -1,88 +1,35 @@
 package ch.idsia.blip.core;
 
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Random;
-
-
 public class Base {
 
-    protected long start;
+    private int low_find;
 
-    // Maximum execution time
-    public double max_exec_time = 10;
+    private int high_find;
 
-    // Maximum number of threads to use
-    public Integer thread_pool_size = 0;
+    private int mid_find;
 
-    // Lock for concurrent searchers
-    protected final Object lock = new Object();
+    private int midVal_find;
 
-    public int verbose;
 
-    public Writer logWr;
-
-    public long seed;
-
-    public Random rand;
-
-    public void logf(String format, Object... args) {
-        log(String.format(format, args));
+    protected boolean find(int key, int[] a) {
+        return pos(key, a) >= 0;
     }
 
-    public void safeLogf(String format, Object... args) {
-        synchronized (lock) {
-            logf(format ,args);
-        }
-    }
-
-    public void safeLogf(int i, String format, Object... args) {
-        synchronized (lock) {
-            logf(i, format ,args);
-        }
-    }
-
-    public void logf(int i, String format, Object... args) {
-        if (verbose > i)
-            log(String.format(format, args));
-    }
-
-    public void log(int i, String s) {
-        if (verbose > i)
-            log(s);
-    }
-
-    public void log(String s) {
-        try {
-            if (logWr != null) {
-                logWr.write(s);
-                logWr.flush();
+    protected int pos(int key, int[] a) {
+        this.low_find = 0;
+        this.high_find = (a.length - 1);
+        while (this.low_find <= this.high_find) {
+            this.mid_find = (this.low_find + this.high_find >>> 1);
+            this.midVal_find = a[this.mid_find];
+            if (this.midVal_find < key) {
+                this.low_find = (this.mid_find + 1);
+            } else {
+                if (this.midVal_find <= key) {
+                    return this.mid_find;
+                }
+                this.high_find = (this.mid_find - 1);
             }
-            else
-                System.out.print(s);
-            System.out.flush();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
         }
-    }
-
-    public void init() {
-        if (seed == 0)
-            seed = System.currentTimeMillis();
-
-         rand = new Random(seed);
-    }
-
-    public int randInt(int min, int max) {
-        return rand.nextInt((max - min) + 1) + min;
-    }
-
-    public double randProb() {
-        return randInt(0, 1) * rand.nextDouble();
-    }
-
-    public double randDouble() {
-        return rand.nextDouble();
+        return -(this.low_find + 1);
     }
 }

@@ -1,10 +1,10 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.learn.solver.BaseSolver;
-import ch.idsia.blip.core.utils.Pair;
-import ch.idsia.blip.core.utils.ParentSet;
-import ch.idsia.blip.core.utils.RandomStuff;
 import ch.idsia.blip.core.utils.data.SIntSet;
+import ch.idsia.blip.core.utils.other.Pair;
+import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.util.*;
 
@@ -68,14 +68,14 @@ public class BrutalGreedySearcher extends BrutalOldSearcher {
         HashMap<TreeSet<SIntSet>, Integer> handlesAssigned = new HashMap<TreeSet<SIntSet>, Integer>();
         TreeSet<SIntSet> aux;
         // Make list of handles assigned to parents variables to make intersect
-        for (int i = 0; i <p.parents.length && !stopNow; i++) {
+        for (int i = 0; i < p.parents.length && !stopNow; i++) {
             aux = assignments.get(p.parents[i]);
             if (aux.size() == 0)
                 stopNow = true;
             handlesAssigned.put(aux, aux.size());
         }
         if (stopNow)
-            return new TreeSet<SIntSet> ();
+            return new TreeSet<SIntSet>();
 
         // Sort list of handles by value
         List<TreeSet<SIntSet>> handlesNew = RandomStuff.sortByValuesList(handlesAssigned);
@@ -84,7 +84,7 @@ public class BrutalGreedySearcher extends BrutalOldSearcher {
         // Go on and compute the intersection!
         TreeSet<SIntSet> good = new TreeSet<SIntSet>();
         good.addAll(it.next());
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             good.retainAll(it.next());
 
             if (good.size() == 0)
@@ -95,7 +95,7 @@ public class BrutalGreedySearcher extends BrutalOldSearcher {
     }
 
     protected SIntSet rand(TreeSet<SIntSet> h) {
-        int v = solver.randInt(0, h.size() -1);
+        int v = solver.randInt(0, h.size() - 1);
         Iterator<SIntSet> i = h.iterator();
         while (v > 1) {
             i.next();

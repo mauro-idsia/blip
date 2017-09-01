@@ -14,8 +14,8 @@ import ch.idsia.blip.core.utils.data.HashFunctions;
  * @version $Id: TPrimitiveHash.java,v 1.1.2.6 2010/03/01 23:39:07 robeden Exp $
  */
 abstract public class TPrimitiveHash extends THash {
-	@SuppressWarnings( { "UnusedDeclaration" } )
-	static final long serialVersionUID = 1L;
+    @SuppressWarnings({"UnusedDeclaration"})
+    static final long serialVersionUID = 1L;
 
     /**
      * flags indicating whether each position in the hash is
@@ -25,10 +25,14 @@ abstract public class TPrimitiveHash extends THash {
 
     /* constants used for state flags */
 
-    /** flag indicating that a slot in the hashtable is available */
+    /**
+     * flag indicating that a slot in the hashtable is available
+     */
     protected static final byte FREE = 0;
 
-    /** flag indicating that a slot in the hashtable is occupied */
+    /**
+     * flag indicating that a slot in the hashtable is occupied
+     */
     public static final byte FULL = 1;
 
     /**
@@ -55,7 +59,7 @@ abstract public class TPrimitiveHash extends THash {
      * @param initialCapacity an <code>int</code> value
      */
     protected TPrimitiveHash(int initialCapacity) {
-        this( initialCapacity, DEFAULT_LOAD_FACTOR );
+        this(initialCapacity, DEFAULT_LOAD_FACTOR);
     }
 
 
@@ -70,9 +74,9 @@ abstract public class TPrimitiveHash extends THash {
      */
     protected TPrimitiveHash(int initialCapacity, float loadFactor) {
         super();
-		initialCapacity = Math.max( 1, initialCapacity );
+        initialCapacity = Math.max(1, initialCapacity);
         _loadFactor = loadFactor;
-        setUp( HashFunctions.fastCeil( initialCapacity / loadFactor ) );
+        setUp(HashFunctions.fastCeil(initialCapacity / loadFactor));
     }
 
 
@@ -92,9 +96,9 @@ abstract public class TPrimitiveHash extends THash {
      *
      * @param index an <code>int</code> value
      */
-    protected void removeAt( int index ) {
+    protected void removeAt(int index) {
         _states[index] = REMOVED;
-        super.removeAt( index );
+        super.removeAt(index);
     }
 
 
@@ -105,10 +109,10 @@ abstract public class TPrimitiveHash extends THash {
      * @param initialCapacity an <code>int</code> value
      * @return the actual capacity chosen
      */
-    protected int setUp( int initialCapacity ) {
+    protected int setUp(int initialCapacity) {
         int capacity;
 
-        capacity = super.setUp( initialCapacity );
+        capacity = super.setUp(initialCapacity);
         _states = new byte[capacity];
         return capacity;
     }

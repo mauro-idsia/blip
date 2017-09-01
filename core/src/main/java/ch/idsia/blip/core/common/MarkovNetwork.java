@@ -6,13 +6,13 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.RandomStuff.getRandom;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getRandom;
 
 
 /**
  * A Markov network, and the main operations to do on them.
  */
-public class MarkovNetwork  {
+public class MarkovNetwork {
 
     private static final Logger log = Logger.getLogger(
             MarkovNetwork.class.getName());
@@ -98,11 +98,11 @@ public class MarkovNetwork  {
         for (int j = 0; j < arity(v); j++)
             pt[j] = 1.0;
         // Multiply with all the cliques where it appears
-        for (int clique: l_vars_assign[v]) {
+        for (int clique : l_vars_assign[v]) {
             multiply(pt, v, clique, sample);
         }
         double tot = 0;
-        for (double p: pt)
+        for (double p : pt)
             tot += p;
         double r = rand.nextDouble() * tot;
         int i = 0;
@@ -114,8 +114,8 @@ public class MarkovNetwork  {
     }
 
     /**
-     * @param pt potential to be multiplied
-     * @param v variable
+     * @param pt     potential to be multiplied
+     * @param v      variable
      * @param clique clique
      * @param sample
      */
@@ -153,7 +153,7 @@ public class MarkovNetwork  {
             aux[i] = new TIntArrayList();
 
         for (int i = 0; i < n_cliques; i++) {
-            for (int v: l_vars_cliques[i]) {
+            for (int v : l_vars_cliques[i]) {
                 aux[v].add(i);
             }
         }
