@@ -3,7 +3,6 @@ package ch.idsia.blip.api.learn.solver.win;
 
 import ch.idsia.blip.api.learn.solver.ScoreSolverApi;
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
-import ch.idsia.blip.core.learn.solver.WinAsobsSolver;
 import ch.idsia.blip.core.learn.solver.WinSolver;
 import org.kohsuke.args4j.Option;
 
