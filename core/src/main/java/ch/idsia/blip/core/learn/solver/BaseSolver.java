@@ -113,14 +113,10 @@ public abstract class BaseSolver extends App {
         prepare();
 
         Provider pro = getProvider();
-
-        smp = getSampler();
-        smp.init();
-
-        // Obtains the parent set to winasobs
-        if (verbose > 0)
+        if (this.verbose > 0) {
             log("Read scores... \n");
-        sc = pro.getParentSets();
+        }
+        this.sc = pro.getParentSets();
 
         almost();
 

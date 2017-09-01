@@ -42,6 +42,7 @@ public abstract class ScoreSearcher extends Base implements Searcher {
     public void init(ParentSet[][] scores, int thread) {
 
         smp = solver.getSampler();
+        smp.init();
 
         vars = new int[n_var];
 
