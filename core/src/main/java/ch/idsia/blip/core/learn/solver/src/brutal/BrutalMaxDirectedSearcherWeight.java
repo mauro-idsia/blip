@@ -12,7 +12,6 @@ import ch.idsia.blip.core.utils.other.ParentSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static ch.idsia.blip.core.utils.RandomStuff.p;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
 import static ch.idsia.blip.core.utils.other.RandomStuff.f;
 import static ch.idsia.blip.core.utils.other.RandomStuff.p;

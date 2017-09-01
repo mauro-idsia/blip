@@ -398,17 +398,6 @@ public abstract class BaseSolver extends App {
         return getPSetArray(new_str, sc);
     }
 
-    public ParentSet[] getPSetArray(int[] new_str, ParentSet[][] pps) {
-        ParentSet[] ps = new ParentSet[new_str.length];
-        for (int v = 0; v < new_str.length; v++)
-            ps[v] = getPSet(new_str, v, pps);
-        return ps;
-    }
-
-    public ParentSet[] getPSetArray(int[] new_str) {
-        return getPSetArray(new_str, sc);
-    }
-
     private boolean testComplete(ParentSet[] new_str) {
         for (int i = 0; i < n_var; i++) {
             ParentSet ps = new_str[i];

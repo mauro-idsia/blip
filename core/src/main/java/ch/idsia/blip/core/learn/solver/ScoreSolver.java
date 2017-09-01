@@ -9,8 +9,6 @@ import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.HashMap;
 
-import java.util.HashMap;
-
 public abstract class ScoreSolver extends BaseSolver {
 
     public String dat_path;
@@ -39,6 +37,7 @@ public abstract class ScoreSolver extends BaseSolver {
         this.sc = sc;
         this.n_var = sc.length;
     }
+
     public void init(ParentSet[][] sc, int time) {
         init(sc);
         this.max_exec_time = time;

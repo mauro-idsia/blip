@@ -37,11 +37,6 @@ public class ObsSearcher extends ScoreSearcher {
     public ParentSet[] search() {
         this.vars = this.smp.sample();
 
-        return obs(vars);
-    }
-
-    public ParentSet[] obs(int[] vars) {
-
         obs(this.vars);
 
         boolean gain = true;
@@ -111,7 +106,6 @@ public class ObsSearcher extends ScoreSearcher {
             this.last_sk += this.pSet.sk;
 
             this.forbidden[v] = true;
-            fullB[i] = true;
         }
         return this.last_str;
     }

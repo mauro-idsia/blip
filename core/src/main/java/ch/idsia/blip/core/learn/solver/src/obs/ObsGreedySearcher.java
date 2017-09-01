@@ -103,14 +103,14 @@ public class ObsGreedySearcher extends ObsSearcher {
 
     }
 
-    
-        @Override
+
+    @Override
     public ParentSet[] search() {
 
         vars = smp.sample();
 
 
-            if (solver.verbose > 2)
+        if (solver.verbose > 2)
             solver.log("going! \n");
 
         // Find initial structure!

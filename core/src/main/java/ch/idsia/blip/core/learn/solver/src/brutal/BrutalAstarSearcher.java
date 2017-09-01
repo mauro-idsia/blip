@@ -7,7 +7,6 @@ import ch.idsia.blip.core.utils.other.ParentSet;
 import java.util.Arrays;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.RandomStuff.cloneStr;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
