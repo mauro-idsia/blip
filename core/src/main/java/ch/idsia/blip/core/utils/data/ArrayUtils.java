@@ -586,6 +586,12 @@ public class ArrayUtils {
     public static int index(int p, TIntArrayList v) {
         for (int i = 0; i < v.size(); i++)
             if (v.get(i) == p) return i;
+        return  -1;
+    }
+
+    public static int index(String p, String[] v) {
+        for (int i = 0; i < v.length; i++)
+            if (v[i].equals(p.trim())) return i;
         return -1;
     }
 

@@ -48,8 +48,8 @@ public class BrutalUndirectedSolver extends BaseSolver {
     }
 
     public void setUnd(Und und) {
-        this.und = und;
-        this.n_var = und.n;
+        this.und =und;
+        this.n_var =und.n;
     }
 
     @Override

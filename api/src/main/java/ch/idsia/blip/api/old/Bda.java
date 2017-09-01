@@ -37,7 +37,7 @@ public class Bda extends Api {
      * Command line execution
      *
      * @param args parameters provided
-     * @throws IncorrectCallException if there is pa problem with parameters
+     * @throws ch.idsia.blip.core.utils.IncorrectCallException if there is a problem with parameters
      */
     public static void main(String[] args) throws IncorrectCallException {
         defaultMain(args, new Bda(), log);

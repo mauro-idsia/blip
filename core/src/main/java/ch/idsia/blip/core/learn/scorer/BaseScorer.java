@@ -299,6 +299,9 @@ public abstract class BaseScorer extends App {
 
         private Writer cacheWr;
 
+
+        private Writer cacheWr;
+
         private HashMap<Integer, Map<int[], Double>> cache;
 
         ScoreWriter(BaseScorer sc, String ph_scores, int start, int end, int verbose) {
@@ -421,6 +424,8 @@ public abstract class BaseScorer extends App {
         }
 
     }
+
+
 
 
     public abstract class BaseSearcher implements Runnable {

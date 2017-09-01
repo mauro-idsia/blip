@@ -71,7 +71,7 @@ public class BayesianFactor {
             aux_dom.add(v);
             aux_card.add(n_card.get(v));
         }
-
+        
         dom = aux_dom.toArray();
         card = aux_card.toArray();
 
@@ -348,7 +348,7 @@ public class BayesianFactor {
         }
         for (int i = 0; i < size; i++) {
             potent[i] = logComp
-                    ? potent[i] - Math.log10(sum)
+                    ? potent[i] - Math.log(sum)
                     : potent[i] / sum;
         }
 
@@ -417,7 +417,7 @@ public class BayesianFactor {
         if (logComp) {
             // Go back to log
             for (int i = 0; i < p; i++) {
-                n_psi.potent[i] = Math.log10(n_psi.potent[i]);
+                n_psi.potent[i] = Math.log(n_psi.potent[i]);
             }
         }
 

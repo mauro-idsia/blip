@@ -100,7 +100,7 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
             int v = vars[j];
 
             // get best parent set for the variable
-            ParentSet best = m_scores[v][0];
+            ParentSet best =m_scores[v][0];
 
             // check if there are already some handlers
             TreeSet<SIntSet> good = evaluate(best);

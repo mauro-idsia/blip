@@ -887,6 +887,11 @@ public class TIntArrayList implements TIntList {
     }
 
     public int last() {
+        return _d[_pos-1];
+    }
+
+
+    public int last() {
         return _d[_pos - 1];
     }
 

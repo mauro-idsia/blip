@@ -27,6 +27,7 @@ The format for the initial dataset has to be the same as the file "child-5000.da
 * -t N   : Maximum time limit, in seconds (default: 10)
 * -b N   : Number of machine cores to use (default: 1)
 * -w N   : Maximum treewidth
+* -seed N   : Seed for the pseudo random number generator
 
 ### Parent set identification 
 

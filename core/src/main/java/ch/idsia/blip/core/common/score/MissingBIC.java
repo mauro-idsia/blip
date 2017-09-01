@@ -53,6 +53,45 @@ public class MissingBIC extends BIC {
         for (int v = 0; v < arity; v++) {
 
             double weight = values[v].length;
+            for (int r: completion[n][v])
+                weight += weights[r];
+
+            double p = (weight + alpha_i) / (dat.n_datapoints + alpha);
+
+            skore += weight * log(p);
+            // System.out.printf("%d - %.2f, ", values[v].length, p);
+            // System.out.println((values[v].length * 1.0) + (alpha / arity));
+            // System.out.println((n_datapoints + alpha));
+
+            // System.out.println(values[v].length + " & " + log(p) + " & " + p + " % " + skore);
+        }
+
+        double pen = getPenalization(arity);
+
+        skore -= pen;
+
+        return skore;
+    }
+
+    @Override
+    public double computeScore(int n) {
+
+        numEvaluated++;
+
+        int arity = dat.l_n_arity[n];
+        int[][] values = dat.row_values[n];
+
+        double skore = 0;
+
+        // for(int[] v: values)
+        // System.out.println(Arrays.toString(v));
+
+        double alpha = 1;
+        double alpha_i = (alpha / arity);
+
+        for (int v = 0; v < arity; v++) {
+
+            double weight = values[v].length;
             for (int r : completion[n][v])
                 weight += weights[r];
 
@@ -79,6 +118,7 @@ public class MissingBIC extends BIC {
         int[][] p_values = computeParentSetValues(set_p);
 
         int[][] comp_values = computeParentSetValues(set_p, completion);
+
 
         numEvaluated++;
 

@@ -6,8 +6,7 @@ import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.learn.solver.src.brutal.*;
-import ch.idsia.blip.core.utils.other.ParentSet;
-
+import ch.idsia.blip.core.utils.ParentSet;
 import java.util.HashMap;
 
 import static ch.idsia.blip.core.learn.solver.samp.SamplerUtils.getAdvSampler;
@@ -77,11 +76,9 @@ public class BrutalSolver extends ScoreSolver {
             return new BrutalGreedySearcher(this, tw);
     }
 
-    public void init(ParentSet[][] sc, int time, int tw) {
-        this.tw = tw;
-        super.init(sc, time);
-    }
-
+    public void init(int max_time, ParentSet[][] sc, int threads, int maxTw) {
+        this.tw = maxTw;
+        init(sc, max_time, threads);
     /*
     public void propose(double new_sk, ParentSet[] new_str, List<Clique> junctTree) {
         synchronized (lock) {

@@ -60,7 +60,7 @@ public abstract class ScoreSearcher extends Base implements Searcher {
     protected double checkSk(ParentSet[] new_str) {
         double check = 0.0;
 
-        for (ParentSet p : new_str) {
+        for (ParentSet p: new_str) {
             if (p != null)
                 check += p.sk;
         }
