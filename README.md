@@ -59,3 +59,9 @@ For perfoming with k-max:
 ```
 java -jar blip.jar solver.kmax -j data/child-5000.jkl -r data/child-5000.kmax.res -t 10 -w 4 -v 1
 ```
+
+### Interpreting the result 
+
+The format of the ".res" file is as follows: each line indicates the parent set assigned to each variable and its score.
+
+For example the line "4: -2797.39 (10,17,18)" indicates that to the variable with index 4 in the dataset are assgined as parents the variables with index (10,17,18). This parent set has score -2797.39 (by default the score function is the BIC). 
