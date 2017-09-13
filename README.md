@@ -16,8 +16,10 @@ The process of learning a bounded-treewidth BN is explained by using the "child"
 ### Dataset format
 
 The format for the initial dataset has to be the same as the file "child-5000.dat", namely a space-separated file containing: 
-* first line, list of variable names
-* following lines, discrete value for each variable
+
+    * First line: list of variables names, separated by space;
+    * Second line: list of variables cardinalities, separated by space;
+    * Following lines: list of values taken by the variables in each datapoint, separated by space.
 
 ### Common command line options
 
