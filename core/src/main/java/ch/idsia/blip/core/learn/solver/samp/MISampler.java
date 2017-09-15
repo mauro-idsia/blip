@@ -1,8 +1,10 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+
 import ch.idsia.blip.core.common.analyze.MutualInformation;
 
 import java.util.Random;
+
 
 public class MISampler extends EntropySampler {
 
@@ -19,6 +21,7 @@ public class MISampler extends EntropySampler {
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
                 double m = mi.computeMi(i, j);
+
                 weight[i] += m;
                 weight[j] += m;
             }

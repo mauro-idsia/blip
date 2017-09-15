@@ -39,7 +39,7 @@ public abstract class BaseScorer extends App {
     public Score score;
 
     // Parents size limit (for memory!)
-    protected final long max_parents = (long) Math.pow(2, 10);
+    protected final long max_parents = (long) Math.pow(2, 8);
 
     // Equivalent sample size
     public double alpha;
@@ -73,8 +73,9 @@ public abstract class BaseScorer extends App {
 
     public void go(String dat_path) throws Exception {
         start = System.currentTimeMillis();
-        if (verbose > 0)
+        if (verbose > 0) {
             logf("Reading from datafile '%s'... \n", dat_path);
+        }
         go(getDataSet(dat_path));
     }
 
@@ -93,8 +94,7 @@ public abstract class BaseScorer extends App {
         }
 
         if (verbose > 0) {
-            pf("... done - eval: %d (el: %.2f) \n",
-                    score.numEvaluated,
+            pf("... done - eval: %d (el: %.2f) \n", score.numEvaluated,
                     (System.currentTimeMillis() - start) / 1000.0);
         }
     }
@@ -105,6 +105,7 @@ public abstract class BaseScorer extends App {
 
         Pattern p = Pattern.compile("\\d+");
         Matcher m = p.matcher(choice_variables);
+
         if (m.matches()) {
             s = Integer.valueOf(choice_variables);
             e = s + 1;
@@ -121,10 +122,12 @@ public abstract class BaseScorer extends App {
         if (max_time > 0) {
             // for each searcher, (total time) * (num of threads) / (num of variables)
             max_exec_time = (max_time * thread_pool_size) / (e - s);
-        } else
+        } else {
             max_exec_time = 60;
+        }
 
         Thread t1 = new Thread(new Executor(thread_pool_size, s, e, this));
+
         scoreWriter = new ScoreWriter(this, ph_scores, s, e, verbose);
         Thread t2 = new Thread(scoreWriter);
 
@@ -136,26 +139,26 @@ public abstract class BaseScorer extends App {
 
     }
 
-/*
-    private void searchOne(int n) throws InterruptedException, UnsupportedEncodingException, FileNotFoundException {
+    /*
+     private void searchOne(int n) throws InterruptedException, UnsupportedEncodingException, FileNotFoundException {
 
-        // available time
-        if (max_time == 0)
-            max_exec_time = 60;
+     // available time
+     if (max_time == 0)
+     max_exec_time = 60;
 
-        Runnable r = getNewSearcher(n);
-        Thread t = new Thread(r);
+     Runnable r = getNewSearcher(n);
+     Thread t = new Thread(r);
 
-        scoreWriter = new ScoreWriter(this, ph_scores, n, n+1, verbose);
-        Thread t2 = new Thread(scoreWriter);
+     scoreWriter = new ScoreWriter(this, ph_scores, n, n+1, verbose);
+     Thread t2 = new Thread(scoreWriter);
 
-        t.start();
-        t2.start();
+     t.start();
+     t2.start();
 
-        t.join();
-        t2.join();
-    }
-    */
+     t.join();
+     t2.join();
+     }
+     */
 
     public void searchAll() throws InterruptedException, IOException {
 
@@ -163,8 +166,9 @@ public abstract class BaseScorer extends App {
         if (max_time > 0) {
             // for each searcher, (total time) * (num of threads) / (num of variables)
             max_exec_time = (max_time * thread_pool_size) / dat.n_var;
-        } else
+        } else {
             max_exec_time = 60;
+        }
 
         if (verbose > 0) {
             pf("Executing with: \n");
@@ -180,6 +184,7 @@ public abstract class BaseScorer extends App {
         }
 
         Thread t1 = new Thread(new Executor(thread_pool_size, 0, n_var, this));
+
         scoreWriter = new ScoreWriter(this, ph_scores, 0, n_var, verbose);
         Thread t2 = new Thread(scoreWriter);
 
@@ -417,11 +422,10 @@ public abstract class BaseScorer extends App {
         } catch (IOException e) {
             log.severe(
                     String.format("Error writing score to file: %s",
-                            e.getMessage()));
+                    e.getMessage()));
         }
 
     }
-
 
     public abstract class BaseSearcher implements Runnable {
 
@@ -454,7 +458,7 @@ public abstract class BaseScorer extends App {
         }
 
         void addScore(int p, double sk) {
-            addScore(new int[]{p}, sk);
+            addScore(new int[] { p}, sk);
         }
 
         protected void addScore(int[] p, double sk) {
@@ -466,7 +470,8 @@ public abstract class BaseScorer extends App {
             m_start = System.currentTimeMillis();
 
             // Prepare scores
-            scores = new TCustomHashMap<int[], Double>(new ArrayHashingStrategy());
+            scores = new TCustomHashMap<int[], Double>(
+                    new ArrayHashingStrategy());
 
             // Void score
             voidSk = score.computeScore(n);
@@ -477,42 +482,44 @@ public abstract class BaseScorer extends App {
         }
 
         /*
-        private void evaluateParents(int n) {
+         private void evaluateParents(int n) {
 
-            if (monovalue(n)) {
-                parents = new int[0];
-                return;
-            }
+         if (monovalue(n)) {
+         parents = new int[0];
+         return;
+         }
 
-            // MutualInformation mi = new MutualInformation(dat, 0.999, 10);
-            TIntArrayList l = new TIntArrayList();
+         // MutualInformation mi = new MutualInformation(dat, 0.999, 10);
+         TIntArrayList l = new TIntArrayList();
 
-            for (int n2 = 0; n2 < n_var; n2++) {
+         for (int n2 = 0; n2 < n_var; n2++) {
 
-                if (n == n2) {
-                    continue;
-                }
+         if (n == n2) {
+         continue;
+         }
 
-                if (monovalue(n2))
-                    continue;
-
-
-                if (mi.condInd(n, n2))
-                     continue;
+         if (monovalue(n2))
+         continue;
 
 
-                l.add(n2);
-            }
+         if (mi.condInd(n, n2))
+         continue;
 
-            parents = l.toArray();
 
-        }
-        */
+         l.add(n2);
+         }
+
+         parents = l.toArray();
+
+         }
+         */
 
         private boolean monovalue(int n2) {
             for (int v = 0; v < dat.l_n_arity[n2]; v++) {
-                if (dat.row_values[n2][v].length * 1.0 / dat.n_datapoints > 0.9999)
+                if (dat.row_values[n2][v].length * 1.0 / dat.n_datapoints
+                        > 0.9999) {
                     return true;
+                }
             }
             return false;
         }
@@ -521,10 +528,10 @@ public abstract class BaseScorer extends App {
 
             oneScores = new TIntDoubleHashMap();
 
-            //if (monovalue(n)) {
-            //    parents = new int[0];
-            //    return;
-            //}
+            // if (monovalue(n)) {
+            // parents = new int[0];
+            // return;
+            // }
 
             double worstQueueScore = 0;
 
@@ -537,9 +544,14 @@ public abstract class BaseScorer extends App {
                 }
 
                 // if (monovalue(n2))
-                //    continue;
+                // continue;
 
                 double oneSk = score.computeScore(n, n2);
+                if (Math.abs(oneSk) < 0.00000001)
+                    continue;
+
+                oneScores.put(n2, oneSk);
+                addScore(n2, oneSk);
 
                 boolean toDropWorst = false;
 
@@ -558,18 +570,18 @@ public abstract class BaseScorer extends App {
                     open.pollLast();
                     worstQueueScore = open.last().sk;
                 } else // If we didn't drop any element, check if we have to update the current
-                    // worst score!
-                    if (oneSk < worstQueueScore) {
-                        worstQueueScore = oneSk;
-                    }
+                // worst score!
+                if (oneSk < worstQueueScore) {
+                    worstQueueScore = oneSk;
+                }
 
                 open.add(new OpenParentSet(n2, -1, oneSk, null));
             }
             TIntArrayList l = new TIntArrayList(open.size());
+
             for (OpenParentSet p : open) {
                 int n2 = p.s[0];
-                oneScores.put(n2, p.sk);
-                addScore(n2, p.sk);
+
                 l.add(n2);
             }
 
@@ -586,12 +598,12 @@ public abstract class BaseScorer extends App {
         }
 
         boolean thereIsTime() {
-            if (max_exec_time == 0)
+            if (max_exec_time == 0) {
                 return true;
+            }
             m_elapsed = ((System.currentTimeMillis() - m_start) / 1000.0);
             return m_elapsed < max_exec_time;
         }
-
 
     }
 

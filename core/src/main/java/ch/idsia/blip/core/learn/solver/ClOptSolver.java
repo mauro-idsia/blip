@@ -6,6 +6,7 @@ import ch.idsia.blip.core.learn.solver.src.Searcher;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.f;
 
+
 public class ClOptSolver extends ObsSolver {
 
     public String ph_gobnilp = "experiments/gobnilp";
@@ -18,8 +19,7 @@ public class ClOptSolver extends ObsSolver {
         this.searcher = search;
     }
 
-    public ClOptSolver() {
-    }
+    public ClOptSolver() {}
 
     @Override
     protected Searcher getSearcher() {

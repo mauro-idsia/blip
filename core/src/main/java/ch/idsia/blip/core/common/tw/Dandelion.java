@@ -206,13 +206,13 @@ public class Dandelion {
                 if (S[1][i] != -1) {
                     throw new Error(
                             "Row " + i + " of S incorrect! " + S[0][i] + ", "
-                                    + S[1][i]);
+                            + S[1][i]);
                 }
             } else if (S[1][i] == -1) {
                 if (S[0][i] != 0) {
                     throw new Error(
                             "Row " + i + " of S incorrect! " + S[0][i] + ", "
-                                    + S[1][i]);
+                            + S[1][i]);
                 }
             } else if (S[0][i] < 1 || S[0][i] > n - k) {
                 throw new Error("Row " + i + " of S[0] incorrect! " + S[0][i]);

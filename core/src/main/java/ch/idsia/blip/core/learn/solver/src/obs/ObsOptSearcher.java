@@ -28,13 +28,15 @@ public class ObsOptSearcher extends ObsSearcher {
 
         done = new boolean[n_var];
 
-        last_sk = 0;
+        sk = 0;
 
         forbidden = new boolean[n_var];
 
         LinkedHashSet todo = new LinkedHashSet();
-        for (int v = 0; v < n_var; v++)
+
+        for (int v = 0; v < n_var; v++) {
             todo.add(v);
+        }
 
         // index of the best parent set for that variable so far (at start, it is 0 for every variable)
         int[] best_ps = new int[n_var];
@@ -56,7 +58,9 @@ public class ObsOptSearcher extends ObsSearcher {
 
             // For each variable that has not been chosen yet (n_var - i), build the weight array
             for (int v = 0; v < n_var; v++) {
-                if (done[v]) continue;
+                if (done[v]) {
+                    continue;
+                }
 
                 // Update the list of best parent sets; for each variable
                 best = m_scores[v][best_ps[v]];
@@ -77,26 +81,30 @@ public class ObsOptSearcher extends ObsSearcher {
 
             double r = solver.randDouble() - Math.pow(2, -10);
             int sel = -1;
+
             for (int v = 0; v < j && sel == -1; v++) {
                 // Normalize weights
                 double s = ws[v] /= tot;
-                if (r < s)
+
+                if (r < s) {
                     sel = v;
+                }
                 r -= s;
             }
 
             // "sel" is the selected index
             int var = ix[sel];
+
             forbidden[var] = true;
             last_chosen = var;
             done[var] = true;
-            last_str[var] = m_scores[var][best_ps[var]];
-            last_sk += last_str[var].sk;
+            str[var] = m_scores[var][best_ps[var]];
+            sk += str[var].sk;
 
-            //   pf("%d %s \n", var, last_str[var]);
+            // pf("%d %s \n", var, str[var]);
         }
 
-        return last_str;
+        return str;
     }
 
     // Finds the best

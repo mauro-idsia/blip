@@ -17,7 +17,9 @@ import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 public class IambBMi3 extends IambBMi {
 
     private BDeu b;
-    private final double[] alphas = new double[]{0.01, 0.1, 1, 10, 50, 100, 1000, 1500, 2000};
+    private final double[] alphas = new double[] {
+        0.01, 0.1, 1, 10, 50, 100,
+        1000, 1500, 2000};
 
     public IambBMi3(DatFileReader dr) throws IOException {
         super(dr);
@@ -50,8 +52,9 @@ public class IambBMi3 extends IambBMi {
 
     private void fixEss(int x, int y, int[] z) {
 
-        if (z.length == 0)
+        if (z.length == 0) {
             return;
+        }
 
         int[][] x_r = dat.row_values[x];
         int x_ar = dat.l_n_arity[x];
@@ -66,12 +69,14 @@ public class IambBMi3 extends IambBMi {
 
         // Compute joints for x
         int[] n_z = new int[z_ar];
+
         for (int i = 0; i < z_ar; i++) {
             n_z[i] = z_r[i].length;
         }
 
         // Compute counts for joint X-Y
         int[][] n_w = new int[z_ar][];
+
         for (int z_i = 0; z_i < z_ar; z_i++) {
             n_w[z_i] = new int[w_ar];
             for (int x_i = 0; x_i < x_ar; x_i++) {
@@ -79,7 +84,8 @@ public class IambBMi3 extends IambBMi {
 
                 for (int y_i = 0; y_i < y_ar; y_i++) {
                     // int[] xy = ArrayUtils.intersect(x_r[x_i], y_r[y_i]);
-                    n_w[z_i][x_i * y_ar + y_i] = ArrayUtils.intersectN(y_r[y_i], x_z_r);
+                    n_w[z_i][x_i * y_ar + y_i] = ArrayUtils.intersectN(y_r[y_i],
+                            x_z_r);
                 }
             }
         }
@@ -89,17 +95,20 @@ public class IambBMi3 extends IambBMi {
 
         for (double a : alphas) {
             double sk = computeScore(n_z, z_ar, n_w, w_ar, a);
+
             if (sk > best_sk) {
                 best_sk = sk;
                 best_a = a;
 
-                if (verb)
+                if (verb) {
                     pf("sk: %.4f, alpha %.3f \n", sk, a);
+                }
             }
         }
 
-        if (verb)
+        if (verb) {
             pf("chosen alpha %.3f \n", best_a);
+        }
         bmi.ess = best_a;
 
     }

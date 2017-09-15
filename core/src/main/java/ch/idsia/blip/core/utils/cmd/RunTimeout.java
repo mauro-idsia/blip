@@ -1,14 +1,15 @@
 package ch.idsia.blip.core.utils.cmd;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
 public class RunTimeout {
 
-
     public static int cmdTimeout(final String commandLine,
-                                 final boolean printOutput, final boolean printError, final long timeout) throws IOException {
+            final boolean printOutput, final boolean printError, final long timeout) throws IOException {
 
         Runtime runtime = Runtime.getRuntime();
         Process proc = runtime.exec(commandLine);
@@ -20,12 +21,14 @@ public class RunTimeout {
                 InputStreamReader(proc.getErrorStream()));
 
         Worker worker = new Worker(proc);
+
         worker.start();
         try {
             worker.join(timeout);
 
             StringBuilder out = new StringBuilder();
             String s;
+
             if (printOutput) {
                 while ((s = stdInput.readLine()) != null) {
                     out.append(s);
@@ -65,6 +68,5 @@ public class RunTimeout {
             }
         }
     }
-
 
 }

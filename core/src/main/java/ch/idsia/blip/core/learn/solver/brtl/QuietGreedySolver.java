@@ -8,6 +8,7 @@ import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.other.Pair;
 import ch.idsia.blip.core.utils.other.ParentSet;
 
+
 /**
  * Adds check to out_degree of each node
  */
@@ -58,8 +59,9 @@ public class QuietGreedySolver extends BrutalSolver {
 
             for (ParentSet p : m_scores[v]) {
 
-                if (!check(p))
+                if (!check(p)) {
                     continue;
+                }
 
                 for (SIntSet h : handles) {
                     if (containsAll(p.parents, h.set)) {
@@ -73,11 +75,12 @@ public class QuietGreedySolver extends BrutalSolver {
 
         protected boolean check(ParentSet p) {
 
-            for (int v : p.parents)
+            for (int v : p.parents) {
                 if (out_degree[v] > max_out_degree) {
                     // remove_handles(v);
                     return false;
                 }
+            }
 
             return true;
         }

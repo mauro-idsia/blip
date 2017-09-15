@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.matrix;
 
+
 import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.BufferedReader;
@@ -8,6 +9,7 @@ import java.io.Writer;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.getReader;
 import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
+
 
 public class UpperMatrix {
 
@@ -31,26 +33,29 @@ public class UpperMatrix {
     }
 
     public void inc(int v1, int v2) {
-        if (v1 != v2)
+        if (v1 != v2) {
             vec[index(v1, v2)]++;
+        }
     }
 
     public double value(int v1, int v2) {
-        if (v1 != v2)
+        if (v1 != v2) {
             return vec[index(v1, v2)];
-        else
+        } else {
             return 0;
+        }
     }
 
-
     public void inc(int i, double v) {
-        if (i >= 0 && i < size)
+        if (i >= 0 && i < size) {
             vec[i] += v;
+        }
     }
 
     public double value(int i) {
-        if (i >= 0 && i < size)
+        if (i >= 0 && i < size) {
             return vec[i];
+        }
         return 0;
     }
 
@@ -69,8 +74,10 @@ public class UpperMatrix {
         int n = Integer.valueOf(br.readLine().trim());
         UpperMatrix u = new UpperMatrix(n);
         String l;
+
         while ((l = br.readLine()) != null) {
             String[] aux = l.split("-");
+
             u.inc(in(aux[0]), in(aux[1]), f(aux[2]));
         }
         return u;

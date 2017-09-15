@@ -20,7 +20,7 @@ public class SIntSet implements Comparable<SIntSet> {
     }
 
     public SIntSet(int n) {
-        this(new int[]{n});
+        this(new int[] { n});
     }
 
     @Override

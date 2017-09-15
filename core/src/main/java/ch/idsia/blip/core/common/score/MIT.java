@@ -31,78 +31,79 @@ public class MIT extends Score {
 
     @Override
     public double computeScore(int n, int[] set_p, int[][] p_values) {
-/*
-        numEvaluated++;
 
-        Arrays.sort(set_p);
+        /*
+         numEvaluated++;
 
-        double skore = 0;
+         Arrays.sort(set_p);
 
-        int arity = dat.l_n_arity[n];
+         double skore = 0;
 
-        int[] totcount = new int[arity + 1];
+         int arity = dat.l_n_arity[n];
 
-        for (int v = 0; v < arity; v++) {
-            totcount[v] = 0;
-        }
+         int[] totcount = new int[arity + 1];
 
-        for (int r : values) {
-            totcount[r] += 1;
-        }
+         for (int v = 0; v < arity; v++) {
+         totcount[v] = 0;
+         }
 
-        for (int p_v = 0; p_v < p_values.length; p_v++) {
+         for (int r : values) {
+         totcount[r] += 1;
+         }
 
-            // Check if it contains a missing value; in case, don't consider it
-            if (containsMissing(p_v, set_p)) {
-                continue;
-            }
+         for (int p_v = 0; p_v < p_values.length; p_v++) {
 
-            int[] valcount = new int[arity + 1];
+         // Check if it contains a missing value; in case, don't consider it
+         if (containsMissing(p_v, set_p)) {
+         continue;
+         }
 
-            for (int v = 0; v < arity; v++) {
-                valcount[v] = 0;
-            }
+         int[] valcount = new int[arity + 1];
 
-            for (int r : p_values[p_v]) {
-                valcount[values[r]] += 1;
-            }
+         for (int v = 0; v < arity; v++) {
+         valcount[v] = 0;
+         }
 
-            for (int v = 0; v < arity; v++) {
+         for (int r : p_values[p_v]) {
+         valcount[values[r]] += 1;
+         }
 
-                if (valcount[v] == 0) {
-                    continue;
-                }
+         for (int v = 0; v < arity; v++) {
 
-                double p_x_y = valcount[v] * 1.0 / dat.n_datapoints;
+         if (valcount[v] == 0) {
+         continue;
+         }
 
-                double p_y = p_values[p_v].length * 1.0 / dat.n_datapoints;
+         double p_x_y = valcount[v] * 1.0 / dat.n_datapoints;
 
-                double p_x = totcount[v] * 1.0 / dat.n_datapoints;
+         double p_y = p_values[p_v].length * 1.0 / dat.n_datapoints;
 
-                // System.out.printf("%.4f, %d - %d, %.3f \n", skore, valcount[v], p_values[p_v].length,  log((valcount[v] * 1.0) / p_values[p_v].length));
+         double p_x = totcount[v] * 1.0 / dat.n_datapoints;
 
-                skore += p_x_y
-                        * (log(p_x_y) - log(p_x) - log(p_y));
-                // System.out.println(skore);
+         // System.out.printf("%.4f, %d - %d, %.3f \n", skore, valcount[v], p_values[p_v].length,  log((valcount[v] * 1.0) / p_values[p_v].length));
 
-                // System.out.printf("%d- %.2f, ", valcount[v], p);
+         skore += p_x_y
+         * (log(p_x_y) - log(p_x) - log(p_y));
+         // System.out.println(skore);
 
-                // System.out.println(valcount[v] + "   " + log(p) + "   " + p + "   " + skore);
-            }
+         // System.out.printf("%d- %.2f, ", valcount[v], p);
 
-        }
+         // System.out.println(valcount[v] + "   " + log(p) + "   " + p + "   " + skore);
+         }
 
-        double pen = penalizationTerm(n, set_p);
-        double sk = 2 * dat.n_datapoints * skore - pen;
+         }
 
-        if (debug) {
-            System.out.printf("%d, %10s -> %10.2f, %10.2f   --- %10.2f \n", n,
-                    Arrays.toString(set_p), 2 * dat.n_datapoints * skore, pen,
-                    sk);
-        }
+         double pen = penalizationTerm(n, set_p);
+         double sk = 2 * dat.n_datapoints * skore - pen;
 
-        return sk;
-        */
+         if (debug) {
+         System.out.printf("%d, %10s -> %10.2f, %10.2f   --- %10.2f \n", n,
+         Arrays.toString(set_p), 2 * dat.n_datapoints * skore, pen,
+         sk);
+         }
+
+         return sk;
+         */
 
         return -Double.MAX_VALUE;
     }
@@ -150,27 +151,27 @@ public class MIT extends Score {
         double x = 0;
 
         /*
-        ChiSquaredDistribution d = new ChiSquaredDistribution(df);
+         ChiSquaredDistribution d = new ChiSquaredDistribution(df);
 
-        while (dv > 1e-10) {
-            x = 1 / v - 1;
-            dv = dv / 2;
-            // System.out.print (x + "-"+ d.cumulativeProbability(x) + " ... ");
-            if (d.cumulativeProbability(x) < p) {
-                v = v - dv;
-            } else {
-                v = v + dv;
-            }
-        }
-        return x;
-        */
+         while (dv > 1e-10) {
+         x = 1 / v - 1;
+         dv = dv / 2;
+         // System.out.print (x + "-"+ d.cumulativeProbability(x) + " ... ");
+         if (d.cumulativeProbability(x) < p) {
+         v = v - dv;
+         } else {
+         v = v + dv;
+         }
+         }
+         return x;
+         */
 
         return 0;
     }
 
     @Override
     public double computePrediction(int n, int[] p1, int p2, Map<int[], Double> scores) {
-        return scores.get(p1) + scores.get(new int[]{p2});
+        return scores.get(p1) + scores.get(new int[] { p2});
     }
 
 }

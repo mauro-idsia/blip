@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.io.dat;
 
+
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.other.StringUtils;
 
@@ -9,6 +10,7 @@ import java.io.Writer;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
 import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
 import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
+
 
 public class DatFileWriter {
 
@@ -20,6 +22,7 @@ public class DatFileWriter {
 
     public void go(DataSet dat, String s) throws IOException {
         Writer wr = getWriter(s);
+
         writeMetaData(dat, wr);
 
         String g;
@@ -27,16 +30,20 @@ public class DatFileWriter {
         for (int d = 0; d < dat.n_datapoints; d++) {
             for (int n = 0; n < dat.n_var; n++) {
                 int v = -1;
+
                 for (int k = 0; k < dat.l_n_arity[n]; k++) {
-                    if (find(d, dat.row_values[n][k]))
+                    if (find(d, dat.row_values[n][k])) {
                         v = k;
+                    }
                 }
-                if (v != -1)
+                if (v != -1) {
                     g = value(dat, n, v);
-                else
+                } else {
                     g = "?";
-                if (n > 0)
+                }
+                if (n > 0) {
                     wf(wr, "%s", separator);
+                }
                 wf(wr, "%s", g);
             }
 

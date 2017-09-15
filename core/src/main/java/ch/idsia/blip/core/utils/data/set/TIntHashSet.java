@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.data.set;
 
+
 import ch.idsia.blip.core.utils.data.HashFunctions;
 import ch.idsia.blip.core.utils.data.common.TIntCollection;
 import ch.idsia.blip.core.utils.data.common.TIntIterator;
@@ -19,7 +20,6 @@ import java.util.Collection;
 public class TIntHashSet extends TIntHash implements TIntSet {
     static final long serialVersionUID = 1L;
 
-
     /**
      * Creates a new <code>TIntHashSet</code> instance with the default
      * capacity and load factor.
@@ -27,7 +27,6 @@ public class TIntHashSet extends TIntHash implements TIntSet {
     public TIntHashSet() {
         super();
     }
-
 
     /**
      * Creates a new <code>TIntHashSet</code> instance with a prime
@@ -39,7 +38,6 @@ public class TIntHashSet extends TIntHash implements TIntSet {
     private TIntHashSet(int initialCapacity) {
         super(initialCapacity);
     }
-
 
     /**
      * Creates a new <code>TIntHash</code> instance with a prime
@@ -53,7 +51,6 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         super(initialCapacity, load_factor);
     }
 
-
     /**
      * Creates a new <code>TIntHashSet</code> instance with a prime
      * capacity equal to or greater than <tt>initial_capacity</tt> and
@@ -64,14 +61,13 @@ public class TIntHashSet extends TIntHash implements TIntSet {
      * @param no_entry_value   a <code>int</code> value that represents null.
      */
     public TIntHashSet(int initial_capacity, float load_factor,
-                       int no_entry_value) {
+            int no_entry_value) {
         super(initial_capacity, load_factor, no_entry_value);
-        //noinspection RedundantCast
+        // noinspection RedundantCast
         if (no_entry_value != (int) 0) {
             Arrays.fill(_set, no_entry_value);
         }
     }
-
 
     /**
      * Creates a new <code>TIntHashSet</code> instance that is a copy
@@ -84,7 +80,6 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         addAll(collection);
     }
 
-
     /**
      * Creates a new <code>TIntHashSet</code> instance that is a copy
      * of the existing set.
@@ -95,9 +90,10 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         this(Math.max(collection.size(), DEFAULT_CAPACITY));
         if (collection instanceof TIntHashSet) {
             TIntHashSet hashset = (TIntHashSet) collection;
+
             this._loadFactor = hashset._loadFactor;
             this.no_entry_value = hashset.no_entry_value;
-            //noinspection RedundantCast
+            // noinspection RedundantCast
             if (this.no_entry_value != (int) 0) {
                 Arrays.fill(_set, this.no_entry_value);
             }
@@ -105,7 +101,6 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         }
         addAll(collection);
     }
-
 
     /**
      * Creates a new <code>TIntHashSet</code> instance containing the
@@ -118,25 +113,22 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         addAll(array);
     }
 
-
     public TIntIterator iterator() {
         return new TIntHashIterator(this);
     }
-
 
     public int[] toArray() {
         int[] result = new int[size()];
         int[] set = _set;
         byte[] states = _states;
 
-        for (int i = states.length, j = 0; i-- > 0; ) {
+        for (int i = states.length, j = 0; i-- > 0;) {
             if (states[i] == FULL) {
                 result[j++] = set[i];
             }
         }
         return result;
     }
-
 
     /**
      * {@inheritDoc}
@@ -145,7 +137,7 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         int[] set = _set;
         byte[] states = _states;
 
-        for (int i = states.length, j = 0; i-- > 0; ) {
+        for (int i = states.length, j = 0; i-- > 0;) {
             if (states[i] == FULL) {
                 dest[j++] = set[i];
             }
@@ -157,7 +149,6 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return dest;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -165,27 +156,26 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         int index = insertKey(val);
 
         if (index < 0) {
-            return false;       // already present in set, nothing to add
+            return false; // already present in set, nothing to add
         }
 
         postInsertHook(consumeFreeSlot);
 
-        return true;            // yes, we added something
+        return true; // yes, we added something
     }
-
 
     /**
      * {@inheritDoc}
      */
     public boolean remove(int val) {
         int index = index(val);
+
         if (index >= 0) {
             removeAt(index);
             return true;
         }
         return false;
     }
-
 
     /**
      * {@inheritDoc}
@@ -194,6 +184,7 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         for (Object element : collection) {
             if (element instanceof Integer) {
                 int c = (Integer) element;
+
                 if (!contains(c)) {
                     return false;
                 }
@@ -205,14 +196,15 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return true;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean containsAll(TIntCollection collection) {
         TIntIterator iter = collection.iterator();
+
         while (iter.hasNext()) {
             int element = iter.next();
+
             if (!contains(element)) {
                 return false;
             }
@@ -220,12 +212,11 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return true;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean containsAll(int[] array) {
-        for (int i = array.length; i-- > 0; ) {
+        for (int i = array.length; i-- > 0;) {
             if (!contains(array[i])) {
                 return false;
             }
@@ -233,14 +224,15 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return true;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean addAll(Collection<? extends Integer> collection) {
         boolean changed = false;
+
         for (Integer element : collection) {
             int e = element;
+
             if (add(e)) {
                 changed = true;
             }
@@ -248,15 +240,16 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean addAll(TIntCollection collection) {
         boolean changed = false;
         TIntIterator iter = collection.iterator();
+
         while (iter.hasNext()) {
             int element = iter.next();
+
             if (add(element)) {
                 changed = true;
             }
@@ -264,13 +257,13 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean addAll(int[] array) {
         boolean changed = false;
-        for (int i = array.length; i-- > 0; ) {
+
+        for (int i = array.length; i-- > 0;) {
             if (add(array[i])) {
                 changed = true;
             }
@@ -278,14 +271,14 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings({"SuspiciousMethodCalls"})
+    @SuppressWarnings({ "SuspiciousMethodCalls"})
     public boolean retainAll(Collection<?> collection) {
         boolean modified = false;
         TIntIterator iter = iterator();
+
         while (iter.hasNext()) {
             if (!collection.contains(iter.next())) {
                 iter.remove();
@@ -294,7 +287,6 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         }
         return modified;
     }
-
 
     /**
      * {@inheritDoc}
@@ -305,6 +297,7 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         }
         boolean modified = false;
         TIntIterator iter = iterator();
+
         while (iter.hasNext()) {
             if (!collection.contains(iter.next())) {
                 iter.remove();
@@ -314,18 +307,18 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return modified;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean retainAll(int[] array) {
         boolean changed = false;
+
         Arrays.sort(array);
         int[] set = _set;
         byte[] states = _states;
 
         _autoCompactTemporaryDisable = true;
-        for (int i = set.length; i-- > 0; ) {
+        for (int i = set.length; i-- > 0;) {
             if (states[i] == FULL && (Arrays.binarySearch(array, set[i]) < 0)) {
                 removeAt(i);
                 changed = true;
@@ -336,15 +329,16 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean removeAll(Collection<?> collection) {
         boolean changed = false;
+
         for (Object element : collection) {
             if (element instanceof Integer) {
                 int c = (Integer) element;
+
                 if (remove(c)) {
                     changed = true;
                 }
@@ -353,15 +347,16 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean removeAll(TIntCollection collection) {
         boolean changed = false;
         TIntIterator iter = collection.iterator();
+
         while (iter.hasNext()) {
             int element = iter.next();
+
             if (remove(element)) {
                 changed = true;
             }
@@ -369,20 +364,19 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean removeAll(int[] array) {
         boolean changed = false;
-        for (int i = array.length; i-- > 0; ) {
+
+        for (int i = array.length; i-- > 0;) {
             if (remove(array[i])) {
                 changed = true;
             }
         }
         return changed;
     }
-
 
     /**
      * {@inheritDoc}
@@ -392,12 +386,11 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         int[] set = _set;
         byte[] states = _states;
 
-        for (int i = set.length; i-- > 0; ) {
+        for (int i = set.length; i-- > 0;) {
             set[i] = no_entry_value;
             states[i] = FREE;
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -411,14 +404,13 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         _set = new int[newCapacity];
         _states = new byte[newCapacity];
 
-        for (int i = oldCapacity; i-- > 0; ) {
+        for (int i = oldCapacity; i-- > 0;) {
             if (oldStates[i] == FULL) {
                 int o = oldSet[i];
                 int index = insertKey(o);
             }
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -428,10 +420,11 @@ public class TIntHashSet extends TIntHash implements TIntSet {
             return false;
         }
         TIntSet that = (TIntSet) other;
+
         if (that.size() != this.size()) {
             return false;
         }
-        for (int i = _states.length; i-- > 0; ) {
+        for (int i = _states.length; i-- > 0;) {
             if (_states[i] == FULL) {
                 if (!that.contains(_set[i])) {
                     return false;
@@ -441,13 +434,13 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return true;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public int hashCode() {
         int hashcode = 0;
-        for (int i = _states.length; i-- > 0; ) {
+
+        for (int i = _states.length; i-- > 0;) {
             if (_states[i] == FULL) {
                 hashcode += HashFunctions.hash(_set[i]);
             }
@@ -455,14 +448,14 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         return hashcode;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public String toString() {
         StringBuilder buffy = new StringBuilder(_size * 2 + 2);
+
         buffy.append("{");
-        for (int i = _states.length, j = 1; i-- > 0; ) {
+        for (int i = _states.length, j = 1; i-- > 0;) {
             if (_states[i] == FULL) {
                 buffy.append(_set[i]);
                 if (j++ < _size) {
@@ -473,7 +466,6 @@ public class TIntHashSet extends TIntHash implements TIntSet {
         buffy.append("}");
         return buffy.toString();
     }
-
 
     static class TIntHashIterator extends THashPrimitiveIterator implements TIntIterator {
 

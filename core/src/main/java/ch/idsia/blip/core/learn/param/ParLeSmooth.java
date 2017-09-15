@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.param;
 
+
 import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
@@ -14,24 +15,14 @@ import java.util.logging.Logger;
 import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSetReader;
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
+
 public class ParLeSmooth extends App {
 
     private static final Logger log = Logger.getLogger(
             ParLeSmooth.class.getName());
 
-    private double[] scale = new double[]{
-            0.001,
-            0.01,
-            0.05,
-            0.1,
-            0.5,
-            1,
-            2,
-            5,
-            10,
-            20,
-            50,
-            100
+    private double[] scale = new double[] {
+        0.001, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 50, 100
     };
 
     private double highestLL;
@@ -54,6 +45,7 @@ public class ParLeSmooth extends App {
         this.valid = valid;
 
         Thread t1 = new Thread(new SmoothExecutor(thread_pool_size, this));
+
         t1.start();
         try {
             t1.join();
@@ -84,6 +76,7 @@ public class ParLeSmooth extends App {
 
             crt_thread = 0;
             int v = 0;
+
             while (v < smooth.scale.length) {
 
                 try {
@@ -107,7 +100,7 @@ public class ParLeSmooth extends App {
                 }
             }
 
-            while (completed != smooth.scale.length)
+            while (completed != smooth.scale.length) {
 
                 // p(completed);
                 synchronized (lock) {
@@ -117,6 +110,7 @@ public class ParLeSmooth extends App {
                         RandomStuff.logExp(log, e);
                     }
                 }
+            }
 
         }
 
@@ -147,6 +141,7 @@ public class ParLeSmooth extends App {
             ParLeBayes p = new ParLeBayes(alpha);
             BayesianNetwork newBn = p.go(res, train);
             LLEval l = new LLEval();
+
             l.go(newBn, getDataSetReader(valid));
             if (verbose > 0) {
                 logf("Propose new ll: %.4f for alpha: %.4f \n", l.ll, alpha);

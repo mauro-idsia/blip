@@ -37,8 +37,9 @@ public class NamedDirected extends Directed {
 
     public void setNames(List<String> l) {
         names = new String[l.size()];
-        for (int i = 0; i < l.size(); i++)
+        for (int i = 0; i < l.size(); i++) {
             names[i] = l.get(i);
+        }
     }
 
     public void setNames(String[] l_nm_var) {

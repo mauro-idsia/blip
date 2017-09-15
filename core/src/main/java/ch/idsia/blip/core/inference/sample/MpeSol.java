@@ -18,7 +18,7 @@ public class MpeSol implements Comparable<MpeSol> {
     }
 
     public MpeSol(short n) {
-        this(new short[]{n});
+        this(new short[] { n});
     }
 
     @Override

@@ -13,7 +13,6 @@ public abstract class BaseFileLineReader implements Closeable {
     private static final Logger log = Logger.getLogger(
             BaseFileLineReader.class.getName());
 
-
     public String path;
 
     // Concluded sample reading
@@ -35,7 +34,6 @@ public abstract class BaseFileLineReader implements Closeable {
         this.path = s;
     }
 
-
     public abstract short[] next();
 
     public abstract boolean readMetaData() throws IOException;
@@ -52,18 +50,25 @@ public abstract class BaseFileLineReader implements Closeable {
 
     protected String readLn() throws IOException {
         String s = readL();
-        if (s == null) return null;
+
+        if (s == null) {
+            return null;
+        }
         while (s.equals("")) {
             s = readL();
-            if (s == null) return null;
+            if (s == null) {
+                return null;
+            }
         }
         return s;
     }
 
     private String readL() throws IOException {
         String s = rd_dat.readLine();
-        if (s == null)
+
+        if (s == null) {
             return null;
+        }
         s = s.trim();
         return s;
     }

@@ -37,7 +37,7 @@ public class LLEvalApi extends Api {
      * @param args parameters provided
      */
     public static void main(String[] args) {
-        defaultMain(args, new LLEvalApi(), log);
+        defaultMain(args, new LLEvalApi());
     }
 
     @Override
@@ -46,13 +46,16 @@ public class LLEvalApi extends Api {
         BayesianNetwork bn = getBayesianNetwork(ph);
         BaseFileLineReader dr = getDataSetReader(s_datafile);
         LLEval l = new LLEval();
+
         l.go(bn, dr);
 
         if (list) {
-            for (int i = 0; i < l.ls.size(); i++)
+            for (int i = 0; i < l.ls.size(); i++) {
                 p(l.ls.get(i));
-        } else
+            }
+        } else {
             p(l.ll);
+        }
     }
 
 }

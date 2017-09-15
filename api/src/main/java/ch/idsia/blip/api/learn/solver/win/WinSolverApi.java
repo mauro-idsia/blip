@@ -8,6 +8,7 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
+
 public class WinSolverApi extends ScoreSolverApi {
 
     @Option(name = "-win", usage = "Maximum window size")
@@ -17,18 +18,12 @@ public class WinSolverApi extends ScoreSolverApi {
             WinSolverApi.class.getName());
 
     public static void main(String[] args) {
-        defaultMain(args, new WinSolverApi(), log);
+        defaultMain(args, new WinSolverApi());
     }
 
     @Override
     protected ScoreSolver getSolver() {
         return new WinSolver();
-    }
-
-    @Override
-    public void exec() throws Exception {
-        ((WinSolver) solver).init(win);
-        super.exec();
     }
 
 }

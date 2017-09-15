@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.data.hash;
 
+
 import ch.idsia.blip.core.utils.data.common.TDoubleCollection;
 import ch.idsia.blip.core.utils.data.set.TIntSet;
 
@@ -10,6 +11,7 @@ import java.util.Map;
  * Interface for a primitive map of int keys and double values.
  */
 interface TIntDoubleMap {
+
     /**
      * Returns the value that will be returned from {@link #get} or {@link #put} if no
      * entry exists for a given key. The default value is generally zero, but can be
@@ -18,7 +20,6 @@ interface TIntDoubleMap {
      * @return the value that represents a null key in this collection.
      */
     int getNoEntryKey();
-
 
     /**
      * Returns the value that will be returned from {@link #get} or {@link #put} if no
@@ -29,7 +30,6 @@ interface TIntDoubleMap {
      */
     double getNoEntryValue();
 
-
     /**
      * Inserts a key/value pair into the map.
      *
@@ -39,7 +39,6 @@ interface TIntDoubleMap {
      * if none was found (see {@link #getNoEntryValue}).
      */
     double put(int key, double value);
-
 
     /**
      * Inserts a key/value pair into the map if the specified key is not already
@@ -52,7 +51,6 @@ interface TIntDoubleMap {
      */
     double putIfAbsent(int key, double value);
 
-
     /**
      * Put all the entries from the given Map into this map.
      *
@@ -60,14 +58,12 @@ interface TIntDoubleMap {
      */
     void putAll(Map<? extends Integer, ? extends Double> map);
 
-
     /**
      * Put all the entries from the given map into this map.
      *
      * @param map The map from which entries will be obtained to put into this map.
      */
     void putAll(TIntDoubleMap map);
-
 
     /**
      * Retrieves the value for <tt>key</tt>
@@ -78,12 +74,10 @@ interface TIntDoubleMap {
      */
     double get(int key);
 
-
     /**
      * Empties the map.
      */
     void clear();
-
 
     /**
      * Returns <tt>true</tt> if this map contains no key-value mappings.
@@ -91,7 +85,6 @@ interface TIntDoubleMap {
      * @return <tt>true</tt> if this map contains no key-value mappings
      */
     boolean isEmpty();
-
 
     /**
      * Deletes a key/value pair from the map.
@@ -102,14 +95,12 @@ interface TIntDoubleMap {
      */
     double remove(int key);
 
-
     /**
      * Returns an <tt>int</tt> value that is the number of elements in the map.
      *
      * @return an <tt>int</tt> value that is the number of elements in the map.
      */
     int size();
-
 
     /**
      * Returns the keys of the map as a <tt>TIntSet</tt>
@@ -118,14 +109,12 @@ interface TIntDoubleMap {
      */
     TIntSet keySet();
 
-
     /**
      * Returns the keys of the map as an array of <tt>int</tt> values.
      *
      * @return the keys of the map as an array of <tt>int</tt> values.
      */
     int[] keys();
-
 
     /**
      * Returns the keys of the map.
@@ -137,7 +126,6 @@ interface TIntDoubleMap {
      */
     int[] keys(int[] array);
 
-
     /**
      * Returns the values of the map as a <tt>TDoubleCollection</tt>
      *
@@ -145,14 +133,12 @@ interface TIntDoubleMap {
      */
     TDoubleCollection valueCollection();
 
-
     /**
      * Returns the values of the map as an array of <tt>#e#</tt> values.
      *
      * @return the values of the map as an array of <tt>#e#</tt> values.
      */
     double[] values();
-
 
     /**
      * Returns the values of the map using an existing array.
@@ -164,7 +150,6 @@ interface TIntDoubleMap {
      */
     double[] values(double[] array);
 
-
     /**
      * Checks for the presence of <tt>val</tt> in the values of the map.
      *
@@ -172,7 +157,6 @@ interface TIntDoubleMap {
      * @return a <code>boolean</code> value
      */
     boolean containsValue(double val);
-
 
     /**
      * Checks for the present of <tt>key</tt> in the keys of the map.
@@ -182,12 +166,10 @@ interface TIntDoubleMap {
      */
     boolean containsKey(int key);
 
-
     /**
      * @return a TIntDoubleIterator with access to this map's keys and values
      */
     TIntDoubleIterator iterator();
-
 
     /**
      * Increments the primitive value mapped to key by 1
@@ -197,7 +179,6 @@ interface TIntDoubleMap {
      */
     boolean increment(int key);
 
-
     /**
      * Adjusts the primitive value mapped to key.
      *
@@ -206,7 +187,6 @@ interface TIntDoubleMap {
      * @return true if a mapping was found and modified.
      */
     boolean adjustValue(int key, double amount);
-
 
     /**
      * Adjusts the primitive value mapped to the key if the key is present in the map.

@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.inference.sample;
 
+
 import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+
 
 public abstract class BaseSampler extends Base {
 
@@ -43,6 +45,7 @@ public abstract class BaseSampler extends Base {
         evid = new int[vars.length];
         for (int i = 0; i < vars.length; i++) {
             int k = vars[i];
+
             evid[i] = evidence.get(k);
             sample[k] = (short) evid[i];
         }
@@ -58,6 +61,7 @@ public abstract class BaseSampler extends Base {
     public double PR(int v, int e, double max_time) {
 
         TIntIntHashMap values = new TIntIntHashMap();
+
         values.put(v, e);
 
         return PR(values, max_time);
@@ -77,6 +81,7 @@ public abstract class BaseSampler extends Base {
 
     public void writeMARoutput(String h, double[][] p_x_w) throws IOException {
         Writer w = getWriter(h + ".MAR2");
+
         wf(w, "MAR\n");
         wf(w, "%d ", p_x_w.length);
         for (int i = 0; i < p_x_w.length; i++) {
@@ -92,16 +97,21 @@ public abstract class BaseSampler extends Base {
         BufferedReader r = getReader(s);
         String l;
         String cnt = "";
+
         while ((l = r.readLine()) != null) {
             cnt += l + " ";
         }
         String[] g = cnt.trim().split("\\s+");
         TIntIntHashMap evid = new TIntIntHashMap();
-        if (g.length <= 1)
+
+        if (g.length <= 1) {
             return evid;
+        }
         int n = Integer.valueOf(g[0]);
+
         for (int i = 0; i < n; i++) {
-            evid.put(Integer.valueOf(g[1 + 2 * i]), Integer.valueOf(g[2 + 2 * i]));
+            evid.put(Integer.valueOf(g[1 + 2 * i]),
+                    Integer.valueOf(g[2 + 2 * i]));
         }
         return evid;
     }

@@ -112,6 +112,7 @@ public class BayesianNetwork extends Base implements Serializable {
 
         double logLik = 0.0D;
         double l = 0.0D;
+
         for (int i = 0; i < this.n_var; i++) {
             double p = getPotential(i, sample);
 
@@ -138,7 +139,8 @@ public class BayesianNetwork extends Base implements Serializable {
 
         for (int i = 0; i < n_var; i++) {
             double p = getPotential(i, sample);
-            //  pf("%d | %.5f \n", i, p);
+
+            // pf("%d | %.5f \n", i, p);
             l = Math.log(p);
 
             logLik += l;
@@ -157,14 +159,17 @@ public class BayesianNetwork extends Base implements Serializable {
     public double getPotential(int n, short[] sample) {
 
         int ix = potentialIndex(n, sample);
+
         ix *= arity(n);
         ix += sample[n];
         double[] p = potential(n);
         double ps;
-        if (ix >= p.length)
+
+        if (ix >= p.length) {
             ps = 0;
-        else
+        } else {
             ps = p[ix];
+        }
 
         if (ps < eps) {
             ps = eps;
@@ -189,6 +194,7 @@ public class BayesianNetwork extends Base implements Serializable {
         // for (int n : order) {
         for (int i = ps.length - 1; i >= 0; i--) {
             int p = ps[i];
+
             ix += sample[p] * ix_ml; // Shift index
             ix_ml *= arity(p); // Compute cumulative shifter
             // log.severe("P:" + par + " - v: " + sample[par] + " - " + arity(par) + " - " + ix );
@@ -213,7 +219,7 @@ public class BayesianNetwork extends Base implements Serializable {
 
         // for (int i = order.length-1; i >= 0; i--) {
 
-        //     int n = order[i];
+        // int n = order[i];
         for (int n : order) {
             int ar = arity(n);
 
@@ -606,9 +612,12 @@ public class BayesianNetwork extends Base implements Serializable {
 
     public int[] childrens(int t) {
         TIntArrayList g = new TIntArrayList();
-        for (int i = 0; i < n_var; i++)
-            if (find(t, parents(i)))
+
+        for (int i = 0; i < n_var; i++) {
+            if (find(t, parents(i))) {
                 g.add(i);
+            }
+        }
         return g.toArray();
     }
 
@@ -629,10 +638,12 @@ public class BayesianNetwork extends Base implements Serializable {
             ;
             for (int v1 = 0; v1 < n_var; v1++) {
                 String v = name(v1);
-                if (highligth != null && highligth.contains(v))
+
+                if (highligth != null && highligth.contains(v)) {
                     wf(w, "\"%s\" [style=filled, fillcolor=red]  \n", v);
-                else
+                } else {
                     wf(w, "\"%s\" \n", v);
+                }
                 for (int v2 : parents(v1)) {
                     wf(w, "\"%s\" -> \"%s\" \n", name(v2), v);
                 }
@@ -645,8 +656,9 @@ public class BayesianNetwork extends Base implements Serializable {
 
     public void toGraph(PrintWriter w, int[] keys) {
         try {
-            if (keys != null)
+            if (keys != null) {
                 Arrays.sort(keys);
+            }
 
             wf(w, "digraph Base {\n");
             wf(w, "labelloc=\"t\"\n");
@@ -654,10 +666,12 @@ public class BayesianNetwork extends Base implements Serializable {
             ;
             for (int v1 = 0; v1 < n_var; v1++) {
                 String v = name(v1);
-                if (keys != null && find(v1, keys))
+
+                if (keys != null && find(v1, keys)) {
                     wf(w, "\"%s\" [style=filled, fillcolor=red]  \n", v);
-                else
+                } else {
                     wf(w, "\"%s\" \n", v);
+                }
                 for (int v2 : parents(v1)) {
                     wf(w, "\"%s\" -> \"%s\" \n", name(v2), v);
                 }
@@ -670,10 +684,12 @@ public class BayesianNetwork extends Base implements Serializable {
 
     public void writeGraph(String s, int[] keys) {
         try {
-            if (!new File(System.getProperty("user.home") + "/Tools/dot").exists())
+            if (!new File(System.getProperty("user.home") + "/Tools/dot").exists()) {
                 return;
+            }
 
             PrintWriter w = new PrintWriter(s + ".dot", "UTF-8");
+
             toGraph(w, keys);
             w.close();
 
@@ -691,7 +707,9 @@ public class BayesianNetwork extends Base implements Serializable {
     }
 
     private void dot(String h) throws IOException, InterruptedException {
-        Process proc = Runtime.getRuntime().exec(h, new String[0], new File(System.getProperty("user.home") + "/Tools"));
+        Process proc = Runtime.getRuntime().exec(h, new String[0],
+                new File(System.getProperty("user.home") + "/Tools"));
+
         exec(proc);
 
         // To close them
@@ -715,7 +733,7 @@ public class BayesianNetwork extends Base implements Serializable {
 
         // for (int n : order) {
         // for (int i = new_ord.length-1; i >= 0; i--) {
-        //   int p = new_ord[i];
+        // int p = new_ord[i];
         for (int p : new_ord) {
             ix += t.get(p) * ix_ml; // Shift index
             ix_ml *= arity(p); // Compute cumulative shifter

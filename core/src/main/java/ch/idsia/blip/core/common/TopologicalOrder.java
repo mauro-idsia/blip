@@ -1,8 +1,10 @@
 package ch.idsia.blip.core.common;
 
+
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+
 
 public class TopologicalOrder {
 

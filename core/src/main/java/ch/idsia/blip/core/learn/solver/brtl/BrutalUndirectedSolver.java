@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.brtl;
 
+
 import ch.idsia.blip.core.common.arcs.Und;
 import ch.idsia.blip.core.common.graph.UndSeparator;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.sameArray;
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+
 
 /**
  * BRTL approach, Greedy
@@ -56,8 +58,9 @@ public class BrutalUndirectedSolver extends BaseSolver {
     protected void prepare() {
         super.prepare();
 
-        if (verbose > 0)
+        if (verbose > 0) {
             logf("treewidth: %d \n", tw);
+        }
 
         this.open = new TreeSet<Solution2>();
     }
@@ -94,8 +97,9 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
     public void newUndirected(int new_sk, Und new_und) {
 
-        if (new_und == null)
+        if (new_und == null) {
             return;
+        }
 
         synchronized (lock) {
 
@@ -123,12 +127,12 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
             propose(new_sk, new_und);
 
-
-            if (verbose > 1)
+            if (verbose > 1) {
                 if ((System.currentTimeMillis() - counter) / 1000.0 > 1) {
                     logf("%.5f %.1f \n", best_sk, elapsed);
                     counter = System.currentTimeMillis();
                 }
+            }
 
             // logf("%d \n", numIter);
         }
@@ -142,15 +146,15 @@ public class BrutalUndirectedSolver extends BaseSolver {
     }
 
     /*
-    private void checkUnd(Undirected und, Undirected new_und) {
-        // Check that in new_und there are no arcs not present in und
-        for (int i1 = 0; i1 < und.n; i1++) {
-            for (int i2 = i1 + 1; i2 < und.n; i2++) {
-                if (new_und.check(i1, i2) && !und.check(i1, i2))
-                    p("WARNIIIIIINGGGG!");
-            }
-        }
-    } */
+     private void checkUnd(Undirected und, Undirected new_und) {
+     // Check that in new_und there are no arcs not present in und
+     for (int i1 = 0; i1 < und.n; i1++) {
+     for (int i2 = i1 + 1; i2 < und.n; i2++) {
+     if (new_und.check(i1, i2) && !und.check(i1, i2))
+     p("WARNIIIIIINGGGG!");
+     }
+     }
+     } */
 
     private void propose(int new_sk, Und new_str) {
 
@@ -167,8 +171,9 @@ public class BrutalUndirectedSolver extends BaseSolver {
         }
 
         for (Solution2 s : open) {
-            if (s.same(new_str))
+            if (s.same(new_str)) {
                 return;
+            }
         }
 
         // Drop worst element in queue, to make room!
@@ -176,10 +181,10 @@ public class BrutalUndirectedSolver extends BaseSolver {
             open.pollLast();
             worstSk = open.last().sk;
         } else // If we didn't drop any element, check if we have to update the current
-            // worst score!
-            if (new_sk < worstSk) {
-                worstSk = new_sk;
-            }
+        // worst score!
+        if (new_sk < worstSk) {
+            worstSk = new_sk;
+        }
 
         open.add(new Solution2(new_sk, new_str));
 
@@ -187,27 +192,32 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
     }
 
-
     public void writeUndirected(String s, int sk, Und str) {
 
         str.names = new String[str.n];
-        for (int i = 0; i < str.n; i++)
+        for (int i = 0; i < str.n; i++) {
             str.names[i] = f("MM%s", und.names[i]);
+        }
         List<Und> components = UndSeparator.go(str);
+
         if (components.size() > 1) {
             p("NON COMPLETE!");
             return;
         }
-        //String path = f("%s/comp-%d/%d/", s, components, sk);
+        // String path = f("%s/comp-%d/%d/", s, components, sk);
         String path = f("%s/%d/", s, sk);
         File dir = new File(path);
-        if (!dir.exists())
+
+        if (!dir.exists()) {
             dir.mkdirs();
+        }
 
         String uuid = UUID.randomUUID().toString();
+
         uuid = uuid.replace("-", "").substring(0, 12);
 
         String y = f("%s/%s", path, uuid);
+
         write(str, y);
         str.write(y);
 
@@ -216,11 +226,14 @@ public class BrutalUndirectedSolver extends BaseSolver {
     private void write(Und str, String y) {
         try {
             PrintWriter w = new PrintWriter(y, "UTF-8");
+
             // wf(w, "%d\n", str.n );
             for (int v1 = 0; v1 < str.n; v1++) {
-                for (int v2 : str.neigh[v1])
-                    if (v2 > v1)
+                for (int v2 : str.neigh[v1]) {
+                    if (v2 > v1) {
                         wf(w, "%s %s\n", und.names[v1], und.names[v2]);
+                    }
+                }
                 w.flush();
             }
             w.close();
@@ -248,12 +261,14 @@ public class BrutalUndirectedSolver extends BaseSolver {
 
         public boolean same(Und o_str) {
 
-            if (str.n != o_str.n)
+            if (str.n != o_str.n) {
                 return false;
+            }
 
             for (int i = 0; i < str.n; i++) {
-                if (!sameArray(str.neigh[i], o_str.neigh[i]))
+                if (!sameArray(str.neigh[i], o_str.neigh[i])) {
                     return false;
+                }
             }
 
             return true;

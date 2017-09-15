@@ -47,8 +47,10 @@ public class GobnilpReader {
 
     public BayesianNetwork getBn() {
         BayesianNetwork bn = new BayesianNetwork(n_var);
-        for (int i = 0; i < n_var; i++)
+
+        for (int i = 0; i < n_var; i++) {
             bn.setParents(i, new_str[i].parents);
+        }
 
         return bn;
     }
@@ -104,6 +106,7 @@ public class GobnilpReader {
 
     public static BayesianNetwork ex(String f) {
         GobnilpReader g = new GobnilpReader();
+
         g.go(f);
         return g.getBn();
     }

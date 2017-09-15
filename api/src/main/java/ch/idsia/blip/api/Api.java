@@ -1,5 +1,6 @@
 package ch.idsia.blip.api;
 
+
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+
 
 public abstract class Api {
 
@@ -26,14 +28,17 @@ public abstract class Api {
 
     public abstract void exec() throws Exception;
 
-    public static void defaultMain(String[] o_args, Api api, Logger log) {
+    public static void defaultMain(String[] o_args, Api api) {
 
         String[] args = new String[o_args.length - 1];
+
         System.arraycopy(o_args, 1, args, 0, o_args.length - 1);
 
         CmdLineParser parser = new CmdLineParser(api);
 
-        if (args.length == 0 || (args.length == 1 && "help".equals(args[0].trim().toLowerCase()))) {
+        if (args.length == 0
+                || (args.length == 1
+                        && "help".equals(args[0].trim().toLowerCase()))) {
             p("Task command line options: ");
             parser.printUsage(System.out);
             return;
@@ -53,14 +58,27 @@ public abstract class Api {
         }
 
         try {
-            api.exec();
-        } catch (IncorrectCallException exp) {
-            p("Execution failed. Reason: ");
-            p(exp.getMessage());
-        } catch (Throwable exp) {
-            log.severe("Error in: " + api.getClass().getName());
-            logExp(log, exp);
+            api.check();
+        } catch (IncorrectCallException e) {
+            p("");
+            p("WARNING! Can't process, error in input parameters:");
+            p("");
+            p("### " + e.getMessage());
+            p("");
+            p("Will exit now.");
+            return;
         }
+
+        try {
+            api.exec();
+        } catch (Exception exp) {
+            p("Error during execution, in class: " + api.getClass().getName());
+            p(exp.getMessage());
+        }
+    }
+
+    protected void check() throws IncorrectCallException {
+        return;
     }
 
     protected HashMap<String, String> options() {
@@ -79,6 +97,7 @@ public abstract class Api {
                 try {
 
                     Option o = f.getAnnotation(Option.class);
+
                     if (o != null) {
                         options.put(f.getName(), String.valueOf(f.get(this)));
                     }
@@ -90,9 +109,7 @@ public abstract class Api {
             }
         }
 
-
         return options;
     }
-
 
 }

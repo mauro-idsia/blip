@@ -19,11 +19,13 @@
  */
 package jdistlib;
 
+
 import jdistlib.generic.GenericDistribution;
 import jdistlib.rng.RandomEngine;
 
 import static java.lang.Math.sqrt;
 import static jdistlib.math.MathFunctions.isInfinite;
+
 
 public class Chi extends GenericDistribution {
     private static double density(double x, double df, boolean give_log) {
@@ -39,14 +41,18 @@ public class Chi extends GenericDistribution {
     }
 
     private static double random(double df, RandomEngine random) {
-        if (isInfinite(df) || df < 0.0) return Double.NaN;
+        if (isInfinite(df) || df < 0.0) {
+            return Double.NaN;
+        }
         return sqrt(Gamma.random(df / 2.0, 2.0, random));
     }
 
     public static double[] random(int n, double df, RandomEngine random) {
         double[] rand = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             rand[i] = random(df, random);
+        }
         return rand;
     }
 

@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.src;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.io.GobnilpReader;
 import ch.idsia.blip.core.learn.solver.ClOptSolver;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.findAll;
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+
 
 public class ClOptSearcher extends ObsSearcher {
 
@@ -67,9 +69,12 @@ public class ClOptSearcher extends ObsSearcher {
 
         for (int i = 0; i < n_var; i++) {
             TIntHashSet l = new TIntHashSet();
-            for (ParentSet ps : scores[i])
-                for (int p : ps.parents)
+
+            for (ParentSet ps : scores[i]) {
+                for (int p : ps.parents) {
                     l.add(p);
+                }
+            }
 
             availParents[i] = l.toArray();
             Arrays.sort(availParents[i]);
@@ -80,6 +85,7 @@ public class ClOptSearcher extends ObsSearcher {
 
         for (int i = 0; i < n_var; i++) {
             int j = m_scores[i].length - 1;
+
             minSk[i] = m_scores[i][j].sk;
             maxSk[i] = m_scores[i][0].sk;
         }
@@ -102,13 +108,15 @@ public class ClOptSearcher extends ObsSearcher {
         ParentSet[] best_str = null;
         int[] best_vars = new int[n_var];
         // Gain from the best switch
-        double best_sk = last_sk;
+        double best_sk = sk;
 
-        ParentSet[] new_str = cloneStr(last_str);
+        ParentSet[] new_str = cloneStr(str);
 
         int[] new_vars = new int[n_var];
-        for (int i = 0; i < n_var; i++)
+
+        for (int i = 0; i < n_var; i++) {
             new_vars[i] = vars[i];
+        }
 
         acceptable = new BitSet(n_var);
         for (int i = 0; i < ix; i++) {
@@ -119,6 +127,7 @@ public class ClOptSearcher extends ObsSearcher {
             // Switch in the order ix2 and ix
             varSwitch(ix2, new_str, new_vars);
             double sk = skore(new_str);
+
             if (sk > best_sk) {
                 best_sk = sk;
                 best_str = cloneStr(new_str);
@@ -130,12 +139,13 @@ public class ClOptSearcher extends ObsSearcher {
         }
 
         // If no best gain, return false
-        if (best_str == null)
+        if (best_str == null) {
             return false;
+        }
 
         // Save best
-        last_str = best_str;
-        last_sk = best_sk;
+        str = best_str;
+        sk = best_sk;
         cloneArray(best_vars, vars);
         return true;
 
@@ -143,8 +153,8 @@ public class ClOptSearcher extends ObsSearcher {
 
     private void checkCorrect(ParentSet[] new_str, int[] new_vars) {
 
-
         BayesianNetwork bn = new BayesianNetwork(new_str);
+
         try {
             bn.checkAcyclic();
         } catch (CyclicGraphException e) {
@@ -155,11 +165,12 @@ public class ClOptSearcher extends ObsSearcher {
 
     private ParentSet[] cloneStr(ParentSet[] s) {
         ParentSet[] new_s = new ParentSet[s.length];
-        for (int i = 0; i < s.length; i++)
+
+        for (int i = 0; i < s.length; i++) {
             new_s[i] = s[i];
+        }
         return new_s;
     }
-
 
     private void varSwitch(int ix, ParentSet[] str, int[] vars) {
         int b = vars[ix];
@@ -176,11 +187,11 @@ public class ClOptSearcher extends ObsSearcher {
 
         // pf("New parent set for %d: %s \n", b, str[b]);
 
-        //  pf("Old parent set for %d: %s \n", a, str[a]);
+        // pf("Old parent set for %d: %s \n", a, str[a]);
 
         // Find new best parent set for a, now that b is available
         acceptable.set(b);
-        //if (find(b, availParents[a]))
+        // if (find(b, availParents[a]))
         str[a] = bests(a);
 
         // pf("New parent set for %d: %s \n", a, str[a]);
@@ -217,27 +228,28 @@ public class ClOptSearcher extends ObsSearcher {
 
     }
 
-
     @Override
     public ParentSet[] search() {
 
         vars = smp.sample();
 
-        if (solver.verbose > 2)
+        if (solver.verbose > 2) {
             solver.log("going! \n");
+        }
 
         // Find initial structure!
         this.searchF(vars);
 
-        if (solver.verbose > 2)
-            solver.logf("Initial: %.5f (check: %.5f) \n",
-                    last_sk, checkSk());
+        if (solver.verbose > 2) {
+            solver.logf("Initial: %.5f (check: %.5f) \n", sk, checkSk());
+        }
 
-        vars = new BayesianNetwork(last_str).getTopologicalOrder();
+        vars = new BayesianNetwork(str).getTopologicalOrder();
 
         solver.checkTime();
 
         FastList<Integer> todo = new FastList<Integer>(solver.rand);
+
         initT(todo);
 
         while (solver.still_time) {
@@ -246,10 +258,12 @@ public class ClOptSearcher extends ObsSearcher {
             int ix = todo.rand();
 
             if (greedy(vars, ix)) {
-                if (todo.size() != n_var - 1)
+                if (todo.size() != n_var - 1) {
                     initT(todo);
-            } else
+                }
+            } else {
                 todo.delete(ix);
+            }
 
             if (todo.size() == 0) {
                 break;
@@ -258,13 +272,14 @@ public class ClOptSearcher extends ObsSearcher {
             solver.checkTime();
         }
 
-        checkCorrect(last_str, vars);
+        checkCorrect(str, vars);
 
+        if (solver.verbose > 2) {
+            solver.logf("After greedy! %.5f - %.3f \n", solver.elapsed,
+                    skore(str));
+        }
 
-        if (solver.verbose > 2)
-            solver.logf("After greedy! %.5f - %.3f \n", solver.elapsed, skore(last_str));
-
-        return last_str;
+        return str;
     }
 
     private void initT(FastList todo) {
@@ -278,9 +293,9 @@ public class ClOptSearcher extends ObsSearcher {
 
         // Get the first w variables for the Gobnilp optimization
         int[] selec = new int[w];
+
         System.arraycopy(vars, 0, selec, 0, w);
         Arrays.sort(selec);
-
 
         new File(ph_work).mkdir();
         String jkl = f("%s/%d-%d.jkl", ph_work, thread, iter);
@@ -317,10 +332,11 @@ public class ClOptSearcher extends ObsSearcher {
 
             // Get the best one yet
             Result res = cand.pollFirst();
+
             // update the lists
             done(res.v);
             // update structure
-            last_str[res.v] = res.p;
+            str[res.v] = res.p;
         }
 
         iter++;
@@ -342,24 +358,28 @@ public class ClOptSearcher extends ObsSearcher {
 
         // Update best handlers
         TIntIterator it = todo.iterator();
+
         while (it.hasNext()) {
             int v = it.next();
 
-            if (newAvailable != -1 && !find(newAvailable, availParents[v]))
+            if (newAvailable != -1 && !find(newAvailable, availParents[v])) {
                 continue;
+            }
 
             ParentSet bestPset = bests(v);
-            if (bestPset == bests[v].p)
+
+            if (bestPset == bests[v].p) {
                 continue;
+            }
 
             cand.remove(bests[v]);
             double sk = (bestPset.sk - maxSk[v]) / (minSk[v] - maxSk[v]);
             Result c = new Result(sk, v, bestPset);
+
             cand.add(c);
             bests[v] = c;
         }
     }
-
 
     private void initBests(int[] vars) {
         // Init list of variables to evaluate
@@ -369,8 +389,10 @@ public class ClOptSearcher extends ObsSearcher {
 
         for (int i = w; i < n_var; i++) {
             int v = vars[i];
+
             todo.add(v);
             Result r = new Result(1, v, m_scores[v][m_scores[v].length - 1]);
+
             cand.add(r);
             bests[v] = r;
         }
@@ -379,9 +401,10 @@ public class ClOptSearcher extends ObsSearcher {
 
     private void readGobnilp(int[] selec, String out) {
         GobnilpReader g = new GobnilpReader();
+
         g.go(out);
 
-        last_str = new ParentSet[n_var];
+        str = new ParentSet[n_var];
         acceptable = new BitSet(n_var);
 
         for (int i = 0; i < w; i++) {
@@ -389,24 +412,26 @@ public class ClOptSearcher extends ObsSearcher {
 
             ParentSet oldP = g.new_str[i];
             int[] newAr = new int[oldP.parents.length];
+
             for (int j = 0; j < newAr.length; j++) {
                 newAr[j] = selec[oldP.parents[j]];
             }
 
-            last_str[v] = new ParentSet(oldP.sk, newAr);
+            str[v] = new ParentSet(oldP.sk, newAr);
             acceptable.set(v);
         }
     }
 
     private void solveGobnilp(String jkl, String out, String err) throws IOException, InterruptedException {
-        ProcessBuilder builder = new ProcessBuilder(ph_gobnilp,
-                "-f=jkl", jkl);
+        ProcessBuilder builder = new ProcessBuilder(ph_gobnilp, "-f=jkl", jkl);
 
         Process p = builder.start();
 
         StreamGobbler e = new StreamGobbler(p.getErrorStream(), err);
+
         e.start();
         StreamGobbler o = new StreamGobbler(p.getInputStream(), out);
+
         o.start();
 
         p.waitFor();
@@ -420,13 +445,16 @@ public class ClOptSearcher extends ObsSearcher {
         for (int i = 0; i < w; i++) {
 
             ArrayList<ParentSet> newPs = new ArrayList<ParentSet>();
+
             for (ParentSet p : m_scores[selec[i]]) {
                 // Check if the parent set contains only value in selec
-                if (!findAll(p.parents, selec))
+                if (!findAll(p.parents, selec)) {
                     continue;
+                }
 
                 // put the parents with the new index
                 int[] newAr = new int[p.parents.length];
+
                 for (int j = 0; j < newAr.length; j++) {
                     newAr[j] = pos(p.parents[j], selec);
                 }
@@ -460,19 +488,25 @@ public class ClOptSearcher extends ObsSearcher {
 
         @Override
         public int compareTo(Result o) {
-            if (sk < o.sk)
+            if (sk < o.sk) {
                 return -1;
-            if (sk > o.sk)
+            }
+            if (sk > o.sk) {
                 return 1;
+            }
 
-            if (v < o.v)
+            if (v < o.v) {
                 return 1;
-            if (v > o.v)
+            }
+            if (v > o.v) {
                 return -1;
+            }
 
-            if (equals(o))
+            if (equals(o)) {
                 return 0;
-            else return -1;
+            } else {
+                return -1;
+            }
         }
     }
 }

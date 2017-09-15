@@ -3,11 +3,16 @@ package ch.idsia.blip.api.learn.solver;
 
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
+import ch.idsia.blip.core.utils.other.IncorrectCallException;
 import ch.idsia.blip.core.utils.other.ParentSet;
 import ch.idsia.blip.core.utils.other.RandomStuff;
 import org.kohsuke.args4j.Option;
 
+import java.io.File;
 import java.util.logging.Logger;
+
+import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
 
 
 public abstract class ScoreSolverApi extends Api {
@@ -39,19 +44,35 @@ public abstract class ScoreSolverApi extends Api {
     protected String logPath;
 
     public ScoreSolverApi() {
-        this.solver = getSolver();
+        solver = getSolver();
     }
 
     protected abstract ScoreSolver getSolver();
 
+    @Override
     public void exec() throws Exception {
-        ParentSet[][] sc = RandomStuff.getScoreReader(this.ph_scores, this.verbose);
-        this.solver.init(options());
-        this.solver.init(sc);
+        
+        ParentSet[][] sc = RandomStuff.getScoreReader(ph_scores,
+                verbose);
+
+        solver.init(options());
+        solver.init(sc);
         if (log != null) {
-            this.solver.logWr = RandomStuff.getWriter(this.logPath);
+            solver.logWr = getWriter(logPath);
         }
-        this.solver.go(this.ph_result);
+        solver.go(ph_result);
+    }
+
+    @Override
+    protected void check() throws IncorrectCallException {
+        if ( ! new File(ph_scores).exists()) {
+            throw new IncorrectCallException("Score input file ("+ph_scores +") does not exists.");
+        }
+
+        if ( getWriter(ph_result, true) == null) {
+            throw new IncorrectCallException("Can't write to result file ("+ph_result +").");
+        }
+
     }
 }
 

@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common;
 
+
 public class DataSet {
 
     // Number of variables
@@ -31,6 +32,5 @@ public class DataSet {
         this.l_nm_states = dat.l_nm_states;
     }
 
-    public DataSet() {
-    }
+    public DataSet() {}
 }

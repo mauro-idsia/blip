@@ -1,8 +1,10 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 
 import java.util.Random;
+
 
 public class SimpleSampler implements Sampler {
 
@@ -18,7 +20,7 @@ public class SimpleSampler implements Sampler {
 
         synchronized (lock) {
             for (int j = 0; j < Math.max(3, nv.length / 10); j++) {
-                for (int i = nv.length; i-- > 1; ) {
+                for (int i = nv.length; i-- > 1;) {
                     ArrayUtils.swap(nv, i, r.nextInt(i));
                 }
             }
@@ -32,12 +34,11 @@ public class SimpleSampler implements Sampler {
         this.r = r;
 
         nv = new int[n];
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             nv[i] = i;
+        }
     }
 
     @Override
-    public void init() {
-
-    }
+    public void init() {}
 }

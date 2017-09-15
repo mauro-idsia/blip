@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.other;
 
+
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 
@@ -9,6 +10,7 @@ import java.util.logging.Logger;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.intersect;
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+
 
 public class Query {
 
@@ -26,20 +28,23 @@ public class Query {
 
     private double go(DataSet dat, TIntIntHashMap q) throws IOException {
         int[] rows = null;
+
         for (int var : q.keys()) {
             int val = q.get(var);
             int[] aux = dat.row_values[var][val];
 
-            if (rows == null)
+            if (rows == null) {
                 rows = aux;
-            else
+            } else {
                 rows = intersect(rows, aux);
+            }
 
             pf("%d %d %d \n", var, val, rows.length);
         }
 
-        if (rows == null || rows.length == 0)
+        if (rows == null || rows.length == 0) {
             return 0;
+        }
 
         return Math.log10(rows.length * 1.0) - Math.log10(dat.n_datapoints);
     }

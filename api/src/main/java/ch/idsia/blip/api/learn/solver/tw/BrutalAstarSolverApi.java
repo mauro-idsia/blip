@@ -13,7 +13,7 @@ public class BrutalAstarSolverApi extends TwSolverApi {
             BrutalAstarSolverApi.class.getName());
 
     public static void main(String[] args) {
-        defaultMain(args, new BrutalAstarSolverApi(), log);
+        defaultMain(args, new BrutalAstarSolverApi());
     }
 
     @Override

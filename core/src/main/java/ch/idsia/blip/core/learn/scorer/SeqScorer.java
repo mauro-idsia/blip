@@ -66,7 +66,7 @@ public class SeqScorer extends BaseScorer {
             if (verbose > 2) {
                 log.info(
                         String.format("Starting with: %d, max time: %.2f", n,
-                                max_exec_time));
+                        max_exec_time));
             }
 
             prepare();
@@ -110,38 +110,37 @@ public class SeqScorer extends BaseScorer {
 
             }
 
-            if (verbose > 2)
-                logf("ending with: %d, elapsed: %.2f, num evaluated %d",
-                        n, m_elapsed, score.numEvaluated);
+            if (verbose > 2) {
+                logf("ending with: %d, elapsed: %.2f, num evaluated %d", n,
+                        m_elapsed, score.numEvaluated);
+            }
 
             conclude();
 
         }
 
-        protected void checkBound(double sk, int[] pset) {
-        }
+        protected void checkBound(double sk, int[] pset) {}
 
         /*
-        protected void checkBound(double sk, int[][] p_values, int[] s) {
+         protected void checkBound(double sk, int[][] p_values, int[] s) {
 
-            // de Campos and Ji style
-            int k_i = 0;
+         // de Campos and Ji style
+         int k_i = 0;
 
-            for (int[] p_v : p_values) {
-                if (p_v.length > 0) {
-                    k_i++;
-                }
-            }
+         for (int[] p_v : p_values) {
+         if (p_v.length > 0) {
+         k_i++;
+         }
+         }
 
-            double bound = (-Math.log(dat.l_n_arity[n]) * k_i);
+         double bound = (-Math.log(dat.l_n_arity[n]) * k_i);
 
-            if (sk > bound) {
-                pf("%s Ji and Campos strikes again! \n", Arrays.toString(s));
-            }
-        }
-        */
+         if (sk > bound) {
+         pf("%s Ji and Campos strikes again! \n", Arrays.toString(s));
+         }
+         }
+         */
     }
-
 
 }
 

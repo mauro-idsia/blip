@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+
 import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.common.arcs.Directed;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
@@ -7,6 +8,7 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import java.util.Random;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.expandArray;
+
 
 /**
  * Samples topological orders - with constraints (given by skeleton)
@@ -28,13 +30,18 @@ public class SkelSampler extends Base implements Sampler {
     public static int[][] getParents(Directed skel) {
         int n = skel.n;
         int[][] parents = new int[n][];
-        for (int i = 0; i < n; i++)
-            parents[i] = new int[0];
 
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                if (i != j && !skel.check(i, j) && skel.check(j, i))
+        for (int i = 0; i < n; i++) {
+            parents[i] = new int[0];
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j && !skel.check(i, j) && skel.check(j, i)) {
                     parents[i] = expandArray(parents[i], j);
+                }
+            }
+        }
 
         return parents;
     }
@@ -49,15 +56,16 @@ public class SkelSampler extends Base implements Sampler {
 
         this.rand = rand;
 
-
         this.childrens = new int[n][];
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             childrens[i] = new int[0];
+        }
 
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             for (int p : parents[i]) {
                 childrens[p] = expandArray(childrens[p], i);
             }
+        }
     }
 
     @Override
@@ -67,19 +75,25 @@ public class SkelSampler extends Base implements Sampler {
         TIntArrayList todo = new TIntArrayList();
         TIntArrayList done = new TIntArrayList();
 
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             todo.add(i);
+        }
 
         state = new int[n];
         // choose a variable for position thread
         for (int i = 0; i < n; i++) {
             TIntArrayList avail = new TIntArrayList();
+
             for (int j = 0; j < todo.size(); j++) {
                 int a = todo.get(j);
+
                 // if every parent has already been inserted
-                if (okForNow(a, done)) avail.add(a);
+                if (okForNow(a, done)) {
+                    avail.add(a);
+                }
             }
             int c = avail.get(rand.nextInt(avail.size()));
+
             state[c] = i;
             todo.remove(c);
             done.add(c);
@@ -89,9 +103,11 @@ public class SkelSampler extends Base implements Sampler {
     }
 
     private boolean okForNow(int j, TIntArrayList done) {
-        for (int p : parents[j])
-            if (!done.contains(p))
+        for (int p : parents[j]) {
+            if (!done.contains(p)) {
                 return false;
+            }
+        }
         return true;
     }
 
@@ -102,8 +118,10 @@ public class SkelSampler extends Base implements Sampler {
         }
 
         int[] ord = new int[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             ord[state[i]] = i;
+        }
 
         return ord;
     }
@@ -113,19 +131,25 @@ public class SkelSampler extends Base implements Sampler {
         // Choose random pair
         int i = rand.nextInt(n);
         int j = i;
-        while (i == j)
+
+        while (i == j) {
             j = rand.nextInt(n);
+        }
 
-        if (find(j, parents[i]) || find(i, parents[j]))
+        if (find(j, parents[i]) || find(i, parents[j])) {
             return;
+        }
 
-        if (!swapOk(i, j))
+        if (!swapOk(i, j)) {
             return;
+        }
 
-        if (!swapOk(j, i))
+        if (!swapOk(j, i)) {
             return;
+        }
 
         int t = state[i];
+
         state[i] = state[j];
         state[j] = t;
 
@@ -137,13 +161,15 @@ public class SkelSampler extends Base implements Sampler {
     private boolean swapOk(int i, int j) {
 
         for (int p : parents[i]) {
-            if (state[j] < state[p])
+            if (state[j] < state[p]) {
                 return false;
+            }
         }
 
         for (int c : childrens[i]) {
-            if (state[j] > state[c])
+            if (state[j] > state[c]) {
                 return false;
+            }
         }
 
         return true;

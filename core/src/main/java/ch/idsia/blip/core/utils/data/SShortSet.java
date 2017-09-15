@@ -20,7 +20,7 @@ public class SShortSet implements Comparable<SShortSet> {
     }
 
     public SShortSet(short n) {
-        this(new short[]{n});
+        this(new short[] { n});
     }
 
     @Override

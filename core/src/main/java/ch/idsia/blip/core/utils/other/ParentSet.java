@@ -10,7 +10,7 @@ import java.util.BitSet;
  */
 public class ParentSet implements Comparable<ParentSet> {
 
-    //Indexes of parent variables
+    // Indexes of parent variables
     public final int[] parents;
 
     // Score of the parent set.
@@ -69,13 +69,15 @@ public class ParentSet implements Comparable<ParentSet> {
     public int compareTo(ParentSet other) {
         if (sk < other.sk) {
             return 1;
-        } else if (other.sk < sk)
+        } else if (other.sk < sk) {
             return -1;
+        }
 
         if (parents.length < other.parents.length) {
             return 1;
-        } else if (other.parents.length < parents.length)
+        } else if (other.parents.length < parents.length) {
             return -1;
+        }
 
         return 0;
     }

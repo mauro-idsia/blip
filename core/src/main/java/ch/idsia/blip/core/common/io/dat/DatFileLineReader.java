@@ -32,11 +32,13 @@ public class DatFileLineReader extends BaseFileLineReader {
         try {
 
             int i = 0; // variable index
+
             for (String aux : getSplit(nextLine)) {
-                if ("?".equals(aux))
+                if ("?".equals(aux)) {
                     samp[i] = -1;
-                else
+                } else {
                     samp[i] = Short.valueOf(aux);
+                }
                 i++;
             }
 
@@ -54,7 +56,6 @@ public class DatFileLineReader extends BaseFileLineReader {
                 }
             }
 
-
         } catch (IOException e) {
             RandomStuff.logExp(log, e);
         }
@@ -62,10 +63,10 @@ public class DatFileLineReader extends BaseFileLineReader {
         return samp;
     }
 
-
     public boolean readMetaData() {
         try {
             String ln = rd_dat.readLine();
+
             l_s_names = getSplit(ln);
             n_var = l_s_names.length;
 

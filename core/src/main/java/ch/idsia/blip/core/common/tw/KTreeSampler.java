@@ -42,7 +42,8 @@ public class KTreeSampler {
 
         while (K == null) {
             try {
-                KTree K1 = KTree.decode(Dandelion.sample(n_var, maxTreeWidth, base));
+                KTree K1 = KTree.decode(
+                        Dandelion.sample(n_var, maxTreeWidth, base));
 
                 is = K1.informativeScore(mi, m_scores);
 

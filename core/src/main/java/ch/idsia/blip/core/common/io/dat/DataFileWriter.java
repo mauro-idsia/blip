@@ -1,9 +1,11 @@
 package ch.idsia.blip.core.common.io.dat;
 
+
 import ch.idsia.blip.core.common.DataSet;
 
 import java.io.IOException;
 import java.io.Writer;
+
 
 public class DataFileWriter extends DatFileWriter {
 
@@ -15,8 +17,6 @@ public class DataFileWriter extends DatFileWriter {
         new DataFileWriter().go(dat, s);
     }
 
-
     @Override
-    protected void writeMetaData(DataSet dat, Writer wr) throws IOException {
-    }
+    protected void writeMetaData(DataSet dat, Writer wr) throws IOException {}
 }

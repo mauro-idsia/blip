@@ -176,7 +176,7 @@ public class Directed extends Arcs {
             for (int v2 = 0; v2 < n; v2++) {
                 if (check(v1, v2)) {
                     fm.format(" \"%s\" -> \"%s\" \n", name(v1), name(v2));
-                    //  fm.format(" %s -> %s \n", name(v1), name(v2));
+                    // fm.format(" %s -> %s \n", name(v1), name(v2));
                 }
             }
         }

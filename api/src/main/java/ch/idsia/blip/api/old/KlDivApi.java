@@ -1,5 +1,6 @@
 package ch.idsia.blip.api.old;
 
+
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.io.bn.BnNetReader;
@@ -30,18 +31,19 @@ public class KlDivApi extends Api {
     }
 
     public static void main(String[] args) throws IncorrectCallException {
-        defaultMain(args, new KlDivApi(), log);
+        defaultMain(args, new KlDivApi());
     }
-/*
 
-    @Override
-    public void defineOpts(Options o) {
-         @Option(name="t", ph_P, null, true, "Path to true network (in .net format)");
-         @Option(name="q", ph_Q, null, true, "Path to learned network (in .net format)");
-         @Option(name="v", klDiv.verbose, false, false, "verbose");
-         @Option(name="l", notlogComp, false, false, "disable log computation");
-    }
-*/
+    /*
+
+     @Override
+     public void defineOpts(Options o) {
+     @Option(name="t", ph_P, null, true, "Path to true network (in .net format)");
+     @Option(name="q", ph_Q, null, true, "Path to learned network (in .net format)");
+     @Option(name="v", klDiv.verbose, false, false, "verbose");
+     @Option(name="l", notlogComp, false, false, "disable log computation");
+     }
+     */
 
     @Override
     public void exec() throws Exception {
@@ -63,7 +65,6 @@ public class KlDivApi extends Api {
         BufferedReader rd_Q = null;
 
         BayesianFactor.logComp = !notlogComp;
-
 
         rd_P = new BufferedReader(new FileReader(f_P));
         BayesianNetwork bn_P = BnNetReader.ex(rd_P);

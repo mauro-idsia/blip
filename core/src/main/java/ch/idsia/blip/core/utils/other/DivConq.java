@@ -50,8 +50,7 @@ public class DivConq {
         this.k = k;
     }
 
-    public DivConq() {
-    }
+    public DivConq() {}
 
     // Find the tw-medoids from the variables.
     public List<TIntArrayList> findKMedoids(DataSet dat) throws IOException {

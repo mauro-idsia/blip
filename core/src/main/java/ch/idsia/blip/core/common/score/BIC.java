@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.score;
 
+
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 
@@ -87,7 +88,8 @@ public class BIC extends Score {
             int valcount;
 
             for (int v = 0; v < arity; v++) {
-                valcount = ArrayUtils.intersectN(dat.row_values[n][v], p_values[p_v]);
+                valcount = ArrayUtils.intersectN(dat.row_values[n][v],
+                        p_values[p_v]);
 
                 if (valcount == 0) {
                     continue;
@@ -97,7 +99,7 @@ public class BIC extends Score {
 
                 skore += valcount
                         * (log(valcount + alpha_ij)
-                        - log(p_values[p_v].length + alpha_i));
+                                - log(p_values[p_v].length + alpha_i));
 
                 // System.out.printf("%d- %.2f, ", valcount[v], p);
 
@@ -113,6 +115,7 @@ public class BIC extends Score {
 
     double getPenalization(int arity, int p_arity) {
         double pen = log(dat.n_datapoints);
+
         pen *= (arity - 1);
         pen *= p_arity / 2;
         return pen;
@@ -120,6 +123,7 @@ public class BIC extends Score {
 
     public double getPenalization(int n, int[] pset) {
         int p_arity = 1;
+
         for (int p : pset) {
             p_arity *= dat.l_n_arity[p];
         }
@@ -147,7 +151,7 @@ public class BIC extends Score {
 
     @Override
     public double computePrediction(int n, int[] p1, int p2, Map<int[], Double> scores) {
-        return scores.get(p1) + scores.get(new int[]{p2}) + inter(n, p1, p2);
+        return scores.get(p1) + scores.get(new int[] { p2}) + inter(n, p1, p2);
     }
 
 }

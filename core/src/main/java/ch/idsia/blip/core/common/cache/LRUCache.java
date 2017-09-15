@@ -1,6 +1,8 @@
 package ch.idsia.blip.core.common.cache;
 
+
 import java.util.Hashtable;
+
 
 /**
  * This class implements a Generic LRU Cache
@@ -16,10 +18,8 @@ public class LRUCache<T1, T2> {
         T2 value;
         T1 key;
 
-        CacheNode() {
-        }
+        CacheNode() {}
     }
-
 
     public LRUCache(int i) {
         currentSize = 0;
@@ -29,6 +29,7 @@ public class LRUCache<T1, T2> {
 
     public T2 get(T1 key) {
         CacheNode node = nodes.get(key);
+
         if (node != null) {
             moveToHead(node);
             return node.value;
@@ -39,10 +40,12 @@ public class LRUCache<T1, T2> {
 
     public void put(T1 key, T2 value) {
         CacheNode node = nodes.get(key);
+
         if (node == null) {
             if (currentSize >= cacheSize) {
-                if (last != null)
+                if (last != null) {
                     nodes.remove(last.key);
+                }
                 removeLast();
             } else {
                 currentSize++;
@@ -57,6 +60,7 @@ public class LRUCache<T1, T2> {
 
     public T2 remove(T1 key) {
         CacheNode node = nodes.get(key);
+
         if (node != null) {
             if (node.prev != null) {
                 node.prev.next = node.next;
@@ -64,10 +68,12 @@ public class LRUCache<T1, T2> {
             if (node.next != null) {
                 node.next.prev = node.prev;
             }
-            if (last == node)
+            if (last == node) {
                 last = node.prev;
-            if (first == node)
+            }
+            if (first == node) {
                 first = node.next;
+            }
         }
         return node.value;
     }
@@ -79,31 +85,37 @@ public class LRUCache<T1, T2> {
 
     private void removeLast() {
         if (last != null) {
-            if (last.prev != null)
+            if (last.prev != null) {
                 last.prev.next = null;
-            else
+            } else {
                 first = null;
+            }
             last = last.prev;
         }
     }
 
     private void moveToHead(CacheNode node) {
-        if (node == first)
+        if (node == first) {
             return;
-        if (node.prev != null)
+        }
+        if (node.prev != null) {
             node.prev.next = node.next;
-        if (node.next != null)
+        }
+        if (node.next != null) {
             node.next.prev = node.prev;
-        if (last == node)
+        }
+        if (last == node) {
             last = node.prev;
+        }
         if (first != null) {
             node.next = first;
             first.prev = node;
         }
         first = node;
         node.prev = null;
-        if (last == null)
+        if (last == null) {
             last = first;
+        }
     }
 
     private int cacheSize;

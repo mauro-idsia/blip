@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2001, Eric D. Friedman All Rights Reserved.
 //
 // This library is free software; you can redistribute it and/or
@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 
 package ch.idsia.blip.core.utils.structure;
+
 
 /**
  * Interface for procedures that take two Object parameters.

@@ -1,6 +1,8 @@
 package ch.idsia.blip.core.utils.data.set;
 
+
 import ch.idsia.blip.core.utils.data.HashFunctions;
+
 
 /**
  * The base class for hashtables of primitive values.  Since there is
@@ -14,7 +16,7 @@ import ch.idsia.blip.core.utils.data.HashFunctions;
  * @version $Id: TPrimitiveHash.java,v 1.1.2.6 2010/03/01 23:39:07 robeden Exp $
  */
 abstract public class TPrimitiveHash extends THash {
-    @SuppressWarnings({"UnusedDeclaration"})
+    @SuppressWarnings({ "UnusedDeclaration"})
     static final long serialVersionUID = 1L;
 
     /**
@@ -41,7 +43,6 @@ abstract public class TPrimitiveHash extends THash {
      */
     protected static final byte REMOVED = 2;
 
-
     /**
      * Creates a new <code>THash</code> instance with the default
      * capacity and load factor.
@@ -49,7 +50,6 @@ abstract public class TPrimitiveHash extends THash {
     protected TPrimitiveHash() {
         super();
     }
-
 
     /**
      * Creates a new <code>TPrimitiveHash</code> instance with a prime
@@ -61,7 +61,6 @@ abstract public class TPrimitiveHash extends THash {
     protected TPrimitiveHash(int initialCapacity) {
         this(initialCapacity, DEFAULT_LOAD_FACTOR);
     }
-
 
     /**
      * Creates a new <code>TPrimitiveHash</code> instance with a prime
@@ -79,7 +78,6 @@ abstract public class TPrimitiveHash extends THash {
         setUp(HashFunctions.fastCeil(initialCapacity / loadFactor));
     }
 
-
     /**
      * Returns the capacity of the hash table.  This is the true
      * physical capacity, without adjusting for the load factor.
@@ -90,7 +88,6 @@ abstract public class TPrimitiveHash extends THash {
         return _states.length;
     }
 
-
     /**
      * Delete the record at <tt>index</tt>.
      *
@@ -100,7 +97,6 @@ abstract public class TPrimitiveHash extends THash {
         _states[index] = REMOVED;
         super.removeAt(index);
     }
-
 
     /**
      * initializes the hashtable to a prime capacity which is at least

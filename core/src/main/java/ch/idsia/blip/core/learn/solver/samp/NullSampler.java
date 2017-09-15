@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+
 /* Does nothing */
 public class NullSampler implements Sampler {
 
@@ -9,6 +10,5 @@ public class NullSampler implements Sampler {
     }
 
     @Override
-    public void init() {
-    }
+    public void init() {}
 }

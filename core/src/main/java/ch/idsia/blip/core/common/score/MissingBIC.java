@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.score;
 
+
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TDoubleArrayList;
@@ -10,7 +11,6 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
  * Computes the BIC
  */
 public class MissingBIC extends BIC {
-
 
     private final int n_var;
 
@@ -53,8 +53,10 @@ public class MissingBIC extends BIC {
         for (int v = 0; v < arity; v++) {
 
             double weight = values[v].length;
-            for (int r : completion[n][v])
+
+            for (int r : completion[n][v]) {
                 weight += weights[r];
+            }
 
             double p = (weight + alpha_i) / (dat.n_datapoints + alpha);
 
@@ -105,6 +107,7 @@ public class MissingBIC extends BIC {
 
             // App weight for the parent configuration
             double weight_p = p_values[p_v].length;
+
             for (int r : comp_values[p_v]) {
                 weight_p += weights[r];
             }
@@ -115,9 +118,13 @@ public class MissingBIC extends BIC {
             for (int v = 0; v < arity; v++) {
 
                 // Weight of missing rows
-                double weight_n = ArrayUtils.intersectN(dat.row_values[n][v], p_values[p_v]);
-                for (int r : ArrayUtils.intersect(completion[n][v], comp_values[p_v]))
+                double weight_n = ArrayUtils.intersectN(dat.row_values[n][v],
+                        p_values[p_v]);
+
+                for (int r : ArrayUtils.intersect(completion[n][v],
+                        comp_values[p_v])) {
                     weight_n += weights[r];
+                }
                 if (weight_n == 0) {
                     continue;
                 }
@@ -125,8 +132,7 @@ public class MissingBIC extends BIC {
                 // System.out.printf("%.4f, %d - %d, %.3f \n", skore, valcount[v], p_values[p_v].length,  log((valcount[v] * 1.0) / p_values[p_v].length));
 
                 skore += weight_n
-                        * (log(weight_n + alpha_ij)
-                        - log(weight_p + alpha_i));
+                        * (log(weight_n + alpha_ij) - log(weight_p + alpha_i));
 
                 // System.out.printf("%d- %.2f, ", valcount[v], p);
 

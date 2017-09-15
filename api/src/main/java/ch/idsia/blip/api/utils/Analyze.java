@@ -10,15 +10,14 @@ import java.util.logging.Logger;
 import static ch.idsia.blip.core.utils.other.RandomStuff.getBayesianNetwork;
 import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 
-public class Analyze extends Api {
 
-    private static final Logger log = Logger.getLogger(Analyze.class.getName());
+public class Analyze extends Api {
 
     @Option(name = "-n", required = true, usage = "Bayesian network file path")
     private String ph;
 
     public static void main(String[] args) {
-        defaultMain(args, new Analyze(), log);
+        defaultMain(args, new Analyze());
     }
 
     @Override

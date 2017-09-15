@@ -35,7 +35,7 @@ public class RankScores extends Api {
      * Default command line execution
      */
     public static void main(String[] args) {
-        defaultMain(args, new RankScores(), log);
+        defaultMain(args, new RankScores());
     }
 
     @Override

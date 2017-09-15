@@ -10,9 +10,8 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
 
-public class PcAlgoApi extends Api {
 
-    private static final Logger log = Logger.getLogger(PcAlgoApi.class.getName());
+public class PcAlgoApi extends Api {
 
     @Option(name = "-d", required = true, usage = "Datafile path (.dat format)")
     private static String ph_dat;
@@ -27,12 +26,13 @@ public class PcAlgoApi extends Api {
     }
 
     protected static void main(String[] args) {
-        defaultMain(args, new PcAlgoApi(), log);
+        defaultMain(args, new PcAlgoApi());
     }
 
     @Override
     public void exec() throws Exception {
         DataSet dat = getDataSet(ph_dat);
+
         pc.verbose = verbose;
         pc.execute(dat);
     }

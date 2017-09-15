@@ -45,19 +45,20 @@ public class App extends Base {
             if (logWr != null) {
                 logWr.write(s);
                 logWr.flush();
-            } else
+            } else {
                 System.out.print(s);
+            }
             System.out.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
-
     protected void prepare() {
 
-        if (seed == 0)
+        if (seed == 0) {
             seed = System.currentTimeMillis();
+        }
 
         rand = new Random(seed);
 
@@ -89,29 +90,33 @@ public class App extends Base {
     }
 
     protected int gInt(String k, int v) {
-        if (options.containsKey(k))
+        if (options.containsKey(k)) {
             return Integer.valueOf(options.get(k));
-        else
+        } else {
             return v;
+        }
     }
 
     protected double gDouble(String k, double v) {
-        if (options.containsKey(k))
+        if (options.containsKey(k)) {
             return Double.valueOf(options.get(k));
-        else
+        } else {
             return v;
+        }
     }
 
     protected String gStr(String k, String v) {
-        if (options.containsKey(k))
+        if (options.containsKey(k)) {
             return options.get(k);
-        else
+        } else {
             return v;
+        }
     }
 
     protected boolean gBool(String k) {
-        if (options.containsKey(k))
+        if (options.containsKey(k)) {
             return Boolean.valueOf(options.get(k));
+        }
         return false;
     }
 
@@ -135,6 +140,7 @@ public class App extends Base {
         long maxMemory = runtime.maxMemory(); // Max heap VM can use e.g. Xmx setting
         long usedMemory = totalMemory - freeMemory; // how much of the current heap the VM is using
         long availableMemory = maxMemory - usedMemory; // available memory i.e. Maximum heap size minus the current amount used
+
         return availableMemory;
     }
 

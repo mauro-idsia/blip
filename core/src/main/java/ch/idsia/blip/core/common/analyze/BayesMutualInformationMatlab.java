@@ -1,11 +1,13 @@
 package ch.idsia.blip.core.common.analyze;
 
+
 import ch.idsia.blip.core.common.DataSet;
 
 import java.io.*;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+
 
 public class BayesMutualInformationMatlab extends BayesMutualInformation {
 
@@ -26,10 +28,11 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
 
     @Override
     public double computeCMI(int x, int y, int z) {
-        return computeCMI(x, y, new int[]{z});
+        return computeCMI(x, y, new int[] { z});
     }
 
     @Override
+
     /**
      * Bayesian PR of CMI: MI(X, Y | Z)
      */
@@ -40,12 +43,15 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
         }
 
         int[][] x_r = dat.row_values[x];
+
         x_ar = dat.l_n_arity[x];
 
         int[][] y_r = dat.row_values[y];
+
         y_ar = dat.l_n_arity[y];
 
         int[][] z_r = getZRowsNoMissing(z);
+
         z_ar = z_r.length;
 
         double ess = (x_ar - 1) * (y_ar - 1) * z_ar;
@@ -53,9 +59,11 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
         n_z = getCounts(z_r, z_ar, ess);
 
         int w_ar = x_ar * y_ar;
+
         n_w = getCondJointCounts(x_r, x_ar, y_r, y_ar, w_ar, z_r, z_ar, ess);
 
         double d = 0;
+
         try {
             d = execute();
         } catch (IOException e) {
@@ -70,6 +78,7 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
 
         String cmd = path + "cmd.m";
         File f = new File(cmd);
+
         if (!f.exists()) {
             f.createNewFile();
         }
@@ -79,19 +88,21 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
 
         FileWriter fw = new FileWriter(f.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(fw);
+
         writeCommands(bw);
         bw.close();
 
         String run = "matlab -nodisplay -nodesktop < cmd.m > log 2>&1 ";
-        Process proc = Runtime.getRuntime().exec(run, new String[0], new File(path));
+        Process proc = Runtime.getRuntime().exec(run, new String[0],
+                new File(path));
         int exitVal = waitForProc(proc, 10000);
-
 
         double cmi = -1;
 
         if (new File(path + "out").exists()) {
 
             BufferedReader br = new BufferedReader(new FileReader(path + "out"));
+
             cmi = Double.valueOf(br.readLine().trim());
         }
 
@@ -107,7 +118,6 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
         for (int i = 0; i < n_z.length; i++) {
             wf(w, "n_z(%d) = %.8f; \n", i + 1, n_z[i]);
         }
-
 
         wf(w, "nz_w = zeros(%d, %d); \n", z_ar, n_w[0].length);
         for (int i = 0; i < z_ar; i++) {
@@ -129,6 +139,7 @@ public class BayesMutualInformationMatlab extends BayesMutualInformation {
     public void out(String s) {
 
         File f1 = new File(path + "out.png");
+
         if (f1.exists()) {
             try {
                 copySomething(f1, new File(s));

@@ -30,12 +30,13 @@ public class KTreeScoreApi extends Api {
     private int num_outputs;
 
     public static void main(String[] args) {
-        defaultMain(args, new KTreeScoreApi(), log);
+        defaultMain(args, new KTreeScoreApi());
     }
 
     @Override
     public void exec() throws IOException {
         KTreeScore k = new KTreeScore();
+
         k.init(options());
         k.go();
     }

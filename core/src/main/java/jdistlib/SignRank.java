@@ -19,6 +19,7 @@
  */
 package jdistlib;
 
+
 import jdistlib.generic.GenericDistribution;
 import jdistlib.math.MathFunctions;
 import jdistlib.rng.RandomEngine;
@@ -27,6 +28,7 @@ import static java.lang.Math.*;
 import static jdistlib.math.Constants.DBL_EPSILON;
 import static jdistlib.math.Constants.M_LN2;
 
+
 public class SignRank extends GenericDistribution {
     private final double[] w;
     private final int n;
@@ -34,6 +36,7 @@ public class SignRank extends GenericDistribution {
     public SignRank(int n) {
         this.n = n;
         int c = (n * (n + 1) / 4);
+
         w = new double[c + 1];
     }
 
@@ -43,19 +46,24 @@ public class SignRank extends GenericDistribution {
         u = n * (n + 1) / 2;
         c = (u / 2);
 
-        if (k < 0 || k > u)
+        if (k < 0 || k > u) {
             return 0;
-        if (k > c)
+        }
+        if (k > c) {
             k = u - k;
+        }
 
-        if (n == 1)
+        if (n == 1) {
             return 1.;
-        if (w[0] == 1.)
+        }
+        if (w[0] == 1.) {
             return w[k];
+        }
 
         w[0] = w[1] = 1.;
         for (j = 2; j < n + 1; ++j) {
             int i, end = min(j * (j + 1) / 2, c);
+
             for (i = end; i >= j; --i) {
                 w[i] += w[i - j];
             }
@@ -67,17 +75,20 @@ public class SignRank extends GenericDistribution {
     private double density(int x, boolean give_log) {
         double d;
 
-	    /* NaNs propagated correctly */
-        if (Double.isNaN(x)) return (x + n);
-        //n = floor(n + 0.5);
-        //if (n <= 0) return Double.NaN;
+        /* NaNs propagated correctly */
+        if (Double.isNaN(x)) {
+            return (x + n);
+        }
+        // n = floor(n + 0.5);
+        // if (n <= 0) return Double.NaN;
 
         // if (isNonInt(x)) return(R_D__0);
         // x = floor(x + 0.5);
-        if ((x < 0) || (x > (n * (n + 1) / 2)))
+        if ((x < 0) || (x > (n * (n + 1) / 2))) {
             return (give_log ? Double.NEGATIVE_INFINITY : 0.);
+        }
 
-        //d = R_D_exp(log(csignrank(x, n)) - n * M_LN2);
+        // d = R_D_exp(log(csignrank(x, n)) - n * M_LN2);
         d = log(count(x, n)) - n * M_LN2;
 
         return (give_log ? (d) : exp(d));
@@ -87,68 +98,99 @@ public class SignRank extends GenericDistribution {
         int i;
         double f, p;
 
-        if (Double.isNaN(x)) return (x + n);
-        //if (Double.isInfinite(n)) return Double.NaN;
-        //n = floor(n + 0.5);
-        //if (n <= 0) return Double.NaN;
+        if (Double.isNaN(x)) {
+            return (x + n);
+        }
+        // if (Double.isInfinite(n)) return Double.NaN;
+        // n = floor(n + 0.5);
+        // if (n <= 0) return Double.NaN;
 
-        //x = floor(x + 1e-7);
-        if (x < 0.0) return (lower_tail ? (log_p ? Double.NEGATIVE_INFINITY : 0.) : (log_p ? 0. : 1.));
-        if (x >= n * (n + 1) / 2)
-            return (lower_tail ? (log_p ? 0. : 1.) : (log_p ? Double.NEGATIVE_INFINITY : 0.));
+        // x = floor(x + 1e-7);
+        if (x < 0.0) {
+            return (lower_tail
+                    ? (log_p ? Double.NEGATIVE_INFINITY : 0.)
+                    : (log_p ? 0. : 1.));
+        }
+        if (x >= n * (n + 1) / 2) {
+            return (lower_tail
+                    ? (log_p ? 0. : 1.)
+                    : (log_p ? Double.NEGATIVE_INFINITY : 0.));
+        }
 
         f = exp(-n * M_LN2);
         p = 0;
         if (x <= (n * (n + 1) / 4)) {
-            for (i = 0; i <= x; i++)
+            for (i = 0; i <= x; i++) {
                 p += count(i, n) * f;
+            }
         } else {
             x = n * (n + 1) / 2 - x;
-            for (i = 0; i < x; i++)
+            for (i = 0; i < x; i++) {
                 p += count(i, n) * f;
+            }
             lower_tail = !lower_tail; /* p = 1 - p; */
         }
 
-        //return(R_DT_val(p));
-        return (lower_tail ? (log_p ? log(p) : (p)) : (log_p ? log1p(-(p)) : (0.5 - (p) + 0.5)));
+        // return(R_DT_val(p));
+        return (lower_tail
+                ? (log_p ? log(p) : (p))
+                : (log_p ? log1p(-(p)) : (0.5 - (p) + 0.5)));
     }
 
     public double quantile(double x, boolean lower_tail, boolean log_p) {
-        double f, p;//, q;
+        double f, p; // , q;
         int q;
 
-        if (Double.isNaN(x)) return (x + n);
-        if (MathFunctions.isInfinite(x)) return Double.NaN;
-        //R_Q_P01_check(x);
-        if ((log_p && x > 0) || (!log_p && (x < 0 || x > 1))) return Double.NaN;
+        if (Double.isNaN(x)) {
+            return (x + n);
+        }
+        if (MathFunctions.isInfinite(x)) {
+            return Double.NaN;
+        }
+        // R_Q_P01_check(x);
+        if ((log_p && x > 0) || (!log_p && (x < 0 || x > 1))) {
+            return Double.NaN;
+        }
 
-        //n = floor(n + 0.5);
-        //if (n <= 0) return Double.NaN;
+        // n = floor(n + 0.5);
+        // if (n <= 0) return Double.NaN;
 
-        if (x == (lower_tail ? (log_p ? Double.NEGATIVE_INFINITY : 0.) : (log_p ? 0. : 1.)))
+        if (x
+                == (lower_tail
+                        ? (log_p ? Double.NEGATIVE_INFINITY : 0.)
+                        : (log_p ? 0. : 1.))) {
             return (0);
-        if (x == (lower_tail ? (log_p ? 0. : 1.) : (log_p ? Double.NEGATIVE_INFINITY : 0.)))
+        }
+        if (x
+                == (lower_tail
+                        ? (log_p ? 0. : 1.)
+                        : (log_p ? Double.NEGATIVE_INFINITY : 0.))) {
             return (n * (n + 1) / 2);
+        }
 
-        if (log_p || !lower_tail)
-            //x = R_DT_qIv(x); /* lower_tail,non-log "p" */
-            x = (log_p ? (lower_tail ? exp(x) : -expm1(x)) : (lower_tail ? (x) : (0.5 - (x) + 0.5)));
+        if (log_p || !lower_tail) {
+            // x = R_DT_qIv(x); /* lower_tail,non-log "p" */
+            x = (log_p
+                    ? (lower_tail ? exp(x) : -expm1(x))
+                    : (lower_tail ? (x) : (0.5 - (x) + 0.5)));
+        }
 
-        //w_init_maybe(n);
+        // w_init_maybe(n);
         f = exp(-n * M_LN2);
         p = 0;
         q = 0;
         if (x <= 0.5) {
             x = x - 10 * DBL_EPSILON;
-            for (; ; ) {
+            for (;;) {
                 p += count(q, n) * f;
-                if (p >= x)
+                if (p >= x) {
                     break;
+                }
                 q++;
             }
         } else {
             x = 1 - x + 10 * DBL_EPSILON;
-            for (; ; ) {
+            for (;;) {
                 p += count(q, n) * f;
                 if (p > x) {
                     q = n * (n + 1) / 2 - q;
@@ -173,17 +215,23 @@ public class SignRank extends GenericDistribution {
     }
 
     public double random(RandomEngine rr) {
-        if (n == 0) return 0;
+        if (n == 0) {
+            return 0;
+        }
         double r = 0.0;
-        for (int i = 0; i < n; )
-            r += (++i) * rint(rr.nextDouble()); // (++thread) * floor(rr.nextDouble() + 0.5);
+
+        for (int i = 0; i < n;) {
+            r += (++i) * rint(rr.nextDouble());
+        } // (++thread) * floor(rr.nextDouble() + 0.5);
         return r;
     }
 
     public double[] random(int n, RandomEngine r) {
         double[] rand = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             rand[i] = random(r);
+        }
         return rand;
     }
 

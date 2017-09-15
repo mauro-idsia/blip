@@ -55,7 +55,8 @@ public class BnResReader {
             String line;
 
             while ((line = rd.readLine()) != null) {
-                String[] a = line.replace("(", "").replace(")", "").replace(":", "").split("\\s+");
+                String[] a = line.replace("(", "").replace(")", "").replace(":", "").split(
+                        "\\s+");
 
                 if (a.length <= 1) {
                     break;
@@ -68,7 +69,8 @@ public class BnResReader {
                     continue;
                 }
 
-                String[] b = a[2].replace("(", "").replace(")", "").replace("\\s+", "").split(",");
+                String[] b = a[2].replace("(", "").replace(")", "").replace("\\s+", "").split(
+                        ",");
                 int[] c = new int[b.length];
 
                 for (int i = 0; i < b.length; i++) {
@@ -86,6 +88,7 @@ public class BnResReader {
             }
 
             String[] a = line.split(":");
+
             scoreTot = Float.valueOf(a[1]);
 
         } catch (Exception e) {
@@ -94,8 +97,10 @@ public class BnResReader {
         }
 
         BayesianNetwork bn = new BayesianNetwork(p.size());
-        for (int i = 0; i < p.size(); i++)
+
+        for (int i = 0; i < p.size(); i++) {
             bn.l_parent_var[i] = p.get(i);
+        }
 
         return bn;
     }

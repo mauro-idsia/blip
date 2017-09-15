@@ -1,24 +1,23 @@
 package ch.idsia.blip.core.inference.ve.samiam;
 
-class Samiam {
-    /*
 
-    private final BeliefNetwork net;
+class Samiam {/*
 
-    public Samiam(String t) throws Exception {
-        net = NetworkIO.readHuginNet(getReader(t));
-    }
+     private final BeliefNetwork net;
 
-    public void query(String var5) {
-        HuginEngineGenerator gen = new HuginEngineGenerator();
+     public Samiam(String t) throws Exception {
+     net = NetworkIO.readHuginNet(getReader(t));
+     }
 
-        InferenceEngine eng = gen.manufactureInferenceEngine(net);
+     public void query(String var5) {
+     HuginEngineGenerator gen = new HuginEngineGenerator();
 
-        EvidenceController var9 = net.getEvidenceController();
-        var9.addPriorityEvidenceChangeListener(eng);
-        // var9.setObservations(var4);
+     InferenceEngine eng = gen.manufactureInferenceEngine(net);
 
-    }
+     EvidenceController var9 = net.getEvidenceController();
+     var9.addPriorityEvidenceChangeListener(eng);
+     // var9.setObservations(var4);
 
-    */
-}
+     }
+
+     */}

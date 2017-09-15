@@ -11,7 +11,6 @@ import java.util.TreeMap;
 
 public abstract class Score extends Analyzer {
 
-
     protected TreeMap<SIntSet, Double>[] scores;
 
     /**
@@ -40,7 +39,7 @@ public abstract class Score extends Analyzer {
     public abstract double computeScore(int n, int[] set_p, int[][] p_values);
 
     public double computeScore(int n, int p) {
-        return computeScore(n, new int[]{p});
+        return computeScore(n, new int[] { p});
     }
 
     public double computeScore(int n, int[] set_p) {

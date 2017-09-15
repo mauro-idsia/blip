@@ -1,6 +1,8 @@
 package ch.idsia.blip.core.utils.data.common;
 
+
 import java.util.Collection;
+
 
 /**
  * An interface that mimics the <tt>Collection</tt> interface.
@@ -23,7 +25,6 @@ public interface TIntCollection {
      */
     int getNoEntryValue();
 
-
     /**
      * Returns the number of elements in this collection (its cardinality).  If this
      * collection contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
@@ -33,14 +34,12 @@ public interface TIntCollection {
      */
     int size();
 
-
     /**
      * Returns <tt>true</tt> if this collection contains no elements.
      *
      * @return <tt>true</tt> if this collection contains no elements
      */
     boolean isEmpty();
-
 
     /**
      * Returns <tt>true</tt> if this collection contains the specified element.
@@ -50,7 +49,6 @@ public interface TIntCollection {
      */
     boolean contains(int entry);
 
-
     /**
      * Creates an iterator over the values of the collection.  The iterator
      * supports element deletion.
@@ -58,7 +56,6 @@ public interface TIntCollection {
      * @return an <code>TIntIterator</code> value
      */
     TIntIterator iterator();
-
 
     /**
      * Returns an array containing all of the elements in this collection.
@@ -77,7 +74,6 @@ public interface TIntCollection {
      * @return an array containing all the elements in this collection
      */
     int[] toArray();
-
 
     /**
      * Returns an array containing elements in this collection.
@@ -104,7 +100,6 @@ public interface TIntCollection {
      */
     int[] toArray(int[] dest);
 
-
     /**
      * Inserts a value into the collection.
      *
@@ -113,7 +108,6 @@ public interface TIntCollection {
      */
     boolean add(int entry);
 
-
     /**
      * Removes <tt>entry</tt> from the collection.
      *
@@ -121,7 +115,6 @@ public interface TIntCollection {
      * @return true if the collection was modified by the remove operation.
      */
     boolean remove(int entry);
-
 
     /**
      * Tests the collection to determine if all of the elements in
@@ -132,7 +125,6 @@ public interface TIntCollection {
      */
     boolean containsAll(Collection<?> collection);
 
-
     /**
      * Tests the collection to determine if all of the elements in
      * <tt>TIntCollection</tt> are present.
@@ -141,7 +133,6 @@ public interface TIntCollection {
      * @return true if all elements were present in the collection.
      */
     boolean containsAll(TIntCollection collection);
-
 
     /**
      * Tests the collection to determine if all of the elements in
@@ -152,7 +143,6 @@ public interface TIntCollection {
      */
     boolean containsAll(int[] array);
 
-
     /**
      * Adds all of the elements in <tt>collection</tt> to the collection.
      *
@@ -160,7 +150,6 @@ public interface TIntCollection {
      * @return true if the collection was modified by the add all operation.
      */
     boolean addAll(Collection<? extends Integer> collection);
-
 
     /**
      * Adds all of the elements in the <tt>TIntCollection</tt> to the collection.
@@ -170,7 +159,6 @@ public interface TIntCollection {
      */
     boolean addAll(TIntCollection collection);
 
-
     /**
      * Adds all of the elements in the <tt>array</tt> to the collection.
      *
@@ -178,7 +166,6 @@ public interface TIntCollection {
      * @return true if the collection was modified by the add all operation.
      */
     boolean addAll(int[] array);
-
 
     /**
      * Removes any values in the collection which are not contained in
@@ -189,7 +176,6 @@ public interface TIntCollection {
      */
     boolean retainAll(Collection<?> collection);
 
-
     /**
      * Removes any values in the collection which are not contained in
      * <tt>TIntCollection</tt>.
@@ -198,7 +184,6 @@ public interface TIntCollection {
      * @return true if the collection was modified by the retain all operation
      */
     boolean retainAll(TIntCollection collection);
-
 
     /**
      * Removes any values in the collection which are not contained in
@@ -209,7 +194,6 @@ public interface TIntCollection {
      */
     boolean retainAll(int[] array);
 
-
     /**
      * Removes all of the elements in <tt>collection</tt> from the collection.
      *
@@ -217,7 +201,6 @@ public interface TIntCollection {
      * @return true if the collection was modified by the remove all operation.
      */
     boolean removeAll(Collection<?> collection);
-
 
     /**
      * Removes all of the elements in <tt>TIntCollection</tt> from the collection.
@@ -227,7 +210,6 @@ public interface TIntCollection {
      */
     boolean removeAll(TIntCollection collection);
 
-
     /**
      * Removes all of the elements in <tt>array</tt> from the collection.
      *
@@ -235,7 +217,6 @@ public interface TIntCollection {
      * @return true if the collection was modified by the remove all operation.
      */
     boolean removeAll(int[] array);
-
 
     /**
      * Empties the collection.
@@ -258,7 +239,6 @@ public interface TIntCollection {
      */
     boolean equals(Object o);
 
-
     /**
      * Returns the hash code value for this collection.  The hash code of a collection is
      * defined to be the sum of the hash codes of the elements in the collection.
@@ -272,6 +252,5 @@ public interface TIntCollection {
      * @see Collection#equals(Object)
      */
     int hashCode();
-
 
 } // TIntCollection

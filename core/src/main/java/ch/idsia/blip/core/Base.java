@@ -1,5 +1,6 @@
 package ch.idsia.blip.core;
 
+
 public class Base {
 
     private int low_find;
@@ -9,7 +10,6 @@ public class Base {
     private int mid_find;
 
     private int midVal_find;
-
 
     protected boolean find(int key, int[] a) {
         return pos(key, a) >= 0;

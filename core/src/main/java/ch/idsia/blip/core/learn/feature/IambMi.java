@@ -17,7 +17,7 @@ public class IambMi extends Iamb {
 
     @Override
     public double[] getTresholds() {
-        return new double[]{1, 2, 3, 4, 5};
+        return new double[] { 1, 2, 3, 4, 5};
     }
 
     // Mutual information
@@ -29,8 +29,7 @@ public class IambMi extends Iamb {
     }
 
     @Override
-    protected void prepare() {
-    }
+    protected void prepare() {}
 
     @Override
     protected double computeCMI(int x, int y, int[] z) {
@@ -60,6 +59,5 @@ public class IambMi extends Iamb {
     public String getName() {
         return "iambMi";
     }
-
 
 }

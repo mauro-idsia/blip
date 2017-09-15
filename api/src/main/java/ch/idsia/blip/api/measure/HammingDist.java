@@ -31,9 +31,8 @@ public class HammingDist extends Api {
      * @param args parameters provided
      */
     public static void main(String[] args) {
-        defaultMain(args, new HammingDist(), log);
+        defaultMain(args, new HammingDist());
     }
-
 
     public int computeDist(BayesianNetwork f_bn, BayesianNetwork s_bn) {
 

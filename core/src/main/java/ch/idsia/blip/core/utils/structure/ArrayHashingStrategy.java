@@ -1,6 +1,8 @@
 package ch.idsia.blip.core.utils.structure;
 
+
 import java.util.Arrays;
+
 
 public class ArrayHashingStrategy implements HashingStrategy<int[]> {
 

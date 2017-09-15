@@ -1,12 +1,13 @@
 package ch.idsia.blip.core.inference;
 
+
 import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.inference.ve.BayesianFactor;
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 
-public abstract class BaseInference
-        extends App {
+
+public abstract class BaseInference extends App {
     protected final BayesianNetwork bn;
 
     public BaseInference(BayesianNetwork bayesNet, int verb) {

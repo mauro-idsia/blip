@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.data.hash;
 
+
 import ch.idsia.blip.core.utils.data.HashFunctions;
 import ch.idsia.blip.core.utils.data.common.TDoubleCollection;
 import ch.idsia.blip.core.utils.data.common.TDoubleIterator;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Map;
+
 
 /**
  * An open addressed Map implementation for int keys and double values.
@@ -30,7 +32,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      */
     private transient double[] _values;
 
-
     /**
      * Creates a new <code>TIntDoubleHashMap</code> instance with the default
      * capacity and load factor.
@@ -38,7 +39,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
     public TIntDoubleHashMap() {
         super();
     }
-
 
     /**
      * Creates a new <code>TIntDoubleHashMap</code> instance with a prime
@@ -51,7 +51,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         super(initialCapacity);
     }
 
-
     /**
      * Creates a new <code>TIntDoubleHashMap</code> instance with a prime
      * capacity equal to or greater than <tt>initialCapacity</tt> and
@@ -63,7 +62,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
     public TIntDoubleHashMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
-
 
     /**
      * Creates a new <code>TIntDoubleHashMap</code> instance with a prime
@@ -78,10 +76,9 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
      *                        <tt>null</tt> for the Value set.
      */
     public TIntDoubleHashMap(int initialCapacity, float loadFactor,
-                             int noEntryKey, double noEntryValue) {
+            int noEntryKey, double noEntryValue) {
         super(initialCapacity, loadFactor, noEntryKey, noEntryValue);
     }
-
 
     /**
      * Creates a new <code>TIntDoubleHashMap</code> instance containing
@@ -94,11 +91,11 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         super(Math.max(keys.length, values.length));
 
         int size = Math.min(keys.length, values.length);
+
         for (int i = 0; i < size; i++) {
             this.put(keys[i], values[i]);
         }
     }
-
 
     /**
      * Creates a new <code>TIntDoubleHashMap</code> instance containing
@@ -110,14 +107,15 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         super(map.size());
         if (map instanceof TIntDoubleHashMap) {
             TIntDoubleHashMap hashmap = (TIntDoubleHashMap) map;
+
             this._loadFactor = hashmap._loadFactor;
             this.no_entry_key = hashmap.no_entry_key;
             this.no_entry_value = hashmap.no_entry_value;
-            //noinspection RedundantCast
+            // noinspection RedundantCast
             if (this.no_entry_key != (int) 0) {
                 Arrays.fill(_set, this.no_entry_key);
             }
-            //noinspection RedundantCast
+            // noinspection RedundantCast
             if (this.no_entry_value != (double) 0) {
                 Arrays.fill(_values, this.no_entry_value);
             }
@@ -125,7 +123,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         }
         putAll(map);
     }
-
 
     /**
      * initializes the hashtable to a prime capacity which is at least
@@ -142,12 +139,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return capacity;
     }
 
-
     /**
      * rehashes the map to the new capacity.
      *
      * @param newCapacity an <code>int</code> value
      */
+    
     /**
      * {@inheritDoc}
      */
@@ -162,39 +159,41 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         _values = new double[newCapacity];
         _states = new byte[newCapacity];
 
-        for (int i = oldCapacity; i-- > 0; ) {
+        for (int i = oldCapacity; i-- > 0;) {
             if (oldStates[i] == FULL) {
                 int o = oldKeys[i];
                 int index = insertKey(o);
+
                 _values[index] = oldVals[i];
             }
         }
     }
-
 
     /**
      * {@inheritDoc}
      */
     public double put(int key, double value) {
         int index = insertKey(key);
+
         return doPut(value, index);
     }
-
 
     /**
      * {@inheritDoc}
      */
     public double putIfAbsent(int key, double value) {
         int index = insertKey(key);
-        if (index < 0)
+
+        if (index < 0) {
             return _values[-index - 1];
+        }
         return doPut(value, index);
     }
-
 
     private double doPut(double value, int index) {
         double previous = no_entry_value;
         boolean isNewMapping = true;
+
         if (index < 0) {
             index = -index - 1;
             previous = _values[index];
@@ -209,7 +208,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return previous;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -221,28 +219,27 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void putAll(TIntDoubleMap map) {
         ensureCapacity(map.size());
         TIntDoubleIterator iter = map.iterator();
+
         while (iter.hasNext()) {
             iter.advance();
             this.put(iter.key(), iter.value());
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double get(int key) {
         int index = index(key);
+
         return index < 0 ? no_entry_value : _values[index];
     }
-
 
     /**
      * {@inheritDoc}
@@ -254,7 +251,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         Arrays.fill(_states, 0, _states.length, FREE);
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -262,29 +258,27 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return 0 == _size;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double remove(int key) {
         double prev = no_entry_value;
         int index = index(key);
+
         if (index >= 0) {
             prev = _values[index];
-            removeAt(index);    // clear key,state; adjust size
+            removeAt(index); // clear key,state; adjust size
         }
         return prev;
     }
-
 
     /**
      * {@inheritDoc}
      */
     protected void removeAt(int index) {
         _values[index] = no_entry_value;
-        super.removeAt(index);  // clear key, state; adjust size
+        super.removeAt(index); // clear key, state; adjust size
     }
-
 
     /**
      * {@inheritDoc}
@@ -292,7 +286,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
     public TIntSet keySet() {
         return new TKeyView();
     }
-
 
     /**
      * {@inheritDoc}
@@ -302,7 +295,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         int[] k = _set;
         byte[] states = _states;
 
-        for (int i = k.length, j = 0; i-- > 0; ) {
+        for (int i = k.length, j = 0; i-- > 0;) {
             if (states[i] == FULL) {
                 keys[j++] = k[i];
             }
@@ -310,12 +303,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return keys;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public int[] keys(int[] array) {
         int size = size();
+
         if (array.length < size) {
             array = new int[size];
         }
@@ -323,7 +316,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         int[] keys = _set;
         byte[] states = _states;
 
-        for (int i = keys.length, j = 0; i-- > 0; ) {
+        for (int i = keys.length, j = 0; i-- > 0;) {
             if (states[i] == FULL) {
                 array[j++] = keys[i];
             }
@@ -345,7 +338,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         double[] v = _values;
         byte[] states = _states;
 
-        for (int i = v.length, j = 0; i-- > 0; ) {
+        for (int i = v.length, j = 0; i-- > 0;) {
             if (states[i] == FULL) {
                 vals[j++] = v[i];
             }
@@ -353,12 +346,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return vals;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double[] values(double[] array) {
         int size = size();
+
         if (array.length < size) {
             array = new double[size];
         }
@@ -366,14 +359,13 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         double[] v = _values;
         byte[] states = _states;
 
-        for (int i = v.length, j = 0; i-- > 0; ) {
+        for (int i = v.length, j = 0; i-- > 0;) {
             if (states[i] == FULL) {
                 array[j++] = v[i];
             }
         }
         return array;
     }
-
 
     /**
      * {@inheritDoc}
@@ -382,7 +374,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         byte[] states = _states;
         double[] vals = _values;
 
-        for (int i = vals.length; i-- > 0; ) {
+        for (int i = vals.length; i-- > 0;) {
             if (states[i] == FULL && val == vals[i]) {
                 return true;
             }
@@ -390,14 +382,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return false;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean containsKey(int key) {
         return contains(key);
     }
-
 
     /**
      * {@inheritDoc}
@@ -413,12 +403,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return adjustValue(key, (double) 1);
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean adjustValue(int key, double amount) {
         int index = index(key);
+
         if (index < 0) {
             return false;
         } else {
@@ -427,7 +417,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -435,6 +424,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         int index = insertKey(key);
         final boolean isNewMapping;
         final double newValue;
+
         if (index < 0) {
             index = -index - 1;
             newValue = (_values[index] += adjust_amount);
@@ -453,7 +443,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         return newValue;
     }
 
-
     /**
      * a view onto the keys of the map.
      */
@@ -466,14 +455,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return new TIntDoubleKeyHashIterator(TIntDoubleHashMap.this);
         }
 
-
         /**
          * {@inheritDoc}
          */
         public int getNoEntryValue() {
             return no_entry_key;
         }
-
 
         /**
          * {@inheritDoc}
@@ -482,14 +469,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return _size;
         }
 
-
         /**
          * {@inheritDoc}
          */
         public boolean isEmpty() {
             return 0 == _size;
         }
-
 
         /**
          * {@inheritDoc}
@@ -498,7 +483,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return TIntDoubleHashMap.this.contains(entry);
         }
 
-
         /**
          * {@inheritDoc}
          */
@@ -506,14 +490,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return TIntDoubleHashMap.this.keys();
         }
 
-
         /**
          * {@inheritDoc}
          */
         public int[] toArray(int[] dest) {
             return TIntDoubleHashMap.this.keys(dest);
         }
-
 
         /**
          * Unsupported when operating upon a Key Set view of a TIntDoubleMap
@@ -524,14 +506,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             throw new UnsupportedOperationException();
         }
 
-
         /**
          * {@inheritDoc}
          */
         public boolean remove(int entry) {
             return no_entry_value != TIntDoubleHashMap.this.remove(entry);
         }
-
 
         /**
          * {@inheritDoc}
@@ -540,6 +520,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             for (Object element : collection) {
                 if (element instanceof Integer) {
                     int ele = (Integer) element;
+
                     if (!TIntDoubleHashMap.this.containsKey(ele)) {
                         return false;
                     }
@@ -550,12 +531,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return true;
         }
 
-
         /**
          * {@inheritDoc}
          */
         public boolean containsAll(TIntCollection collection) {
             TIntIterator iter = collection.iterator();
+
             while (iter.hasNext()) {
                 if (!TIntDoubleHashMap.this.containsKey(iter.next())) {
                     return false;
@@ -563,7 +544,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             }
             return true;
         }
-
 
         /**
          * {@inheritDoc}
@@ -577,7 +557,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return true;
         }
 
-
         /**
          * Unsupported when operating upon a Key Set view of a TIntDoubleMap
          * <p/>
@@ -586,7 +565,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
         public boolean addAll(Collection<? extends Integer> collection) {
             throw new UnsupportedOperationException();
         }
-
 
         /**
          * Unsupported when operating upon a Key Set view of a TIntDoubleMap
@@ -597,7 +575,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             throw new UnsupportedOperationException();
         }
 
-
         /**
          * Unsupported when operating upon a Key Set view of a TIntDoubleMap
          * <p/>
@@ -607,14 +584,14 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             throw new UnsupportedOperationException();
         }
 
-
         /**
          * {@inheritDoc}
          */
-        @SuppressWarnings({"SuspiciousMethodCalls"})
+        @SuppressWarnings({ "SuspiciousMethodCalls"})
         public boolean retainAll(Collection<?> collection) {
             boolean modified = false;
             TIntIterator iter = iterator();
+
             while (iter.hasNext()) {
                 if (!collection.contains(iter.next())) {
                     iter.remove();
@@ -623,7 +600,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             }
             return modified;
         }
-
 
         /**
          * {@inheritDoc}
@@ -634,6 +610,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             }
             boolean modified = false;
             TIntIterator iter = iterator();
+
             while (iter.hasNext()) {
                 if (!collection.contains(iter.next())) {
                     iter.remove();
@@ -643,18 +620,19 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return modified;
         }
 
-
         /**
          * {@inheritDoc}
          */
         public boolean retainAll(int[] array) {
             boolean changed = false;
+
             Arrays.sort(array);
             int[] set = _set;
             byte[] states = _states;
 
-            for (int i = set.length; i-- > 0; ) {
-                if (states[i] == FULL && (Arrays.binarySearch(array, set[i]) < 0)) {
+            for (int i = set.length; i-- > 0;) {
+                if (states[i] == FULL
+                        && (Arrays.binarySearch(array, set[i]) < 0)) {
                     removeAt(i);
                     changed = true;
                 }
@@ -662,15 +640,16 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return changed;
         }
 
-
         /**
          * {@inheritDoc}
          */
         public boolean removeAll(Collection<?> collection) {
             boolean changed = false;
+
             for (Object element : collection) {
                 if (element instanceof Integer) {
                     int c = (Integer) element;
+
                     if (remove(c)) {
                         changed = true;
                     }
@@ -678,7 +657,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             }
             return changed;
         }
-
 
         /**
          * {@inheritDoc}
@@ -690,8 +668,10 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             }
             boolean changed = false;
             TIntIterator iter = collection.iterator();
+
             while (iter.hasNext()) {
                 int element = iter.next();
+
                 if (remove(element)) {
                     changed = true;
                 }
@@ -699,20 +679,19 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return changed;
         }
 
-
         /**
          * {@inheritDoc}
          */
         public boolean removeAll(int[] array) {
             boolean changed = false;
-            for (int i = array.length; i-- > 0; ) {
+
+            for (int i = array.length; i-- > 0;) {
                 if (remove(array[i])) {
                     changed = true;
                 }
             }
             return changed;
         }
-
 
         /**
          * {@inheritDoc}
@@ -727,10 +706,11 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return false;
             }
             final TIntSet that = (TIntSet) other;
+
             if (that.size() != this.size()) {
                 return false;
             }
-            for (int i = _states.length; i-- > 0; ) {
+            for (int i = _states.length; i-- > 0;) {
                 if (_states[i] == FULL) {
                     if (!that.contains(_set[i])) {
                         return false;
@@ -740,18 +720,17 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
             return true;
         }
 
-
         @Override
         public int hashCode() {
             int hashcode = 0;
-            for (int i = _states.length; i-- > 0; ) {
+
+            for (int i = _states.length; i-- > 0;) {
                 if (_states[i] == FULL) {
                     hashcode += HashFunctions.hash(_set[i]);
                 }
             }
             return hashcode;
         }
-
 
         /**
          * a view onto the values of the map.
@@ -765,14 +744,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return new TIntDoubleValueHashIterator(TIntDoubleHashMap.this);
             }
 
-
             /**
              * {@inheritDoc}
              */
             public double getNoEntryValue() {
                 return no_entry_value;
             }
-
 
             /**
              * {@inheritDoc}
@@ -781,14 +758,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return _size;
             }
 
-
             /**
              * {@inheritDoc}
              */
             public boolean isEmpty() {
                 return 0 == _size;
             }
-
 
             /**
              * {@inheritDoc}
@@ -797,14 +772,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return TIntDoubleHashMap.this.containsValue(entry);
             }
 
-
             /**
              * {@inheritDoc}
              */
             public double[] toArray() {
                 return TIntDoubleHashMap.this.values();
             }
-
 
             /**
              * {@inheritDoc}
@@ -813,11 +786,9 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return TIntDoubleHashMap.this.values(dest);
             }
 
-
             public boolean add(double entry) {
                 throw new UnsupportedOperationException();
             }
-
 
             /**
              * {@inheritDoc}
@@ -826,15 +797,15 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 double[] values = _values;
                 int[] set = _set;
 
-                for (int i = values.length; i-- > 0; ) {
-                    if ((set[i] != FREE && set[i] != REMOVED) && entry == values[i]) {
+                for (int i = values.length; i-- > 0;) {
+                    if ((set[i] != FREE && set[i] != REMOVED)
+                            && entry == values[i]) {
                         removeAt(i);
                         return true;
                     }
                 }
                 return false;
             }
-
 
             /**
              * {@inheritDoc}
@@ -843,6 +814,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 for (Object element : collection) {
                     if (element instanceof Double) {
                         double ele = (Double) element;
+
                         if (!TIntDoubleHashMap.this.containsValue(ele)) {
                             return false;
                         }
@@ -853,12 +825,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return true;
             }
 
-
             /**
              * {@inheritDoc}
              */
             public boolean containsAll(TDoubleCollection collection) {
                 TDoubleIterator iter = collection.iterator();
+
                 while (iter.hasNext()) {
                     if (!TIntDoubleHashMap.this.containsValue(iter.next())) {
                         return false;
@@ -866,7 +838,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 }
                 return true;
             }
-
 
             /**
              * {@inheritDoc}
@@ -880,14 +851,12 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return true;
             }
 
-
             /**
              * {@inheritDoc}
              */
             public boolean addAll(Collection<? extends Double> collection) {
                 throw new UnsupportedOperationException();
             }
-
 
             /**
              * {@inheritDoc}
@@ -896,7 +865,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 throw new UnsupportedOperationException();
             }
 
-
             /**
              * {@inheritDoc}
              */
@@ -904,14 +872,14 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 throw new UnsupportedOperationException();
             }
 
-
             /**
              * {@inheritDoc}
              */
-            @SuppressWarnings({"SuspiciousMethodCalls"})
+            @SuppressWarnings({ "SuspiciousMethodCalls"})
             public boolean retainAll(Collection<?> collection) {
                 boolean modified = false;
                 TDoubleIterator iter = iterator();
+
                 while (iter.hasNext()) {
                     if (!collection.contains(iter.next())) {
                         iter.remove();
@@ -920,7 +888,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 }
                 return modified;
             }
-
 
             /**
              * {@inheritDoc}
@@ -931,6 +898,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 }
                 boolean modified = false;
                 TDoubleIterator iter = iterator();
+
                 while (iter.hasNext()) {
                     if (!collection.contains(iter.next())) {
                         iter.remove();
@@ -940,18 +908,19 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return modified;
             }
 
-
             /**
              * {@inheritDoc}
              */
             public boolean retainAll(double[] array) {
                 boolean changed = false;
+
                 Arrays.sort(array);
                 double[] values = _values;
                 byte[] states = _states;
 
-                for (int i = values.length; i-- > 0; ) {
-                    if (states[i] == FULL && (Arrays.binarySearch(array, values[i]) < 0)) {
+                for (int i = values.length; i-- > 0;) {
+                    if (states[i] == FULL
+                            && (Arrays.binarySearch(array, values[i]) < 0)) {
                         removeAt(i);
                         changed = true;
                     }
@@ -959,15 +928,16 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return changed;
             }
 
-
             /**
              * {@inheritDoc}
              */
             public boolean removeAll(Collection<?> collection) {
                 boolean changed = false;
+
                 for (Object element : collection) {
                     if (element instanceof Double) {
                         double c = (Double) element;
+
                         if (remove(c)) {
                             changed = true;
                         }
@@ -975,7 +945,6 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 }
                 return changed;
             }
-
 
             /**
              * {@inheritDoc}
@@ -987,8 +956,10 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 }
                 boolean changed = false;
                 TDoubleIterator iter = collection.iterator();
+
                 while (iter.hasNext()) {
                     double element = iter.next();
+
                     if (remove(element)) {
                         changed = true;
                     }
@@ -996,20 +967,19 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
                 return changed;
             }
 
-
             /**
              * {@inheritDoc}
              */
             public boolean removeAll(double[] array) {
                 boolean changed = false;
-                for (int i = array.length; i-- > 0; ) {
+
+                for (int i = array.length; i-- > 0;) {
                     if (remove(array[i])) {
                         changed = true;
                     }
                 }
                 return changed;
             }
-
 
             /**
              * {@inheritDoc}
@@ -1101,6 +1071,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
 
     }
 
+
     class TIntDoubleHashIterator extends THashPrimitiveIterator implements TIntDoubleIterator {
 
         /**
@@ -1138,6 +1109,7 @@ public class TIntDoubleHashMap extends TIntDoubleHash implements TIntDoubleMap {
          */
         public double setValue(double val) {
             double old = value();
+
             _values[_index] = val;
             return old;
         }

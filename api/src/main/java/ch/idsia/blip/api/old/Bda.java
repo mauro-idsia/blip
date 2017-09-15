@@ -6,7 +6,6 @@ import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.score.BDeu;
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
-import ch.idsia.blip.core.utils.data.SIntSet;
 import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
@@ -32,7 +31,6 @@ public class Bda extends Api {
     @Option(name = "-a", required = true, usage = "Equivalent sample size")
     private double alpha = 1;
 
-
     /**
      * Command line execution
      *
@@ -40,7 +38,7 @@ public class Bda extends Api {
      * @throws IncorrectCallException if there is pa problem with parameters
      */
     public static void main(String[] args) throws IncorrectCallException {
-        defaultMain(args, new Bda(), log);
+        defaultMain(args, new Bda());
     }
 
     @Override

@@ -26,7 +26,7 @@ public class OpenParentSet implements Comparable<OpenParentSet> {
     }
 
     public OpenParentSet(int n, int new_p, double sk, int[][] p_values) {
-        this(new int[]{n}, new_p, sk, p_values);
+        this(new int[] { n}, new_p, sk, p_values);
     }
 
     @Override
@@ -37,9 +37,9 @@ public class OpenParentSet implements Comparable<OpenParentSet> {
         return -1;
     }
 
-   /* public String toString() {
-        return String.format("(%s %d %.3f)", p1.toString(), p2, sk);
-    }
-    */
+    /* public String toString() {
+     return String.format("(%s %d %.3f)", p1.toString(), p2, sk);
+     }
+     */
 }
 

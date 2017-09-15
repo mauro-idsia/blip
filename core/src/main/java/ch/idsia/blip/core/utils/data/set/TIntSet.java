@@ -1,10 +1,12 @@
 package ch.idsia.blip.core.utils.data.set;
 
+
 import ch.idsia.blip.core.utils.data.common.TIntCollection;
 import ch.idsia.blip.core.utils.data.common.TIntIterator;
 
 import java.util.Collection;
 import java.util.Set;
+
 
 /**
  * An implementation of the <tt>Set</tt> interface that uses an
@@ -18,7 +20,6 @@ import java.util.Set;
 
 public interface TIntSet extends TIntCollection {
 
-
     /**
      * Returns the value that is used to represent null. The default
      * value is generally zero, but can be changed during construction
@@ -27,7 +28,6 @@ public interface TIntSet extends TIntCollection {
      * @return the value that represents null
      */
     int getNoEntryValue();
-
 
     /**
      * Returns the number of elements in this set (its cardinality).  If this
@@ -38,14 +38,12 @@ public interface TIntSet extends TIntCollection {
      */
     int size();
 
-
     /**
      * Returns <tt>true</tt> if this set contains no elements.
      *
      * @return <tt>true</tt> if this set contains no elements
      */
     boolean isEmpty();
-
 
     /**
      * Returns <tt>true</tt> if this set contains the specified element.
@@ -55,7 +53,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean contains(int entry);
 
-
     /**
      * Creates an iterator over the values of the set.  The iterator
      * supports element deletion.
@@ -63,7 +60,6 @@ public interface TIntSet extends TIntCollection {
      * @return an <code>TIntIterator</code> value
      */
     TIntIterator iterator();
-
 
     /**
      * Returns an array containing all of the elements in this set.
@@ -82,7 +78,6 @@ public interface TIntSet extends TIntCollection {
      * @return an array containing all the elements in this set
      */
     int[] toArray();
-
 
     /**
      * Returns an array containing elements in this set.
@@ -109,7 +104,6 @@ public interface TIntSet extends TIntCollection {
      */
     int[] toArray(int[] dest);
 
-
     /**
      * Inserts a value into the set.
      *
@@ -118,7 +112,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean add(int entry);
 
-
     /**
      * Removes <tt>entry</tt> from the set.
      *
@@ -126,7 +119,6 @@ public interface TIntSet extends TIntCollection {
      * @return true if the set was modified by the remove operation.
      */
     boolean remove(int entry);
-
 
     /**
      * Tests the set to determine if all of the elements in
@@ -137,7 +129,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean containsAll(Collection<?> collection);
 
-
     /**
      * Tests the set to determine if all of the elements in
      * <tt>TIntCollection</tt> are present.
@@ -146,7 +137,6 @@ public interface TIntSet extends TIntCollection {
      * @return true if all elements were present in the set.
      */
     boolean containsAll(TIntCollection collection);
-
 
     /**
      * Tests the set to determine if all of the elements in
@@ -157,7 +147,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean containsAll(int[] array);
 
-
     /**
      * Adds all of the elements in <tt>collection</tt> to the set.
      *
@@ -165,7 +154,6 @@ public interface TIntSet extends TIntCollection {
      * @return true if the set was modified by the add all operation.
      */
     boolean addAll(Collection<? extends Integer> collection);
-
 
     /**
      * Adds all of the elements in the <tt>TIntCollection</tt> to the set.
@@ -175,7 +163,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean addAll(TIntCollection collection);
 
-
     /**
      * Adds all of the elements in the <tt>array</tt> to the set.
      *
@@ -183,7 +170,6 @@ public interface TIntSet extends TIntCollection {
      * @return true if the set was modified by the add all operation.
      */
     boolean addAll(int[] array);
-
 
     /**
      * Removes any values in the set which are not contained in
@@ -194,7 +180,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean retainAll(Collection<?> collection);
 
-
     /**
      * Removes any values in the set which are not contained in
      * <tt>TIntCollection</tt>.
@@ -203,7 +188,6 @@ public interface TIntSet extends TIntCollection {
      * @return true if the set was modified by the retain all operation
      */
     boolean retainAll(TIntCollection collection);
-
 
     /**
      * Removes any values in the set which are not contained in
@@ -214,7 +198,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean retainAll(int[] array);
 
-
     /**
      * Removes all of the elements in <tt>collection</tt> from the set.
      *
@@ -222,7 +205,6 @@ public interface TIntSet extends TIntCollection {
      * @return true if the set was modified by the remove all operation.
      */
     boolean removeAll(Collection<?> collection);
-
 
     /**
      * Removes all of the elements in <tt>TIntCollection</tt> from the set.
@@ -232,7 +214,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean removeAll(TIntCollection collection);
 
-
     /**
      * Removes all of the elements in <tt>array</tt> from the set.
      *
@@ -240,7 +221,6 @@ public interface TIntSet extends TIntCollection {
      * @return true if the set was modified by the remove all operation.
      */
     boolean removeAll(int[] array);
-
 
     /**
      * Empties the set.
@@ -263,7 +243,6 @@ public interface TIntSet extends TIntCollection {
      */
     boolean equals(Object o);
 
-
     /**
      * Returns the hash code value for this set.  The hash code of a set is
      * defined to be the sum of the hash codes of the elements in the set.
@@ -277,6 +256,5 @@ public interface TIntSet extends TIntCollection {
      * @see Set#equals(Object)
      */
     int hashCode();
-
 
 } // THashSet

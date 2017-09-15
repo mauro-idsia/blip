@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2001, Eric D. Friedman All Rights Reserved.
 // Copyright (c) 2009, Rob Eden All Rights Reserved.
 // Copyright (c) 2009, Jeff Randall All Rights Reserved.
@@ -16,9 +16,10 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 
 package ch.idsia.blip.core.utils.structure;
+
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -33,19 +34,16 @@ import java.io.ObjectOutput;
  * @author Jeff Randall
  * @version $Id: TObjectHash.java,v 1.1.2.6 2009/11/07 03:36:44 robeden Exp $
  */
-@SuppressWarnings({"UnusedDeclaration"})
+@SuppressWarnings({ "UnusedDeclaration"})
 abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
     static final long serialVersionUID = 8766048185963756400L;
 
     protected HashingStrategy<? super T> strategy;
 
-
     /**
      * FOR EXTERNALIZATION ONLY!!!
      */
-    public TCustomObjectHash() {
-    }
-
+    public TCustomObjectHash() {}
 
     /**
      * Creates a new <code>TManualObjectHash</code> instance with the
@@ -56,7 +54,6 @@ abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
 
         this.strategy = strategy;
     }
-
 
     /**
      * Creates a new <code>TManualObjectHash</code> instance whose capacity
@@ -71,7 +68,6 @@ abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
         this.strategy = strategy;
     }
 
-
     /**
      * Creates a new <code>TManualObjectHash</code> instance with a prime
      * value at or near the specified capacity and load factor.
@@ -81,26 +77,24 @@ abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
      *                        rehashing takes place.
      */
     public TCustomObjectHash(HashingStrategy<? super T> strategy, int initialCapacity,
-                             float loadFactor) {
+            float loadFactor) {
 
         super(initialCapacity, loadFactor);
 
         this.strategy = strategy;
     }
 
-
     @Override
     protected int hash(Object obj) {
-        //noinspection unchecked
+        // noinspection unchecked
         return strategy.computeHashCode((T) obj);
     }
 
     @Override
     protected boolean equals(Object one, Object two) {
-        //noinspection unchecked
+        // noinspection unchecked
         return two != REMOVED && strategy.equals((T) one, (T) two);
     }
-
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -115,10 +109,9 @@ abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
         out.writeObject(strategy);
     }
 
-
     @Override
     public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
+        throws IOException, ClassNotFoundException {
 
         // VERSION
         in.readByte();
@@ -127,7 +120,7 @@ abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
         super.readExternal(in);
 
         // STRATEGY
-        //noinspection unchecked
+        // noinspection unchecked
         strategy = (HashingStrategy<T>) in.readObject();
     }
 } // TCustomObjectHash

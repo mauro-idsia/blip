@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.io.dat;
 
+
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.other.StringUtils;
 
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
+
 
 public class ArffFileWriter extends DatFileWriter {
 
@@ -17,7 +19,6 @@ public class ArffFileWriter extends DatFileWriter {
     public static void ex(DataSet dat, String s) throws IOException {
         new ArffFileWriter().go(dat, s);
     }
-
 
     @Override
     protected void writeMetaData(DataSet dat, Writer wr) throws IOException {

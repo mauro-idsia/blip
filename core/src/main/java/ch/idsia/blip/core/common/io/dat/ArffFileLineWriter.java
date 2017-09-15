@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.io.dat;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.other.RandomStuff;
@@ -8,8 +9,8 @@ import ch.idsia.blip.core.utils.other.StringUtils;
 import java.io.IOException;
 import java.io.Writer;
 
-public class ArffFileLineWriter
-        extends BaseFileLineWriter {
+
+public class ArffFileLineWriter extends BaseFileLineWriter {
     private String name;
 
     public ArffFileLineWriter(BayesianNetwork bn, Writer wr, String name) {
@@ -26,18 +27,21 @@ public class ArffFileLineWriter
     }
 
     public void writeMetaData()
-            throws IOException {
-        RandomStuff.wf(this.wr, "@relation '%s'\n\n", new Object[]{this.name});
+        throws IOException {
+        RandomStuff.wf(this.wr, "@relation '%s'\n\n", new Object[] { this.name});
         for (int i = 0; i < this.n_var; i++) {
-            RandomStuff.wf(this.wr, "@attribute '%s' {", new Object[]{this.l_nm_var[i]});
-            RandomStuff.wf(this.wr, "%s}\n", new Object[]{StringUtils.join(this.l_values_var[i], ",")});
+            RandomStuff.wf(this.wr, "@attribute '%s' {",
+                    new Object[] { this.l_nm_var[i]});
+            RandomStuff.wf(this.wr, "%s}\n",
+                    new Object[] { StringUtils.join(this.l_values_var[i], ",")});
         }
         RandomStuff.wf(this.wr, "\n@data\n", new Object[0]);
     }
 
     public void next(short[] sample)
-            throws IOException {
+        throws IOException {
         String l = null;
+
         for (int i = 0; i < this.n_var; i++) {
             if (l == null) {
                 l = "";
@@ -56,7 +60,7 @@ public class ArffFileLineWriter
     }
 
     public void close()
-            throws IOException {
+        throws IOException {
         if (this.wr != null) {
             this.wr.close();
             this.wr = null;

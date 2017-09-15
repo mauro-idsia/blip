@@ -35,6 +35,7 @@ public class AnyFileLineReader extends DatFileLineReader {
         try {
 
             int i = 0; // variable index
+
             for (String aux : getSplit(nextLine)) {
                 lv = values.get(i);
                 v = (short) lv.indexOf(aux);
@@ -60,7 +61,6 @@ public class AnyFileLineReader extends DatFileLineReader {
                 }
             }
 
-
         } catch (IOException e) {
             RandomStuff.logExp(log, e);
         }
@@ -70,8 +70,9 @@ public class AnyFileLineReader extends DatFileLineReader {
 
     @Override
     public boolean readMetaData() {
-        if (!super.readMetaData())
+        if (!super.readMetaData()) {
             return false;
+        }
 
         values = new ArrayList<List<String>>();
         for (int i = 0; i < n_var; i++) {

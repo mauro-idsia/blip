@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.data.set;
 
+
 import ch.idsia.blip.core.utils.data.common.TPrimitiveIterator;
 
 import java.util.ConcurrentModificationException;
@@ -32,16 +33,17 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
      * the data structure this iterator traverses
      */
     protected final TPrimitiveHash _hash;
+
     /**
      * the number of elements this iterator believes are in the
      * data structure it accesses.
      */
     protected int _expectedSize;
+
     /**
      * the index used for iteration.
      */
     protected int _index;
-
 
     /**
      * Creates a <tt>TPrimitiveIterator</tt> for the specified collection.
@@ -53,7 +55,6 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
         _expectedSize = _hash.size();
         _index = _hash.capacity();
     }
-
 
     /**
      * Returns the index of the next value in the data structure
@@ -70,11 +71,10 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
 
         byte[] states = _hash._states;
         int i = _index;
-        while (i-- > 0 && (states[i] != TPrimitiveHash.FULL)) {
-        }
+
+        while (i-- > 0 && (states[i] != TPrimitiveHash.FULL)) {}
         return i;
     }
-
 
     /**
      * Returns true if the iterator can be advanced past its current
@@ -85,7 +85,6 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
     public boolean hasNext() {
         return nextIndex() >= 0;
     }
-
 
     /**
      * Removes the last entry returned by the iterator.
@@ -109,7 +108,6 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
         _expectedSize--;
     }
 
-
     /**
      * Sets the internal <tt>index</tt> so that the `next' object
      * can be returned.
@@ -121,6 +119,5 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
             throw new NoSuchElementException();
         }
     }
-
 
 } // TPrimitiveIterator

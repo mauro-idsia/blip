@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.other;
 
+
 import ch.idsia.blip.core.common.DataSet;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
+
 
 public class Marginals {
 
@@ -25,9 +27,11 @@ public class Marginals {
 
         int n = dat.n_var;
         double d = dat.n_datapoints * 1.0;
+
         wf(wr, "%d\n", n);
         for (int i = 0; i < n; i++) {
             int a = dat.l_n_arity[i];
+
             wf(wr, "%d %d", i, a);
             for (int v = 0; v < a; v++) {
                 wf(wr, " %5.4f", dat.row_values[i][v].length / d);

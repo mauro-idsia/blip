@@ -42,6 +42,7 @@ class Blip {
         }
 
         Api found = null;
+
         for (Api k : m) {
             if (nm.equals(k.nm)) {
                 found = k;
@@ -59,6 +60,7 @@ class Blip {
         try {
             Class<?> clazz = Class.forName(found.c.className);
             Method meth = clazz.getMethod("main", String[].class);
+
             meth.invoke(null, (Object) args);
         } catch (Exception exp) {
             logExp(log, exp);
@@ -91,16 +93,22 @@ class Blip {
         TreeSet<Api> m = new TreeSet<Api>();
 
         BufferedReader br = null;
+
         try {
 
-            br = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("clazzes")));
+            br = new BufferedReader(
+                    new InputStreamReader(
+                            getClass().getClassLoader().getResourceAsStream(
+                                    "clazzes")));
 
             String line = br.readLine();
+
             while (line != null) {
 
                 Clazz c = new Clazz();
 
                 String nm = line.substring(0, line.indexOf(" "));
+
                 line = line.substring(line.indexOf(" ")).trim();
 
                 c.className = line.substring(0, line.indexOf(" "));
@@ -125,6 +133,7 @@ class Blip {
         String className;
     }
 
+
     private static class Api implements Comparable<Api> {
         final Clazz c;
         final String nm;
@@ -134,7 +143,6 @@ class Blip {
             this.c = c;
         }
 
-        @Override
         public int compareTo(Api other) {
             return nm.compareTo(other.nm);
         }

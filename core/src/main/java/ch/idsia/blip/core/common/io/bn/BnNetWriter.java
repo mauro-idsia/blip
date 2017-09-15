@@ -51,7 +51,7 @@ public class BnNetWriter extends BnWriter {
      * @throws IOException if there is any problem in the writing
      */
     private void writePotentials(Writer rd_wr, BayesianNetwork bn)
-            throws IOException {
+        throws IOException {
 
         for (int i = 0; i < bn.n_var; i++) {
             wf(rd_wr, "potential ( %s", bn.name(i));
@@ -150,10 +150,11 @@ public class BnNetWriter extends BnWriter {
      * @throws IOException if there is a problem in the writing
      */
     private static void writeNodes(Writer rd_wr, BayesianNetwork bn)
-            throws IOException {
+        throws IOException {
 
         for (int i = 0; i < bn.n_var; i++) {
             String nm = bn.name(i);
+
             wf(rd_wr, "node %s { \n states = ( ", nm);
             for (String v : bn.values(i)) {
                 wf(rd_wr, "\"%s\" ", v);
@@ -168,6 +169,7 @@ public class BnNetWriter extends BnWriter {
 
             if (bn.positions != null && bn.positions.containsKey(nm)) {
                 double[] g = bn.positions.get(nm);
+
                 wf(rd_wr, " position = ( %s %s ); \n", f(g[0]), f(g[1]));
             }
 

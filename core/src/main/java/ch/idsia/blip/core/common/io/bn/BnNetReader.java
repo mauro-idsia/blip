@@ -174,71 +174,72 @@ public class BnNetReader {
     /**
      * Reorder the Bn in the alphabetical order of its variables.
      */
+    
     /*
-    private void reorderBn() {
+     private void reorderBn() {
 
-        BnBuilder new_bn = new BnBuilder(bn.n_var);
+     BnBuilder new_bn = new BnBuilder(bn.n_var);
 
-        new_bn.l_nm_var.clear();
-        new_bn.l_nm_var.addAll(bn.l_nm_var);
-        Collections.sort(new_bn.l_nm_var);
-        int[] ord = new int[bn.n_var];
+     new_bn.l_nm_var.clear();
+     new_bn.l_nm_var.addAll(bn.l_nm_var);
+     Collections.sort(new_bn.l_nm_var);
+     int[] ord = new int[bn.n_var];
 
-        for (int i = 0; i < bn.n_var; i++) {
-            ord[i] = Collections.binarySearch(new_bn.l_nm_var,
-                    bn.name( i));
-        }
+     for (int i = 0; i < bn.n_var; i++) {
+     ord[i] = Collections.binarySearch(new_bn.l_nm_var,
+     bn.name( i));
+     }
 
-        for (int i = 0; i < bn.n_var; i++) {
-            int o = ord[i];
+     for (int i = 0; i < bn.n_var; i++) {
+     int o = ord[i];
 
-            new_bn.l_ar_var.set(o, bn.arity(i));
-            new_bn.l_values_var.set(o, bn.values(i));
-            new_bn.l_potential_var.set(o, bn.potentials(i));
+     new_bn.l_ar_var.set(o, bn.arity(i));
+     new_bn.l_values_var.set(o, bn.values(i));
+     new_bn.l_potential_var.set(o, bn.potentials(i));
 
-            reorderParents(new_bn, ord, i, o);
-        }
-        for (int i = 0; i < bn.n_var; i++) {
-            int o = ord[i];
+     reorderParents(new_bn, ord, i, o);
+     }
+     for (int i = 0; i < bn.n_var; i++) {
+     int o = ord[i];
 
-            reorderProbs(new_bn, ord, i, o);
-        }
+     reorderProbs(new_bn, ord, i, o);
+     }
 
-        bn = new_bn;
-    } */
-
-    /*
-    private void reorderProbs(BayesianNetwork new_bn, int[] ord, int i, int o) {
-        // Reorder the potentials for each variable
-        int[] old_p = ArrayUtils.expandArray(bn.parents(i), i);
-        int[] new_p = new int[old_p.length];
-        int j = 0;
-
-        for (int p : old_p) {
-            new_p[j++] = ord[p];
-
-        }
-        double[] probs = BnNetUtils.reorganize(new_bn, bn.potentials(i),
-                new_p, ArrayUtils.expandArray(new_bn.parents(o), o));
-
-        // System.out.println(o + " " + Arrays.toString(new_p) + " " + Arrays.toString(expandArray(new_bn.parents(o), o)));
-        new_bn.l_potential_var.set(o, probs);
-    } */
+     bn = new_bn;
+     } */
 
     /*
-    private void reorderParents(BayesianNetwork new_bn, int[] ord, int i, int o) {
-        // Reorder parents for each variable
-        int[] p_var = bn.parents(i);
-        int[] new_p_var = new int[p_var.length];
-        int j = 0;
+     private void reorderProbs(BayesianNetwork new_bn, int[] ord, int i, int o) {
+     // Reorder the potentials for each variable
+     int[] old_p = ArrayUtils.expandArray(bn.parents(i), i);
+     int[] new_p = new int[old_p.length];
+     int j = 0;
 
-        for (int p : p_var) {
-            new_p_var[j++] = ord[p];
+     for (int p : old_p) {
+     new_p[j++] = ord[p];
 
-        }
-        Arrays.sort(new_p_var);
-        new_bn.setParents(o, new_p_var);
-    } */
+     }
+     double[] probs = BnNetUtils.reorganize(new_bn, bn.potentials(i),
+     new_p, ArrayUtils.expandArray(new_bn.parents(o), o));
+
+     // System.out.println(o + " " + Arrays.toString(new_p) + " " + Arrays.toString(expandArray(new_bn.parents(o), o)));
+     new_bn.l_potential_var.set(o, probs);
+     } */
+
+    /*
+     private void reorderParents(BayesianNetwork new_bn, int[] ord, int i, int o) {
+     // Reorder parents for each variable
+     int[] p_var = bn.parents(i);
+     int[] new_p_var = new int[p_var.length];
+     int j = 0;
+
+     for (int p : p_var) {
+     new_p_var[j++] = ord[p];
+
+     }
+     Arrays.sort(new_p_var);
+     new_bn.setParents(o, new_p_var);
+     } */
 
     /**
      * Read the parents in the given string.
@@ -255,9 +256,9 @@ public class BnNetReader {
         String[] aux2 = aux.split("\\|");
 
         nm_var = aux2[0].trim();
-        if (aux2.length == 1 || "".equals(aux2[1].trim()))
+        if (aux2.length == 1 || "".equals(aux2[1].trim())) {
             par = new int[0];
-        else {
+        } else {
             String[] aux3 = aux2[1].trim().split(" ");
 
             par = new int[aux3.length];

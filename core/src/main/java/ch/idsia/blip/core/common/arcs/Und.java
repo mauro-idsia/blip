@@ -1,10 +1,12 @@
 package ch.idsia.blip.core.common.arcs;
 
+
 import java.io.PrintWriter;
 import java.util.Formatter;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.expandArray;
+
 
 public class Und extends Arcs {
 
@@ -13,15 +15,16 @@ public class Und extends Arcs {
     public Und(Integer n) {
         this.n = n;
         neigh = new int[n][];
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             neigh[i] = new int[0];
+        }
     }
 
     public void mark(int i1, int i2) {
-//        if (find(i1, neigh[i2]))
-//            p("sfasfa");
-//        if (find(i2, neigh[i1]))
-//            p("sfasfa");
+        // if (find(i1, neigh[i2]))
+        // p("sfasfa");
+        // if (find(i2, neigh[i1]))
+        // p("sfasfa");
         neigh[i1] = expandArray(neigh[i1], i2);
         neigh[i2] = expandArray(neigh[i2], i1);
     }
@@ -48,9 +51,11 @@ public class Und extends Arcs {
         fm.format("graph Base {\n");
         for (int v1 = 0; v1 < n; v1++) {
             fm.format("%s \n", name(v1));
-            for (int v2 : neigh[v1])
-                if (v2 > v1)
+            for (int v2 : neigh[v1]) {
+                if (v2 > v1) {
                     fm.format("%s -- %s \n", name(v1), name(v2));
+                }
+            }
         }
 
         s.append("}");
@@ -72,6 +77,7 @@ public class Und extends Arcs {
     public void write(String s) {
         try {
             PrintWriter w = new PrintWriter(s + ".dot", "UTF-8");
+
             w.print(this);
             w.close();
         } catch (Exception e) {

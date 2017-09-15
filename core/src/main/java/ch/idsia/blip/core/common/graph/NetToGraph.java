@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.graph;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 
 import java.io.*;
@@ -10,8 +11,8 @@ import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
-public class NetToGraph {
 
+public class NetToGraph {
 
     public int max_time;
 
@@ -33,15 +34,17 @@ public class NetToGraph {
         this.max_time = max_time;
 
         File index = new File(s);
+
         if (!index.exists()) {
             index.mkdir();
         }
 
         try {
-            if (meth == Method.Png)
+            if (meth == Method.Png) {
                 png(bn, s);
-            else if (meth == Method.Plain)
+            } else if (meth == Method.Plain) {
                 plain(bn, s);
+            }
         } catch (Exception e) {
             logExp(e);
         }
@@ -58,14 +61,16 @@ public class NetToGraph {
     private void png(BayesianNetwork bn, String s) throws IOException {
 
         // read highlight
-        if (path_highlith != null)
+        if (path_highlith != null) {
             highligth = readHigh();
+        }
 
         List<BayesianNetwork> ls = BnSeparator.go(bn);
 
         PrintWriter w = new PrintWriter(s + "/excluded", "UTF-8");
 
         Map<BayesianNetwork, Integer> sized = new HashMap<BayesianNetwork, Integer>();
+
         for (BayesianNetwork b : ls) {
             sized.put(b, b.n_var);
         }
@@ -73,6 +78,7 @@ public class NetToGraph {
         // pngSingle(bn, s);
 
         int i = 0;
+
         // Print each bn separated
         for (BayesianNetwork b : sized.keySet()) {
 
@@ -95,6 +101,7 @@ public class NetToGraph {
         BufferedReader b = new BufferedReader(new FileReader(path_highlith));
         TreeSet<String> highligth = new TreeSet<String>();
         String line;
+
         while ((line = b.readLine()) != null) {
             highligth.add(line.trim());
         }
@@ -104,18 +111,21 @@ public class NetToGraph {
 
     private String twoIsBetter(BayesianNetwork b) {
 
-        if (b.n_var == 1)
+        if (b.n_var == 1) {
             return f("%s \n", b.name(0));
+        }
 
-        if (b.l_parent_var.length > 0)
+        if (b.l_parent_var.length > 0) {
             return f("%s -> %s \n", b.name(1), b.name(0));
-
-        else return f("%s -> %s \n", b.name(0), b.name(1));
+        } else {
+            return f("%s -> %s \n", b.name(0), b.name(1));
+        }
     }
 
     private void pngSingle(BayesianNetwork bn, String s) throws IOException {
         printBn(bn, s);
         String h = f("dot -Tpng %s.dot -o %s.png", s, s);
+
         exec(h);
     }
 
@@ -126,6 +136,7 @@ public class NetToGraph {
 
     private void printBn(BayesianNetwork bn, String s) throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter w = new PrintWriter(s + ".dot", "UTF-8");
+
         bn.toGraph(w, highligth);
         w.flush();
         w.close();

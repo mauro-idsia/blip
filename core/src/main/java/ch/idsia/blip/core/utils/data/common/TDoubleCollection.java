@@ -3,6 +3,7 @@ package ch.idsia.blip.core.utils.data.common;
 
 import java.util.Collection;
 
+
 /**
  * An interface that mimics the <tt>Collection</tt> interface.
  *
@@ -24,7 +25,6 @@ public interface TDoubleCollection {
      */
     double getNoEntryValue();
 
-
     /**
      * Returns the number of elements in this collection (its cardinality).  If this
      * collection contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
@@ -34,14 +34,12 @@ public interface TDoubleCollection {
      */
     int size();
 
-
     /**
      * Returns <tt>true</tt> if this collection contains no elements.
      *
      * @return <tt>true</tt> if this collection contains no elements
      */
     boolean isEmpty();
-
 
     /**
      * Returns <tt>true</tt> if this collection contains the specified element.
@@ -51,7 +49,6 @@ public interface TDoubleCollection {
      */
     boolean contains(double entry);
 
-
     /**
      * Creates an iterator over the values of the collection.  The iterator
      * supports element deletion.
@@ -59,7 +56,6 @@ public interface TDoubleCollection {
      * @return an <code>TDoubleIterator</code> value
      */
     TDoubleIterator iterator();
-
 
     /**
      * Returns an array containing all of the elements in this collection.
@@ -78,7 +74,6 @@ public interface TDoubleCollection {
      * @return an array containing all the elements in this collection
      */
     double[] toArray();
-
 
     /**
      * Returns an array containing elements in this collection.
@@ -105,7 +100,6 @@ public interface TDoubleCollection {
      */
     double[] toArray(double[] dest);
 
-
     /**
      * Inserts a value into the collection.
      *
@@ -114,7 +108,6 @@ public interface TDoubleCollection {
      */
     boolean add(double entry);
 
-
     /**
      * Removes <tt>entry</tt> from the collection.
      *
@@ -122,7 +115,6 @@ public interface TDoubleCollection {
      * @return true if the collection was modified by the remove operation.
      */
     boolean remove(double entry);
-
 
     /**
      * Tests the collection to determine if all of the elements in
@@ -133,7 +125,6 @@ public interface TDoubleCollection {
      */
     boolean containsAll(Collection<?> collection);
 
-
     /**
      * Tests the collection to determine if all of the elements in
      * <tt>TDoubleCollection</tt> are present.
@@ -142,7 +133,6 @@ public interface TDoubleCollection {
      * @return true if all elements were present in the collection.
      */
     boolean containsAll(TDoubleCollection collection);
-
 
     /**
      * Tests the collection to determine if all of the elements in
@@ -153,7 +143,6 @@ public interface TDoubleCollection {
      */
     boolean containsAll(double[] array);
 
-
     /**
      * Adds all of the elements in <tt>collection</tt> to the collection.
      *
@@ -161,7 +150,6 @@ public interface TDoubleCollection {
      * @return true if the collection was modified by the add all operation.
      */
     boolean addAll(Collection<? extends Double> collection);
-
 
     /**
      * Adds all of the elements in the <tt>TDoubleCollection</tt> to the collection.
@@ -171,7 +159,6 @@ public interface TDoubleCollection {
      */
     boolean addAll(TDoubleCollection collection);
 
-
     /**
      * Adds all of the elements in the <tt>array</tt> to the collection.
      *
@@ -179,7 +166,6 @@ public interface TDoubleCollection {
      * @return true if the collection was modified by the add all operation.
      */
     boolean addAll(double[] array);
-
 
     /**
      * Removes any values in the collection which are not contained in
@@ -190,7 +176,6 @@ public interface TDoubleCollection {
      */
     boolean retainAll(Collection<?> collection);
 
-
     /**
      * Removes any values in the collection which are not contained in
      * <tt>TDoubleCollection</tt>.
@@ -199,7 +184,6 @@ public interface TDoubleCollection {
      * @return true if the collection was modified by the retain all operation
      */
     boolean retainAll(TDoubleCollection collection);
-
 
     /**
      * Removes any values in the collection which are not contained in
@@ -210,7 +194,6 @@ public interface TDoubleCollection {
      */
     boolean retainAll(double[] array);
 
-
     /**
      * Removes all of the elements in <tt>collection</tt> from the collection.
      *
@@ -218,7 +201,6 @@ public interface TDoubleCollection {
      * @return true if the collection was modified by the remove all operation.
      */
     boolean removeAll(Collection<?> collection);
-
 
     /**
      * Removes all of the elements in <tt>TDoubleCollection</tt> from the collection.
@@ -228,7 +210,6 @@ public interface TDoubleCollection {
      */
     boolean removeAll(TDoubleCollection collection);
 
-
     /**
      * Removes all of the elements in <tt>array</tt> from the collection.
      *
@@ -237,12 +218,10 @@ public interface TDoubleCollection {
      */
     boolean removeAll(double[] array);
 
-
     /**
      * Empties the collection.
      */
     void clear();
-
 
     // Comparison and hashing
 
@@ -260,7 +239,6 @@ public interface TDoubleCollection {
      */
     boolean equals(Object o);
 
-
     /**
      * Returns the hash code value for this collection.  The hash code of a collection is
      * defined to be the sum of the hash codes of the elements in the collection.
@@ -274,6 +252,5 @@ public interface TDoubleCollection {
      * @see Collection#equals(Object)
      */
     int hashCode();
-
 
 } // TDoubleCollection

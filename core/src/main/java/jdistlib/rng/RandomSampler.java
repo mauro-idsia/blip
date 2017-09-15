@@ -1,5 +1,6 @@
 package jdistlib.rng;
 
+
 /**
  * Space and time efficiently computes a sorted <thread>Simple Random Sample Without Replacement (SRSWOR)</thread>, that is, a sorted set of <tt>n</tt> random numbers from an interval of <tt>N</tt> numbers;
  * Example: Computing <tt>n=3</tt> random numbers from the interval <tt>[1,50]</tt> may yield the sorted random set <tt>(7,13,47)</tt>.
@@ -97,12 +98,12 @@ package jdistlib.rng;
  * @version 1.1 05/26/99
  */
 class RandomSampler {
-    //public class RandomSampler extends Object implements java.io.Serializable {
+    // public class RandomSampler extends Object implements java.io.Serializable {
     private long my_n;
     private long my_N;
     private long my_low;
     private RandomEngine my_RandomGenerator;
-    //static long negalphainv; // just to determine once and for all the best value for negalphainv
+    // static long negalphainv; // just to determine once and for all the best value for negalphainv
 
     /**
      * Constructs a random sampler that computes and delivers sorted random sets in blocks.
@@ -115,13 +116,19 @@ class RandomSampler {
      * @param randomGenerator a random number generator. Set this parameter to <tt>null</tt> to use the default random number generator.
      */
     public RandomSampler(long n, long N, long low, RandomEngine randomGenerator) {
-        if (n < 0) throw new IllegalArgumentException("n must be >= 0");
-        if (n > N) throw new IllegalArgumentException("n must by <= N");
+        if (n < 0) {
+            throw new IllegalArgumentException("n must be >= 0");
+        }
+        if (n > N) {
+            throw new IllegalArgumentException("n must by <= N");
+        }
         this.my_n = n;
         this.my_N = N;
         this.my_low = low;
 
-        if (randomGenerator == null) randomGenerator = new MersenneTwister();
+        if (randomGenerator == null) {
+            randomGenerator = new MersenneTwister();
+        }
         this.my_RandomGenerator = randomGenerator;
     }
 
@@ -137,14 +144,21 @@ class RandomSampler {
      * @param fromIndex the first index within <tt>values</tt> to be filled with numbers (inclusive).
      */
     public void nextBlock(int count, long[] values, int fromIndex) {
-        if (count > my_n) throw new IllegalArgumentException("Random sample exhausted.");
-        if (count < 0) throw new IllegalArgumentException("Negative count.");
+        if (count > my_n) {
+            throw new IllegalArgumentException("Random sample exhausted.");
+        }
+        if (count < 0) {
+            throw new IllegalArgumentException("Negative count.");
+        }
 
-        if (count == 0) return; //nothing to do
+        if (count == 0) {
+            return;
+        } // nothing to do
 
         sample(my_n, my_N, count, my_low, values, fromIndex, my_RandomGenerator);
 
         long lastSample = values[fromIndex + count - 1];
+
         my_n -= count;
         my_N = my_N - lastSample - 1 + my_low;
         my_low = lastSample + 1;
@@ -168,24 +182,25 @@ class RandomSampler {
      * @param randomGenerator a random number generator.
      */
     private static void rejectMethodD(long n, long N, int count, long low, long[] values, int fromIndex, RandomEngine randomGenerator) {
-    /*  This algorithm is applicable if a large percentage (90%..100%) of N shall be sampled.
-        In such cases it is more efficient than sampleMethodA() and sampleMethodD().
-	    The idea is that it is more efficient to express
-		sample(n,N,count) in terms of reject(N-n,N,count)
-	 	and then invert the result.
-		For example, sampling 99% turns into sampling 1% plus inversion.
 
-		This algorithm is the same as method sampleMethodD(...) with the exception that sampled elements are rejected, and not sampled elements included in the result set.
-	*/
+        /* This algorithm is applicable if a large percentage (90%..100%) of N shall be sampled.
+         In such cases it is more efficient than sampleMethodA() and sampleMethodD().
+         The idea is that it is more efficient to express
+         sample(n,N,count) in terms of reject(N-n,N,count)
+         and then invert the result.
+         For example, sampling 99% turns into sampling 1% plus inversion.
+
+         This algorithm is the same as method sampleMethodD(...) with the exception that sampled elements are rejected, and not sampled elements included in the result set.
+         */
         n = N - n; // IMPORTANT !!!
 
         double nreal, Nreal, ninv, nmin1inv, U, X, Vprime, y1, y2, top, bottom, negSreal, qu1real;
         long qu1, t, limit;
-        //long threshold;
+        // long threshold;
         long S;
         long chosen = -1 + low;
 
-        //long negalphainv = -13;  //tuning paramter, determines when to switch from method D to method A. Dependent on programming language, platform, etc.
+        // long negalphainv = -13;  //tuning paramter, determines when to switch from method D to method A. Dependent on programming language, platform, etc.
 
         nreal = n;
         ninv = 1.0 / nreal;
@@ -193,26 +208,32 @@ class RandomSampler {
         Vprime = Math.exp(Math.log(randomGenerator.nextDouble()) * ninv);
         qu1 = -n + 1 + N;
         qu1real = -nreal + 1.0 + Nreal;
-        //threshold = -negalphainv * n;
+        // threshold = -negalphainv * n;
 
-        while (n > 1 && count > 0) { //&& threshold<N) {
+        while (n > 1 && count > 0) { // && threshold<N) {
             nmin1inv = 1.0 / (-1.0 + nreal);
-            for (; ; ) {
-                for (; ; ) { // step D2: generate U and X
+            for (;;) {
+                for (;;) { // step D2: generate U and X
                     X = Nreal * (-Vprime + 1.0);
                     S = (long) X;
-                    if (S < qu1) break;
-                    Vprime = Math.exp(Math.log(randomGenerator.nextDouble()) * ninv);
+                    if (S < qu1) {
+                        break;
+                    }
+                    Vprime = Math.exp(
+                            Math.log(randomGenerator.nextDouble()) * ninv);
                 }
                 U = randomGenerator.nextDouble();
                 negSreal = -S;
 
-                //step D3: Accept?
+                // step D3: Accept?
                 y1 = Math.exp(Math.log(U * Nreal / qu1real) * nmin1inv);
-                Vprime = y1 * (-X / Nreal + 1.0) * (qu1real / (negSreal + qu1real));
-                if (Vprime <= 1.0) break; //break inner loop
+                Vprime = y1 * (-X / Nreal + 1.0)
+                        * (qu1real / (negSreal + qu1real));
+                if (Vprime <= 1.0) {
+                    break;
+                } // break inner loop
 
-                //step D4: Accept?
+                // step D4: Accept?
                 y2 = 1.0;
                 top = -1.0 + Nreal;
                 if (n - 1 > S) {
@@ -227,20 +248,27 @@ class RandomSampler {
                     top--;
                     bottom--;
                 }
-                if (Nreal / (-X + Nreal) >= y1 * Math.exp(Math.log(y2) * nmin1inv)) {
+                if (Nreal / (-X + Nreal)
+                        >= y1 * Math.exp(Math.log(y2) * nmin1inv)) {
                     // accept !
-                    Vprime = Math.exp(Math.log(randomGenerator.nextDouble()) * nmin1inv);
-                    break; //break inner loop
+                    Vprime = Math.exp(
+                            Math.log(randomGenerator.nextDouble()) * nmin1inv);
+                    break; // break inner loop
                 }
                 Vprime = Math.exp(Math.log(randomGenerator.nextDouble()) * ninv);
-            } //end for
+            } // end for
 
-            //step D5: reject the (S+1)st record !
-            int iter = count; //int iter = (int) (Math.min(S,count));
-            if (S < iter) iter = (int) S;
+            // step D5: reject the (S+1)st record !
+            int iter = count; // int iter = (int) (Math.min(S,count));
+
+            if (S < iter) {
+                iter = (int) S;
+            }
 
             count -= iter;
-            for (; --iter >= 0; ) values[fromIndex++] = ++chosen;
+            for (; --iter >= 0;) {
+                values[fromIndex++] = ++chosen;
+            }
             chosen++;
 
             N -= S + 1;
@@ -250,24 +278,30 @@ class RandomSampler {
             ninv = nmin1inv;
             qu1 = -S + qu1;
             qu1real = negSreal + qu1real;
-            //threshold += negalphainv;
-        } //end while
+            // threshold += negalphainv;
+        } // end while
 
-
-        if (count > 0) { //special case n==1
-            //reject the (S+1)st record !
+        if (count > 0) { // special case n==1
+            // reject the (S+1)st record !
             S = (long) (N * Vprime);
 
-            int iter = count; //int iter = (int) (Math.min(S,count));
-            if (S < iter) iter = (int) S;
+            int iter = count; // int iter = (int) (Math.min(S,count));
+
+            if (S < iter) {
+                iter = (int) S;
+            }
 
             count -= iter;
-            for (; --iter >= 0; ) values[fromIndex++] = ++chosen;
+            for (; --iter >= 0;) {
+                values[fromIndex++] = ++chosen;
+            }
 
             chosen++;
 
             // fill the rest
-            for (; --count >= 0; ) values[fromIndex++] = ++chosen;
+            for (; --count >= 0;) {
+                values[fromIndex++] = ++chosen;
+            }
         }
     }
 
@@ -293,14 +327,24 @@ class RandomSampler {
      * @param randomGenerator a random number generator. Set this parameter to <tt>null</tt> to use the default random number generator.
      */
     private static void sample(long n, long N, int count, long low, long[] values, int fromIndex, RandomEngine randomGenerator) {
-        if (n <= 0 || count <= 0) return;
-        if (count > n) throw new IllegalArgumentException("count must not be greater than n");
-        if (randomGenerator == null) randomGenerator = new MersenneTwister();
+        if (n <= 0 || count <= 0) {
+            return;
+        }
+        if (count > n) {
+            throw new IllegalArgumentException(
+                    "count must not be greater than n");
+        }
+        if (randomGenerator == null) {
+            randomGenerator = new MersenneTwister();
+        }
 
         if (count == N) { // rare case treated quickly
             long val = low;
             int limit = fromIndex + count;
-            for (int i = fromIndex; i < limit; ) values[i++] = val++;
+
+            for (int i = fromIndex; i < limit;) {
+                values[i++] = val++;
+            }
             return;
         }
 
@@ -309,7 +353,6 @@ class RandomSampler {
         } else { // More than 95% of all numbers shall be sampled.
             rejectMethodD(n, N, count, low, values, fromIndex, randomGenerator);
         }
-
 
     }
 
@@ -385,7 +428,7 @@ class RandomSampler {
         long S;
         long chosen = -1 + low;
 
-        long negalphainv = -13;  //tuning paramter, determines when to switch from method D to method A. Dependent on programming language, platform, etc.
+        long negalphainv = -13; // tuning paramter, determines when to switch from method D to method A. Dependent on programming language, platform, etc.
 
         nreal = n;
         ninv = 1.0 / nreal;
@@ -397,22 +440,28 @@ class RandomSampler {
 
         while (n > 1 && count > 0 && threshold < N) {
             nmin1inv = 1.0 / (-1.0 + nreal);
-            for (; ; ) {
-                for (; ; ) { // step D2: generate U and X
+            for (;;) {
+                for (;;) { // step D2: generate U and X
                     X = Nreal * (-Vprime + 1.0);
                     S = (long) X;
-                    if (S < qu1) break;
-                    Vprime = Math.exp(Math.log(randomGenerator.nextDouble()) * ninv);
+                    if (S < qu1) {
+                        break;
+                    }
+                    Vprime = Math.exp(
+                            Math.log(randomGenerator.nextDouble()) * ninv);
                 }
                 U = randomGenerator.nextDouble();
                 negSreal = -S;
 
-                //step D3: Accept?
+                // step D3: Accept?
                 y1 = Math.exp(Math.log(U * Nreal / qu1real) * nmin1inv);
-                Vprime = y1 * (-X / Nreal + 1.0) * (qu1real / (negSreal + qu1real));
-                if (Vprime <= 1.0) break; //break inner loop
+                Vprime = y1 * (-X / Nreal + 1.0)
+                        * (qu1real / (negSreal + qu1real));
+                if (Vprime <= 1.0) {
+                    break;
+                } // break inner loop
 
-                //step D4: Accept?
+                // step D4: Accept?
                 y2 = 1.0;
                 top = -1.0 + Nreal;
                 if (n - 1 > S) {
@@ -427,25 +476,28 @@ class RandomSampler {
                     top--;
                     bottom--;
                 }
-                if (Nreal / (-X + Nreal) >= y1 * Math.exp(Math.log(y2) * nmin1inv)) {
+                if (Nreal / (-X + Nreal)
+                        >= y1 * Math.exp(Math.log(y2) * nmin1inv)) {
                     // accept !
-                    Vprime = Math.exp(Math.log(randomGenerator.nextDouble()) * nmin1inv);
-                    break; //break inner loop
+                    Vprime = Math.exp(
+                            Math.log(randomGenerator.nextDouble()) * nmin1inv);
+                    break; // break inner loop
                 }
                 Vprime = Math.exp(Math.log(randomGenerator.nextDouble()) * ninv);
-            } //end for
+            } // end for
 
-            //step D5: select the (S+1)st record !
+            // step D5: select the (S+1)st record !
             chosen += S + 1;
             values[fromIndex++] = chosen;
-		/*
-		// invert
-		for (int iter=0; iter<S && count > 0; iter++) {
-			values[fromIndex++] = ++chosen;
-			count--;
-		}
-		chosen++;
-		*/
+
+            /*
+             // invert
+             for (int iter=0; iter<S && count > 0; iter++) {
+             values[fromIndex++] = ++chosen;
+             count--;
+             }
+             chosen++;
+             */
             count--;
 
             N -= S + 1;
@@ -456,14 +508,14 @@ class RandomSampler {
             qu1 = -S + qu1;
             qu1real = negSreal + qu1real;
             threshold += negalphainv;
-        } //end while
-
+        } // end while
 
         if (count > 0) {
-            if (n > 1) { //faster to use method A to finish the sampling
-                sampleMethodA(n, N, count, chosen + 1, values, fromIndex, randomGenerator);
+            if (n > 1) { // faster to use method A to finish the sampling
+                sampleMethodA(n, N, count, chosen + 1, values, fromIndex,
+                        randomGenerator);
             } else {
-                //special case n==1
+                // special case n==1
                 S = (long) (N * Vprime);
                 chosen += S + 1;
                 values[fromIndex++] = chosen;

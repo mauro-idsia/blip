@@ -63,6 +63,7 @@ package ch.idsia.blip.core.utils.data.hash;
  * </pre>
  */
 public interface TIntDoubleIterator extends TAdvancingIterator {
+
     /**
      * Provides access to the key of the mapping at the iterator's position.
      * Note that you must <tt>advance()</tt> the iterator at least once

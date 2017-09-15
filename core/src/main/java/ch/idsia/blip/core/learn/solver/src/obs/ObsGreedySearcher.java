@@ -1,10 +1,12 @@
 package ch.idsia.blip.core.learn.solver.src.obs;
 
+
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.BitSet;
+
 
 public class ObsGreedySearcher extends ObsSearcher {
 
@@ -36,7 +38,7 @@ public class ObsGreedySearcher extends ObsSearcher {
 
             BitSet domains = new BitSet();
 
-            for (int p : last_str[var].parents) {
+            for (int p : str[var].parents) {
                 domains.set(p);
             }
 
@@ -50,14 +52,14 @@ public class ObsGreedySearcher extends ObsSearcher {
                     break;
                 }
 
-                for (int p : last_str[next].parents) {
+                for (int p : str[next].parents) {
                     domains.set(p);
                 }
 
                 // System.out.printf("%d (%s) con %d, %d\n", var, Arrays.toString(new_str.get(var).parents), next,
                 // Arrays.binarySearch(new_str.get(var).parents, next));
 
-                ParentSet nextPSet = last_str[next];
+                ParentSet nextPSet = str[next];
 
                 for (ParentSet pSet : m_scores[next]) {
                     if (!acceptable(pSet.parents, forbidden)) {
@@ -92,33 +94,31 @@ public class ObsGreedySearcher extends ObsSearcher {
             // System.out.printf("swapArray: %d and %d, gain: %.5f, new best: %s\n", vars.get(best_ix), vars.get(best_ix + 1), best_gain, best_pset);
 
             // Update the structure for the following index
-            last_str[vars[best_j]] = best_pset;
+            str[vars[best_j]] = best_pset;
             // Do the switch
             ArrayUtils.swapArray(vars, best_i, best_j);
             // Update the new_sk
-            last_sk += best_gain;
+            sk += best_gain;
 
             return true;
         }
 
     }
 
-
     @Override
     public ParentSet[] search() {
 
         vars = smp.sample();
 
-
-        if (solver.verbose > 2)
+        if (solver.verbose > 2) {
             solver.log("going! \n");
+        }
 
         // Find initial structure!
         super.search();
 
         if (solver.verbose > 2) {
-            solver.logf("Initial: %.5f (check: %.5f) \n",
-                    last_sk, checkSk());
+            solver.logf("Initial: %.5f (check: %.5f) \n", sk, checkSk());
         }
 
         solver.checkTime();
@@ -126,8 +126,10 @@ public class ObsGreedySearcher extends ObsSearcher {
 
             boolean improv = greedy(vars);
 
-            if (solver.verbose > 1)
-                solver.logf("New Greedy! %.5f - %.3f \n", solver.elapsed, last_sk);
+            if (solver.verbose > 1) {
+                solver.logf("New Greedy! %.5f - %.3f \n", solver.elapsed,
+                        sk);
+            }
 
             if (!improv) {
                 break;
@@ -136,7 +138,7 @@ public class ObsGreedySearcher extends ObsSearcher {
             solver.checkTime();
         }
 
-        return last_str;
+        return str;
     }
 
 }

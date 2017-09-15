@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.graph;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.data.set.TIntSet;
@@ -7,6 +8,7 @@ import ch.idsia.blip.core.utils.data.set.TIntSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 /**
  * Separates a BN in subparts
@@ -16,6 +18,7 @@ class BnSeparator {
     public static List<BayesianNetwork> go(BayesianNetwork bn) {
         List<BayesianNetwork> l_bn = new ArrayList<BayesianNetwork>();
         List<TIntSet> sep = getSeparated(bn);
+
         for (TIntSet s : sep) {
             l_bn.add(getSubBn(bn, s));
         }
@@ -24,8 +27,10 @@ class BnSeparator {
 
     private static BayesianNetwork getSubBn(BayesianNetwork bn, TIntSet s) {
         int[] ar = s.toArray();
+
         Arrays.sort(ar);
         BayesianNetwork n_bn = new BayesianNetwork(ar.length);
+
         for (int i = 0; i < ar.length; i++) {
             int a = ar[i];
 
@@ -35,6 +40,7 @@ class BnSeparator {
 
             int[] ps = bn.parents(a);
             int[] n_ps = new int[ps.length];
+
             for (int j = 0; j < ps.length; j++) {
                 n_ps[j] = Arrays.binarySearch(ar, ps[j]);
             }
@@ -50,8 +56,10 @@ class BnSeparator {
 
         // variabiles to process
         TIntSet proc = new TIntHashSet();
-        for (int i = 0; i < bn.n_var; i++)
+
+        for (int i = 0; i < bn.n_var; i++) {
             proc.add(i);
+        }
 
         while (!proc.isEmpty()) {
 
@@ -60,26 +68,31 @@ class BnSeparator {
 
             // new set
             TIntHashSet n_set = new TIntHashSet();
+
             n_set.add(v);
 
             TIntSet todo = new TIntHashSet();
+
             todo.add(v);
 
             while (!todo.isEmpty()) {
 
                 int t = pop(todo);
+
                 proc.remove(t);
 
-                for (int p : bn.parents(t))
+                for (int p : bn.parents(t)) {
                     if (!n_set.contains(p)) {
                         n_set.add(p);
                         todo.add(p);
                     }
-                for (int c : bn.childrens(t))
+                }
+                for (int c : bn.childrens(t)) {
                     if (!n_set.contains(c)) {
                         n_set.add(c);
                         todo.add(c);
                     }
+                }
 
             }
 
@@ -91,6 +104,7 @@ class BnSeparator {
 
     private static int pop(TIntSet proc) {
         int v = proc.iterator().next();
+
         proc.remove(v);
         return v;
     }

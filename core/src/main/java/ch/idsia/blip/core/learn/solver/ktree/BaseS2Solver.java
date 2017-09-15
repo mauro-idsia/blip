@@ -107,10 +107,11 @@ public class BaseS2Solver extends ScoreSolver {
                     Process p = builder.start();
 
                     StreamGobbler e = new StreamGobbler(p.getErrorStream(), err);
+
                     e.start();
                     StreamGobbler o = new StreamGobbler(p.getInputStream(), out);
-                    o.start();
 
+                    o.start();
 
                     p.waitFor();
 
@@ -119,7 +120,6 @@ public class BaseS2Solver extends ScoreSolver {
                 } catch (InterruptedException e) {
                     logExp(log, e);
                 }
-
 
                 GobnilpReader g = new GobnilpReader();
 

@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver;
 
+
 import ch.idsia.blip.core.learn.solver.ps.MaxScoreProvider;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.ps.SimpleProvider;
@@ -8,6 +9,7 @@ import ch.idsia.blip.core.learn.solver.samp.SimpleSampler;
 import ch.idsia.blip.core.utils.other.ParentSet;
 
 import java.util.HashMap;
+
 
 public abstract class ScoreSolver extends BaseSolver {
 
@@ -22,8 +24,11 @@ public abstract class ScoreSolver extends BaseSolver {
 
     @Override
     protected Provider getProvider() {
-        if (max_parents == 0) return new SimpleProvider(sc);
-        else return new MaxScoreProvider(sc, max_parents);
+        if (max_parents == 0) {
+            return new SimpleProvider(sc);
+        } else {
+            return new MaxScoreProvider(sc, max_parents);
+        }
     }
 
     @Override

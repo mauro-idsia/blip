@@ -126,7 +126,7 @@ public class GreedyScorer extends BaseScorer {
             if (verbose > 2) {
                 log.info(
                         String.format("Starting with: %d, max time: %.2f", n,
-                                max_exec_time));
+                        max_exec_time));
             }
 
             // int arity = dat.l_n_arity[n];
@@ -148,7 +148,7 @@ public class GreedyScorer extends BaseScorer {
 
                 addScore(p, sk);
 
-                addParentSetToEvaluate(new int[]{p}, sk, null);
+                addParentSetToEvaluate(new int[] { p}, sk, null);
             }
 
             if (max_exec_time == 0) {
@@ -159,8 +159,10 @@ public class GreedyScorer extends BaseScorer {
             while (!open.isEmpty() && (elapsed < max_exec_time)) {
 
                 ParentSetEntry pset = open.pollLast();
-                if (pset == null)
+
+                if (pset == null) {
                     continue;
+                }
 
                 for (int p2 = 0; (p2 < dat.n_var) && (elapsed < max_exec_time); p2++) {
 
@@ -183,8 +185,9 @@ public class GreedyScorer extends BaseScorer {
             }
 
             // synchronized (scorer) {
-            if (verbose > 0)
+            if (verbose > 0) {
                 System.out.println("... finishing " + n);
+            }
 
             conclude();
         }
@@ -207,10 +210,11 @@ public class GreedyScorer extends BaseScorer {
 
             closed.add(pars);
 
-            if (p_values == null)
+            if (p_values == null) {
                 p_values = score.computeParentSetValues(pars);
-            else
+            } else {
                 p_values = score.expandParentSetValues(pars, p_values, p2);
+            }
 
             double sk = score.computeScore(n, pars, p_values);
 
@@ -244,10 +248,10 @@ public class GreedyScorer extends BaseScorer {
                 open.pollLast();
                 worstQueueScore = open.last().sk;
             } else // If we didn't drop any element, check if we have to update the current
-                // worst score!
-                if (sk < worstQueueScore) {
-                    worstQueueScore = sk;
-                }
+            // worst score!
+            if (sk < worstQueueScore) {
+                worstQueueScore = sk;
+            }
 
             open.add(new ParentSetEntry(p, sk, p_values));
         }

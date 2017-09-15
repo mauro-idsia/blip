@@ -46,10 +46,13 @@ public class ArffFileReader extends DatFileReader {
 
         // Collect row values
         TIntArrayList[][] v_aux = new TIntArrayList[dSet.n_var][];
+
         for (int n = 0; n < dSet.n_var; n++) {
             TIntArrayList[] vv_aux = new TIntArrayList[dSet.l_n_arity[n]];
-            for (int v = 0; v < dSet.l_n_arity[n]; v++)
+
+            for (int v = 0; v < dSet.l_n_arity[n]; v++) {
                 vv_aux[v] = new TIntArrayList();
+            }
             v_aux[n] = vv_aux;
         }
 
@@ -61,14 +64,17 @@ public class ArffFileReader extends DatFileReader {
         int v;
         List<TIntArrayList> lu;
         HashMap<String, Integer> lv;
+
         dSet.n_datapoints = 0;
         while ((line = readLn()) != null) {
             line = line.trim();
-            if ("".equals(line))
+            if ("".equals(line)) {
                 continue;
+            }
 
-            if (!readMissing && line.contains("?"))
+            if (!readMissing && line.contains("?")) {
                 continue;
+            }
 
             sp = getSplit(line);
             if (sp.length != dSet.n_var) {
@@ -80,6 +86,7 @@ public class ArffFileReader extends DatFileReader {
             for (int i = 0; i < dSet.n_var; i++) {
                 if ("?".equals(sp[i])) {
                     int pos = index(i, missing_aux_l);
+
                     if (pos < 0) {
                         pos = missing_aux_l.size();
                         missing_aux_v.add(new TIntArrayList());
@@ -89,8 +96,9 @@ public class ArffFileReader extends DatFileReader {
                     missing_aux_v.get(pos).add(dSet.n_datapoints);
                 } else {
                     v = values.get(i).get(sp[i]);
-                    if (v < 0)
+                    if (v < 0) {
                         p("ciao");
+                    }
                     v_aux[i][v].add(dSet.n_datapoints);
                 }
             }
@@ -110,11 +118,11 @@ public class ArffFileReader extends DatFileReader {
         dSet.missing_l = new int[dSet.n_var][];
         for (int n = 0; n < dSet.n_var; n++) {
             int pos = index(n, missing_aux_l);
+
             if (pos >= 0) {
                 dSet.missing_l[n] = missing_aux_v.get(pos).toArray();
             }
         }
-
 
         rd_dat.close();
 
@@ -142,8 +150,10 @@ public class ArffFileReader extends DatFileReader {
 
         // Read relation name
         String ln = readLn();
-        if (!ln.startsWith("@relation"))
+
+        if (!ln.startsWith("@relation")) {
             p("ERROR! Arff file does not start with relation");
+        }
         relation = splitSpace(ln)[1];
         ln = readLn();
 
@@ -153,8 +163,9 @@ public class ArffFileReader extends DatFileReader {
 
         // Read names
         while (!ln.equals("@data")) {
-            if (!ln.startsWith("@attribute "))
+            if (!ln.startsWith("@attribute ")) {
                 p("ERROR! Arff file does not start with relation");
+            }
 
             ln = ln.replace("@attribute ", "");
             String name;
@@ -163,10 +174,12 @@ public class ArffFileReader extends DatFileReader {
             if (ln.startsWith("'")) {
                 ln = ln.substring(1);
                 int g = ln.indexOf("'");
+
                 name = ln.substring(0, g);
                 value = ln.substring(g + 1);
             } else {
                 int g = ln.indexOf(" ");
+
                 name = ln.substring(0, g);
                 value = ln.substring(g);
             }
@@ -175,8 +188,10 @@ public class ArffFileReader extends DatFileReader {
             String[] v = getSplit(value.replace("{", "").replace("}", "").trim());
             // Arrays.sort(v);
             String[] va = new String[v.length];
-            for (int j = 0; j < v.length; j++)
+
+            for (int j = 0; j < v.length; j++) {
                 va[j] = v[j].trim();
+            }
 
             v_aux.add(va);
 
@@ -200,8 +215,10 @@ public class ArffFileReader extends DatFileReader {
             dSet.l_nm_states[i] = v_aux.get(i);
 
             HashMap<String, Integer> h = new HashMap<String, Integer>();
-            for (int j = 0; j < dSet.l_n_arity[i]; j++)
+
+            for (int j = 0; j < dSet.l_n_arity[i]; j++) {
                 h.put(dSet.l_nm_states[i][j], j);
+            }
             values.add(h);
         }
 
@@ -220,18 +237,25 @@ public class ArffFileReader extends DatFileReader {
 
     private String readLn() throws IOException {
         String s = readL();
-        if (s == null) return null;
+
+        if (s == null) {
+            return null;
+        }
         while (s.equals("")) {
             s = readL();
-            if (s == null) return null;
+            if (s == null) {
+                return null;
+            }
         }
         return s;
     }
 
     private String readL() throws IOException {
         String s = rd_dat.readLine();
-        if (s == null)
+
+        if (s == null) {
             return null;
+        }
         s = s.trim();
         return s;
     }

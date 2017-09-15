@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.data.array;
 
+
 import ch.idsia.blip.core.utils.data.Constants;
 import ch.idsia.blip.core.utils.data.HashFunctions;
 import ch.idsia.blip.core.utils.data.common.TDoubleCollection;
@@ -39,16 +40,14 @@ public class TDoubleArrayList implements TDoubleList {
      */
     protected double no_entry_value;
 
-
     /**
      * Creates a new <code>TDoubleArrayList</code> instance with the
      * default capacity.
      */
-    @SuppressWarnings({"RedundantCast"})
+    @SuppressWarnings({ "RedundantCast"})
     public TDoubleArrayList() {
         this(DEFAULT_CAPACITY, (double) 0);
     }
-
 
     /**
      * Creates a new <code>TDoubleArrayList</code> instance with the
@@ -56,11 +55,10 @@ public class TDoubleArrayList implements TDoubleList {
      *
      * @param capacity an <code>int</code> value
      */
-    @SuppressWarnings({"RedundantCast"})
+    @SuppressWarnings({ "RedundantCast"})
     public TDoubleArrayList(int capacity) {
         this(capacity, (double) 0);
     }
-
 
     /**
      * Creates a new <code>TDoubleArrayList</code> instance with the
@@ -86,7 +84,6 @@ public class TDoubleArrayList implements TDoubleList {
         addAll(collection);
     }
 
-
     /**
      * Creates a new <code>TDoubleArrayList</code> instance whose
      * capacity is the length of <tt>values</tt> array and whose
@@ -102,11 +99,13 @@ public class TDoubleArrayList implements TDoubleList {
     }
 
     protected TDoubleArrayList(double[] values, double no_entry_value, boolean wrap) {
-        if (!wrap)
+        if (!wrap) {
             throw new IllegalStateException("Wrong call");
+        }
 
-        if (values == null)
+        if (values == null) {
             throw new IllegalArgumentException("values can not be null");
+        }
 
         _data = values;
         _pos = values.length;
@@ -138,13 +137,16 @@ public class TDoubleArrayList implements TDoubleList {
      */
     public static TDoubleArrayList wrap(double[] values, double no_entry_value) {
         return new TDoubleArrayList(values, no_entry_value, true) {
+
             /**
              * Growing the wrapped external array is not allow
              */
             @Override
             public void ensureCapacity(int capacity) {
-                if (capacity > _data.length)
-                    throw new IllegalStateException("Can not grow ArrayList wrapped external array");
+                if (capacity > _data.length) {
+                    throw new IllegalStateException(
+                            "Can not grow ArrayList wrapped external array");
+                }
             }
         };
     }
@@ -155,7 +157,6 @@ public class TDoubleArrayList implements TDoubleList {
     public double getNoEntryValue() {
         return no_entry_value;
     }
-
 
     // sizing
 
@@ -168,11 +169,11 @@ public class TDoubleArrayList implements TDoubleList {
         if (capacity > _data.length) {
             int newCap = Math.max(_data.length << 1, capacity);
             double[] tmp = new double[newCap];
+
             System.arraycopy(_data, 0, tmp, 0, _data.length);
             _data = tmp;
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -181,7 +182,6 @@ public class TDoubleArrayList implements TDoubleList {
         return _pos;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -189,18 +189,17 @@ public class TDoubleArrayList implements TDoubleList {
         return _pos == 0;
     }
 
-
     /**
      * Sheds any excess capacity above and beyond the current size of the list.
      */
     public void trimToSize() {
         if (_data.length > size()) {
             double[] tmp = new double[size()];
+
             toArray(tmp, 0, tmp.length);
             _data = tmp;
         }
     }
-
 
     // modifying
 
@@ -213,14 +212,12 @@ public class TDoubleArrayList implements TDoubleList {
         return true;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void add(double[] vals) {
         add(vals, 0, vals.length);
     }
-
 
     /**
      * {@inheritDoc}
@@ -230,7 +227,6 @@ public class TDoubleArrayList implements TDoubleList {
         System.arraycopy(vals, offset, _data, _pos, length);
         _pos += length;
     }
-
 
     /**
      * {@inheritDoc}
@@ -248,14 +244,12 @@ public class TDoubleArrayList implements TDoubleList {
         _pos++;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void insert(int offset, double[] values) {
         insert(offset, values, 0, values.length);
     }
-
 
     /**
      * {@inheritDoc}
@@ -274,7 +268,6 @@ public class TDoubleArrayList implements TDoubleList {
         _pos += len;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -285,14 +278,12 @@ public class TDoubleArrayList implements TDoubleList {
         return _data[offset];
     }
 
-
     /**
      * Returns the value at the specified offset without doing any bounds checking.
      */
     public double getQuick(int offset) {
         return _data[offset];
     }
-
 
     /**
      * {@inheritDoc}
@@ -303,10 +294,10 @@ public class TDoubleArrayList implements TDoubleList {
         }
 
         double prev_val = _data[offset];
+
         _data[offset] = val;
         return prev_val;
     }
-
 
     /**
      * {@inheritDoc}
@@ -316,10 +307,10 @@ public class TDoubleArrayList implements TDoubleList {
             throw new ArrayIndexOutOfBoundsException(offset);
         }
         double old = _data[offset];
+
         _data[offset] = val;
         return old;
     }
-
 
     /**
      * {@inheritDoc}
@@ -327,7 +318,6 @@ public class TDoubleArrayList implements TDoubleList {
     public void set(int offset, double[] values) {
         set(offset, values, 0, values.length);
     }
-
 
     /**
      * {@inheritDoc}
@@ -339,7 +329,6 @@ public class TDoubleArrayList implements TDoubleList {
         System.arraycopy(values, valOffset, _data, offset, length);
     }
 
-
     /**
      * Sets the value at the specified offset without doing any bounds checking.
      */
@@ -347,14 +336,12 @@ public class TDoubleArrayList implements TDoubleList {
         _data[offset] = val;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void clear() {
         clear(DEFAULT_CAPACITY);
     }
-
 
     /**
      * Flushes the internal state of the list, setting the capacity of the empty list to
@@ -365,7 +352,6 @@ public class TDoubleArrayList implements TDoubleList {
         _pos = 0;
     }
 
-
     /**
      * Sets the size of the list to 0, but does not change its capacity. This method can
      * be used as an alternative to the {@link #clear()} method if you want to recycle a
@@ -375,7 +361,6 @@ public class TDoubleArrayList implements TDoubleList {
         _pos = 0;
         Arrays.fill(_data, no_entry_value);
     }
-
 
     /**
      * Sets the size of the list to 0, but does not change its capacity. This method can
@@ -388,7 +373,6 @@ public class TDoubleArrayList implements TDoubleList {
     public void resetQuick() {
         _pos = 0;
     }
-
 
     /**
      * {@inheritDoc}
@@ -403,22 +387,23 @@ public class TDoubleArrayList implements TDoubleList {
         return false;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double removeAt(int offset) {
         double old = get(offset);
+
         remove(offset, 1);
         return old;
     }
-
 
     /**
      * {@inheritDoc}
      */
     public void remove(int offset, int length) {
-        if (length == 0) return;
+        if (length == 0) {
+            return;
+        }
         if (offset < 0 || offset >= _pos) {
             throw new ArrayIndexOutOfBoundsException(offset);
         }
@@ -426,8 +411,7 @@ public class TDoubleArrayList implements TDoubleList {
         if (offset == 0) {
             // data at the front
             System.arraycopy(_data, length, _data, 0, _pos - length);
-        } else if (_pos - length == offset) {
-            // no copy to make, decrementing pos "deletes" values at
+        } else if (_pos - length == offset) {// no copy to make, decrementing pos "deletes" values at
             // the end
         } else {
             // data in the middle
@@ -440,14 +424,12 @@ public class TDoubleArrayList implements TDoubleList {
         // value
     }
 
-
     /**
      * {@inheritDoc}
      */
     public TDoubleIterator iterator() {
         return new TDoubleArrayIterator(0);
     }
-
 
     /**
      * {@inheritDoc}
@@ -456,6 +438,7 @@ public class TDoubleArrayList implements TDoubleList {
         for (Object element : collection) {
             if (element instanceof Double) {
                 double c = ((Double) element).doubleValue();
+
                 if (!contains(c)) {
                     return false;
                 }
@@ -467,7 +450,6 @@ public class TDoubleArrayList implements TDoubleList {
         return true;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -476,8 +458,10 @@ public class TDoubleArrayList implements TDoubleList {
             return true;
         }
         TDoubleIterator iter = collection.iterator();
+
         while (iter.hasNext()) {
             double element = iter.next();
+
             if (!contains(element)) {
                 return false;
             }
@@ -485,12 +469,11 @@ public class TDoubleArrayList implements TDoubleList {
         return true;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean containsAll(double[] array) {
-        for (int i = array.length; i-- > 0; ) {
+        for (int i = array.length; i-- > 0;) {
             if (!contains(array[i])) {
                 return false;
             }
@@ -498,14 +481,15 @@ public class TDoubleArrayList implements TDoubleList {
         return true;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean addAll(Collection<? extends Double> collection) {
         boolean changed = false;
+
         for (Double element : collection) {
             double e = element.doubleValue();
+
             if (add(e)) {
                 changed = true;
             }
@@ -513,15 +497,16 @@ public class TDoubleArrayList implements TDoubleList {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean addAll(TDoubleCollection collection) {
         boolean changed = false;
         TDoubleIterator iter = collection.iterator();
+
         while (iter.hasNext()) {
             double element = iter.next();
+
             if (add(element)) {
                 changed = true;
             }
@@ -529,12 +514,12 @@ public class TDoubleArrayList implements TDoubleList {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean addAll(double[] array) {
         boolean changed = false;
+
         for (double element : array) {
             if (add(element)) {
                 changed = true;
@@ -543,14 +528,14 @@ public class TDoubleArrayList implements TDoubleList {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings({"SuspiciousMethodCalls"})
+    @SuppressWarnings({ "SuspiciousMethodCalls"})
     public boolean retainAll(Collection<?> collection) {
         boolean modified = false;
         TDoubleIterator iter = iterator();
+
         while (iter.hasNext()) {
             if (!collection.contains(Double.valueOf(iter.next()))) {
                 iter.remove();
@@ -559,7 +544,6 @@ public class TDoubleArrayList implements TDoubleList {
         }
         return modified;
     }
-
 
     /**
      * {@inheritDoc}
@@ -570,6 +554,7 @@ public class TDoubleArrayList implements TDoubleList {
         }
         boolean modified = false;
         TDoubleIterator iter = iterator();
+
         while (iter.hasNext()) {
             if (!collection.contains(iter.next())) {
                 iter.remove();
@@ -579,16 +564,16 @@ public class TDoubleArrayList implements TDoubleList {
         return modified;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean retainAll(double[] array) {
         boolean changed = false;
+
         Arrays.sort(array);
         double[] data = _data;
 
-        for (int i = _pos; i-- > 0; ) {
+        for (int i = _pos; i-- > 0;) {
             if (Arrays.binarySearch(array, data[i]) < 0) {
                 remove(i, 1);
                 changed = true;
@@ -597,15 +582,16 @@ public class TDoubleArrayList implements TDoubleList {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean removeAll(Collection<?> collection) {
         boolean changed = false;
+
         for (Object element : collection) {
             if (element instanceof Double) {
                 double c = ((Double) element).doubleValue();
+
                 if (remove(c)) {
                     changed = true;
                 }
@@ -613,7 +599,6 @@ public class TDoubleArrayList implements TDoubleList {
         }
         return changed;
     }
-
 
     /**
      * {@inheritDoc}
@@ -625,8 +610,10 @@ public class TDoubleArrayList implements TDoubleList {
         }
         boolean changed = false;
         TDoubleIterator iter = collection.iterator();
+
         while (iter.hasNext()) {
             double element = iter.next();
+
             if (remove(element)) {
                 changed = true;
             }
@@ -634,13 +621,13 @@ public class TDoubleArrayList implements TDoubleList {
         return changed;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public boolean removeAll(double[] array) {
         boolean changed = false;
-        for (int i = array.length; i-- > 0; ) {
+
+        for (int i = array.length; i-- > 0;) {
             if (remove(array[i])) {
                 changed = true;
             }
@@ -655,13 +642,12 @@ public class TDoubleArrayList implements TDoubleList {
         reverse(0, _pos);
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void reverse(int from, int to) {
         if (from == to) {
-            return;             // nothing to do
+            return; // nothing to do
         }
         if (from > to) {
             throw new IllegalArgumentException("from cannot be greater than to");
@@ -671,16 +657,14 @@ public class TDoubleArrayList implements TDoubleList {
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void shuffle(Random rand) {
-        for (int i = _pos; i-- > 1; ) {
+        for (int i = _pos; i-- > 1;) {
             swap(i, rand.nextInt(i));
         }
     }
-
 
     /**
      * Swap the values at offsets <tt>thread</tt> and <tt>j</tt>.
@@ -690,10 +674,10 @@ public class TDoubleArrayList implements TDoubleList {
      */
     private void swap(int i, int j) {
         double tmp = _data[i];
+
         _data[i] = _data[j];
         _data[j] = tmp;
     }
-
 
     // copying
 
@@ -702,8 +686,8 @@ public class TDoubleArrayList implements TDoubleList {
      */
     public TDoubleList subList(int begin, int end) {
         if (end < begin) {
-            throw new IllegalArgumentException("end index " + end +
-                    " greater than begin index " + begin);
+            throw new IllegalArgumentException(
+                    "end index " + end + " greater than begin index " + begin);
         }
         if (begin < 0) {
             throw new IndexOutOfBoundsException("begin index can not be < 0");
@@ -712,12 +696,12 @@ public class TDoubleArrayList implements TDoubleList {
             throw new IndexOutOfBoundsException("end index < " + _data.length);
         }
         TDoubleArrayList list = new TDoubleArrayList(end - begin);
+
         for (int i = begin; i < end; i++) {
             list.add(_data[i]);
         }
         return list;
     }
-
 
     /**
      * {@inheritDoc}
@@ -726,22 +710,22 @@ public class TDoubleArrayList implements TDoubleList {
         return toArray(0, _pos);
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double[] toArray(int offset, int len) {
         double[] rv = new double[len];
+
         toArray(rv, offset, len);
         return rv;
     }
-
 
     /**
      * {@inheritDoc}
      */
     public double[] toArray(double[] dest) {
         int len = dest.length;
+
         if (dest.length > _pos) {
             len = _pos;
             dest[len] = no_entry_value;
@@ -750,13 +734,12 @@ public class TDoubleArrayList implements TDoubleList {
         return dest;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double[] toArray(double[] dest, int offset, int len) {
         if (len == 0) {
-            return dest;             // nothing to copy
+            return dest; // nothing to copy
         }
         if (offset < 0 || offset >= _pos) {
             throw new ArrayIndexOutOfBoundsException(offset);
@@ -765,13 +748,12 @@ public class TDoubleArrayList implements TDoubleList {
         return dest;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double[] toArray(double[] dest, int source_pos, int dest_pos, int len) {
         if (len == 0) {
-            return dest;             // nothing to copy
+            return dest; // nothing to copy
         }
         if (source_pos < 0 || source_pos >= _pos) {
             throw new ArrayIndexOutOfBoundsException(source_pos);
@@ -779,7 +761,6 @@ public class TDoubleArrayList implements TDoubleList {
         System.arraycopy(_data, source_pos, dest, dest_pos, len);
         return dest;
     }
-
 
     // comparing
 
@@ -792,18 +773,21 @@ public class TDoubleArrayList implements TDoubleList {
             return true;
         } else if (other instanceof TDoubleArrayList) {
             TDoubleArrayList that = (TDoubleArrayList) other;
-            if (that.size() != this.size()) return false;
-            else {
-                for (int i = _pos; i-- > 0; ) {
+
+            if (that.size() != this.size()) {
+                return false;
+            } else {
+                for (int i = _pos; i-- > 0;) {
                     if (this._data[i] != that._data[i]) {
                         return false;
                     }
                 }
                 return true;
             }
-        } else return false;
+        } else {
+            return false;
+        }
     }
-
 
     /**
      * {@inheritDoc}
@@ -811,7 +795,8 @@ public class TDoubleArrayList implements TDoubleList {
     @Override
     public int hashCode() {
         int h = 0;
-        for (int i = _pos; i-- > 0; ) {
+
+        for (int i = _pos; i-- > 0;) {
             h += HashFunctions.hash(_data[i]);
         }
         return h;
@@ -826,14 +811,12 @@ public class TDoubleArrayList implements TDoubleList {
         Arrays.sort(_data, 0, _pos);
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void sort(int fromIndex, int toIndex) {
         Arrays.sort(_data, fromIndex, toIndex);
     }
-
 
     // filling
 
@@ -843,7 +826,6 @@ public class TDoubleArrayList implements TDoubleList {
     public void fill(double val) {
         Arrays.fill(_data, 0, _pos, val);
     }
-
 
     /**
      * {@inheritDoc}
@@ -856,7 +838,6 @@ public class TDoubleArrayList implements TDoubleList {
         Arrays.fill(_data, fromIndex, toIndex, val);
     }
 
-
     // searching
 
     /**
@@ -865,7 +846,6 @@ public class TDoubleArrayList implements TDoubleList {
     public int binarySearch(double value) {
         return binarySearch(value, 0, _pos);
     }
-
 
     /**
      * {@inheritDoc}
@@ -893,9 +873,8 @@ public class TDoubleArrayList implements TDoubleList {
                 return mid; // value found
             }
         }
-        return -(low + 1);  // value not found.
+        return -(low + 1); // value not found.
     }
-
 
     /**
      * {@inheritDoc}
@@ -903,7 +882,6 @@ public class TDoubleArrayList implements TDoubleList {
     public int indexOf(double value) {
         return indexOf(0, value);
     }
-
 
     /**
      * {@inheritDoc}
@@ -917,7 +895,6 @@ public class TDoubleArrayList implements TDoubleList {
         return -1;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -925,19 +902,17 @@ public class TDoubleArrayList implements TDoubleList {
         return lastIndexOf(_pos, value);
     }
 
-
     /**
      * {@inheritDoc}
      */
     public int lastIndexOf(int offset, double value) {
-        for (int i = offset; i-- > 0; ) {
+        for (int i = offset; i-- > 0;) {
             if (_data[i] == value) {
                 return i;
             }
         }
         return -1;
     }
-
 
     /**
      * {@inheritDoc}
@@ -951,9 +926,11 @@ public class TDoubleArrayList implements TDoubleList {
      */
     public double max() {
         if (size() == 0) {
-            throw new IllegalStateException("cannot find maximum of an empty list");
+            throw new IllegalStateException(
+                    "cannot find maximum of an empty list");
         }
         double max = Double.NEGATIVE_INFINITY;
+
         for (int i = 0; i < _pos; i++) {
             if (_data[i] > max) {
                 max = _data[i];
@@ -962,15 +939,16 @@ public class TDoubleArrayList implements TDoubleList {
         return max;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double min() {
         if (size() == 0) {
-            throw new IllegalStateException("cannot find minimum of an empty list");
+            throw new IllegalStateException(
+                    "cannot find minimum of an empty list");
         }
         double min = Double.POSITIVE_INFINITY;
+
         for (int i = 0; i < _pos; i++) {
             if (_data[i] < min) {
                 min = _data[i];
@@ -979,18 +957,17 @@ public class TDoubleArrayList implements TDoubleList {
         return min;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public double sum() {
         double sum = 0;
+
         for (int i = 0; i < _pos; i++) {
             sum += _data[i];
         }
         return sum;
     }
-
 
     // stringification
 
@@ -1000,6 +977,7 @@ public class TDoubleArrayList implements TDoubleList {
     @Override
     public String toString() {
         final StringBuilder buf = new StringBuilder("{");
+
         for (int i = 0, end = _pos - 1; i < end; i++) {
             buf.append(_data[i]);
             buf.append(", ");
@@ -1013,8 +991,10 @@ public class TDoubleArrayList implements TDoubleList {
 
     public double mean() {
         double tot = 0;
-        for (int i = 0; i < size(); i++)
+
+        for (int i = 0; i < size(); i++) {
             tot += _data[i];
+        }
         return (tot / size());
     }
 
@@ -1025,6 +1005,7 @@ public class TDoubleArrayList implements TDoubleList {
     public String stats() {
         StringBuilder s = new StringBuilder();
         double mean = mean();
+
         s.append(f("Median: %.2f \n", median()));
         s.append(f("Mean: %.2f \n", mean));
         s.append(f("Variance: %.2f \n", variance(mean)));
@@ -1034,11 +1015,12 @@ public class TDoubleArrayList implements TDoubleList {
 
     private double variance(double mean) {
         double tot = 0;
-        for (int i = 0; i < size(); i++)
+
+        for (int i = 0; i < size(); i++) {
             tot += Math.pow(mean - _data[i], 2);
+        }
         return (tot / size());
     }
-
 
     /**
      * TDoubleArrayList iterator
@@ -1057,11 +1039,9 @@ public class TDoubleArrayList implements TDoubleList {
          */
         int lastRet = -1;
 
-
         TDoubleArrayIterator(int index) {
             cursor = index;
         }
-
 
         /**
          * {@inheritDoc}
@@ -1070,13 +1050,13 @@ public class TDoubleArrayList implements TDoubleList {
             return cursor < size();
         }
 
-
         /**
          * {@inheritDoc}
          */
         public double next() {
             try {
                 double next = get(cursor);
+
                 lastRet = cursor++;
                 return next;
             } catch (IndexOutOfBoundsException e) {
@@ -1084,25 +1064,25 @@ public class TDoubleArrayList implements TDoubleList {
             }
         }
 
-
         /**
          * {@inheritDoc}
          */
         public void remove() {
-            if (lastRet == -1)
+            if (lastRet == -1) {
                 throw new IllegalStateException();
+            }
 
             try {
                 TDoubleArrayList.this.remove(lastRet, 1);
-                if (lastRet < cursor)
+                if (lastRet < cursor) {
                     cursor--;
+                }
                 lastRet = -1;
             } catch (IndexOutOfBoundsException e) {
                 throw new ConcurrentModificationException();
             }
         }
     }
-
 
     public void writeExternal(ObjectOutput out) throws IOException {
         // VERSION
@@ -1116,15 +1096,15 @@ public class TDoubleArrayList implements TDoubleList {
 
         // ENTRIES
         int len = _data.length;
+
         out.writeInt(len);
         for (int i = 0; i < len; i++) {
             out.writeDouble(_data[i]);
         }
     }
 
-
     public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
+        throws IOException, ClassNotFoundException {
 
         // VERSION
         in.readByte();
@@ -1137,6 +1117,7 @@ public class TDoubleArrayList implements TDoubleList {
 
         // ENTRIES
         int len = in.readInt();
+
         _data = new double[len];
         for (int i = 0; i < len; i++) {
             _data[i] = in.readDouble();

@@ -1,11 +1,13 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.common.analyze.Entropy;
 
 import java.util.Random;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
+
 
 public class EntropySampler implements Sampler {
 
@@ -48,20 +50,26 @@ public class EntropySampler implements Sampler {
         synchronized (lock) {
 
             boolean[] selected = new boolean[n];
+
             for (int j = 0; j < n; j++) {
 
                 double tot = 0;
+
                 for (int i = 0; i < n; i++) {
-                    if (!selected[i])
+                    if (!selected[i]) {
                         tot += weights[i];
+                    }
                 }
                 double v = r.nextDouble() - Math.pow(2, -10);
                 int sel = -1;
+
                 for (int i = 0; i < n && sel == -1; i++) {
                     if (!selected[i]) {
                         double s = weights[i] / tot;
-                        if (s <= 0 || v <= s)
+
+                        if (s <= 0 || v <= s) {
                             sel = i;
+                        }
                         v -= s;
                     }
                 }

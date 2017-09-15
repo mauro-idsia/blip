@@ -25,8 +25,7 @@ public class ObsSolver extends ScoreSolver {
         this.searcher = search;
     }
 
-    public ObsSolver() {
-    }
+    public ObsSolver() {}
 
     @Override
     public void prepare() {
@@ -57,10 +56,12 @@ public class ObsSolver extends ScoreSolver {
 
     @Override
     protected Searcher getSearcher() {
-        if ("greedy".equals(searcher))
+        if ("greedy".equals(searcher)) {
             return new ObsGreedySearcher(this);
-        if ("inobs".equals(searcher))
+        }
+        if ("inobs".equals(searcher)) {
             return new InobsSearcher(this);
+        }
         return new ObsSearcher(this);
     }
 

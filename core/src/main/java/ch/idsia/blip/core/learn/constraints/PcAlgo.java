@@ -43,12 +43,12 @@ public class PcAlgo {
 
     public void execute(DataSet dat) throws IOException {
 
-        if (oracle == null)
+        if (oracle == null) {
             return;
+        }
 
         if (verbose > 1) {
-            f("Starting Pc Algorithm. Oracle %s\n",
-                    oracle.toString());
+            f("Starting Pc Algorithm. Oracle %s\n", oracle.toString());
         }
 
         this.dat = dat;
@@ -88,8 +88,10 @@ public class PcAlgo {
             l = l + 1;
 
             int max_l = 3;
-            if (l > max_l)
+
+            if (l > max_l) {
                 break;
+            }
 
             first_cycle = false;
 
@@ -134,8 +136,9 @@ public class PcAlgo {
 
                 first_cycle = true;
 
-                if (verbose > 1)
+                if (verbose > 1) {
                     pf("Considering %s - %s on size %d \n", h(i), h(j), l);
+                }
 
                 // Consider off all the subsets S \in a(X_i) \ {X_j}, with |S| = l
                 TIntArrayList cp = new TIntArrayList(adj[i].size() - 1);
@@ -150,8 +153,10 @@ public class PcAlgo {
                     int[] s = res.get(k);
 
                     if (oracle.condInd(i, j, s)) {
-                        if (verbose > 0)
-                            pf("delete edge %s - %s on conditioning set %s \n", h(i), h(j), h(s));
+                        if (verbose > 0) {
+                            pf("delete edge %s - %s on conditioning set %s \n",
+                                    h(i), h(j), h(s));
+                        }
                         // delete edge X_i - X_j
                         skeleton.empty(i, j);
                         // let sepset(X_i, X_j) = sepset(X_j, X_i) = S

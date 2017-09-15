@@ -1,9 +1,11 @@
 package ch.idsia.blip.core.learn.solver.src;
 
+
 import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.utils.other.ParentSet;
+
 
 public abstract class ScoreSearcher extends Base implements Searcher {
 
@@ -17,9 +19,9 @@ public abstract class ScoreSearcher extends Base implements Searcher {
 
     protected int thread;
 
-    public double last_sk;
+    public double sk;
 
-    public ParentSet[] last_str;
+    public ParentSet[] str;
 
     public Sampler smp;
 
@@ -57,19 +59,19 @@ public abstract class ScoreSearcher extends Base implements Searcher {
         this.thread = thread;
     }
 
-
     protected double checkSk(ParentSet[] new_str) {
         double check = 0.0;
 
         for (ParentSet p : new_str) {
-            if (p != null)
+            if (p != null) {
                 check += p.sk;
+            }
         }
         return check;
     }
 
     public double checkSk() {
-        return checkSk(last_str);
+        return checkSk(str);
     }
 
     protected int randInt(int a, int b) {

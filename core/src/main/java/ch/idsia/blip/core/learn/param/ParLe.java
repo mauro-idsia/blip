@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.param;
 
+
 import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.DataSet;
@@ -7,6 +8,7 @@ import ch.idsia.blip.core.utils.data.ArrayUtils;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.p;
 import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+
 
 public abstract class ParLe extends App {
 
@@ -127,15 +129,19 @@ public abstract class ParLe extends App {
         int[][] vl_var = rows[var];
 
         // System.out.println(var + " ... " + ar + " .... " + vl_var.length);
-        if (verbose > 1 && parents_var.length < 50)
-            pf("WARNING! Variable %s, less than 50 datapoints in parent configuration! There are: %d \n", bn.name(var), parents_var.length);
+        if (verbose > 1 && parents_var.length < 50) {
+            pf(
+                    "WARNING! Variable %s, less than 50 datapoints in parent configuration! There are: %d \n",
+                    bn.name(var), parents_var.length);
+        }
 
         // For every variable configuration, compute the n's
         for (int v = 0; v < ar; v++) {
             n_ij[v] = ArrayUtils.intersectN(parents_var, vl_var[v]);
 
-            if (n_ij[v] < 50)
-                ; // pf("WARNING! Variable %s, less than 50 datapoints in parameter estimation! \n", bn.name(var));
+            if (n_ij[v] < 50) {
+                ;
+            } // pf("WARNING! Variable %s, less than 50 datapoints in parameter estimation! \n", bn.name(var));
         }
         return n_ij;
     }
@@ -159,6 +165,7 @@ public abstract class ParLe extends App {
 
             // Update set containing sample rows for the chosen configuration
             int[] par_var = null;
+
             try {
                 par_var = rows[par][val];
             } catch (ArrayIndexOutOfBoundsException ex) {

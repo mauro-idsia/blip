@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.brtl;
 
+
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
 import ch.idsia.blip.core.learn.solver.ps.MaxScoreProvider;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
@@ -11,6 +12,7 @@ import ch.idsia.blip.core.utils.other.ParentSet;
 import java.util.HashMap;
 
 import static ch.idsia.blip.core.learn.solver.samp.SamplerUtils.getAdvSampler;
+
 
 /**
  * BRTL approach, Greedy
@@ -34,8 +36,9 @@ public class BrutalSolver extends ScoreSolver {
     public void prepare() {
         super.prepare();
 
-        if (tw == 0)
+        if (tw == 0) {
             tw = 3;
+        }
 
         if (verbose > 0) {
             log("tw: " + tw + "\n");
@@ -65,16 +68,17 @@ public class BrutalSolver extends ScoreSolver {
 
     @Override
     protected Searcher getSearcher() {
-        if ("old".equals(searcher))
+        if ("old".equals(searcher)) {
             return new BrutalOldSearcher(this, tw);
-        else if ("new".equals(searcher))
+        } else if ("new".equals(searcher)) {
             return new BrutalNewGreedySearcher(this, tw);
-        else if ("max".equals(searcher))
+        } else if ("max".equals(searcher)) {
             return new BrutalMaxDirectedSearcher(this, tw);
-        else if ("weight".equals(searcher))
+        } else if ("weight".equals(searcher)) {
             return new BrutalMaxDirectedSearcherWeight(this, tw);
-        else
+        } else {
             return new BrutalGreedySearcher(this, tw);
+        }
     }
 
     public void init(ParentSet[][] sc, int time, int tw) {
@@ -83,11 +87,11 @@ public class BrutalSolver extends ScoreSolver {
     }
 
     /*
-    public void propose(double new_sk, ParentSet[] new_str, List<Clique> junctTree) {
-        synchronized (lock) {
-            if (new_sk > best_sk) {
-                bestJuncTree = junctTree;
-            }
-        }
-    }*/
+     public void propose(double new_sk, ParentSet[] new_str, List<Clique> junctTree) {
+     synchronized (lock) {
+     if (new_sk > best_sk) {
+     bestJuncTree = junctTree;
+     }
+     }
+     }*/
 }

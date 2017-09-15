@@ -17,6 +17,7 @@
  */
 package jdistlib.rng;
 
+
 /**
  * <P>Implementation of CMWC4096 (Complementary-multiply-with-carry) random number generator
  * by George Marsaglia. The period is approximately 2^131086.
@@ -37,13 +38,14 @@ public class RandomCMWC extends RandomEngine {
     private boolean mHaveNextGaussian = false;
     private double mNextGaussian;
 
-    {    // Dyn-initState
-        mSeed = 362436; //  choose random initial < 809430660
+    { // Dyn-initState
+        mSeed = 362436; // choose random initial < 809430660
     }
 
     @Override
     public final int nextInt() {
         long t, x;
+
         mIndex = (mIndex + 1) & 4095;
         t = 18782L * mBuffer[mIndex] + mSeed;
         mSeed = (t >> 32);
@@ -58,6 +60,7 @@ public class RandomCMWC extends RandomEngine {
     @Override
     public final int nextInt(final int n) {
         long t, x;
+
         if ((n & -n) == n) // if n is even
         {
             mIndex = (mIndex + 1) & 4095;
@@ -71,6 +74,7 @@ public class RandomCMWC extends RandomEngine {
             return (int) ((n * ((mBuffer[mIndex] = 0xfffffffe - x) >>> 1)) >> 31);
         }
         int bits, val;
+
         do {
             mIndex = (mIndex + 1) & 4095;
             t = 18782L * mBuffer[mIndex] + mSeed;
@@ -89,6 +93,7 @@ public class RandomCMWC extends RandomEngine {
     @Override
     public final long nextLong() {
         long t, x;
+
         mIndex = (mIndex + 1) & 4095;
         t = 18782L * mBuffer[mIndex] + mSeed;
         mSeed = (t >> 32);
@@ -103,6 +108,7 @@ public class RandomCMWC extends RandomEngine {
     @Override
     public final long nextLong(final long n) {
         long t, x;
+
         if ((n & -n) == n) // if n is even
         {
             mIndex = (mIndex + 1) & 4095;
@@ -116,6 +122,7 @@ public class RandomCMWC extends RandomEngine {
             return (int) ((n * ((mBuffer[mIndex] = 0xfffffffe - x) >>> 1)) >> 31);
         }
         long bits, val;
+
         do {
             mIndex = (mIndex + 1) & 4095;
             t = 18782L * mBuffer[mIndex] + mSeed;
@@ -184,11 +191,18 @@ public class RandomCMWC extends RandomEngine {
             }
             b = (int) (mBuffer[mIndex] = 0xfffffffe - x);
 
-            v1 = 2 * (((((long) (y >>> 6)) << 27) + (z >>> 5)) / (double) (1L << 53)) - 1;
-            v2 = 2 * (((((long) (a >>> 6)) << 27) + (b >>> 5)) / (double) (1L << 53)) - 1;
+            v1 = 2
+                    * (((((long) (y >>> 6)) << 27) + (z >>> 5))
+                            / (double) (1L << 53))
+                                    - 1;
+            v2 = 2
+                    * (((((long) (a >>> 6)) << 27) + (b >>> 5))
+                            / (double) (1L << 53))
+                                    - 1;
             s = v1 * v1 + v2 * v2;
         } while (s >= 1 || s == 0);
         double multiplier = Math.sqrt(-2 * Math.log(s) / s);
+
         mHaveNextGaussian = true;
         mNextGaussian = v2 * multiplier;
         return v1 * multiplier;
@@ -201,9 +215,9 @@ public class RandomCMWC extends RandomEngine {
         do {
             // -9.223372036854776E18 == (double) Long.MIN_VALUE
             // 5.421010862427522E-20 == 1 / Math.pow(2,64) == 1 / ((double) Long.MAX_VALUE - (double) Long.MIN_VALUE);
-            nextDouble = ((double) nextLong() - -9.223372036854776E18) * 5.421010862427522E-20;
-        }
-        // catch loss of precision of long --> double conversion
+            nextDouble = ((double) nextLong() - -9.223372036854776E18)
+                    * 5.421010862427522E-20;
+        } // catch loss of precision of long --> double conversion
         while (!(nextDouble > 0.0 && nextDouble < 1.0));
 
         // --> in (0.0,1.0)

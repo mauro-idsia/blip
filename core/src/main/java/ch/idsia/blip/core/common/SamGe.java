@@ -11,7 +11,9 @@ import ch.idsia.blip.core.utils.other.RandomStuff;
 import java.io.*;
 import java.util.logging.Logger;
 
+import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
+
 
 public class SamGe extends App {
 
@@ -26,7 +28,6 @@ public class SamGe extends App {
      * Total number of sample to generate
      */
     private int n_sample;
-
 
     /**
      * Writer for sampled datapoints (Cussen's format)
@@ -58,7 +59,6 @@ public class SamGe extends App {
      */
     public double perc_values = 0.2;
 
-
     private TIntArrayList missing_var;
 
     /**
@@ -67,41 +67,37 @@ public class SamGe extends App {
      * @param in_bn       Bayesian Network to work with
      * @param in_wr_path  path where to graph
      * @param in_n_sample number of sample to work with
-     * @throws FileNotFoundException        if there is a problem with result file creation
-     * @throws UnsupportedEncodingException if there is a problem with result file creation
      */
-    public void go(BayesianNetwork in_bn, String in_wr_path, int in_n_sample, String format)
-            throws FileNotFoundException, UnsupportedEncodingException {
+    public void go(BayesianNetwork in_bn, String in_wr_path, int in_n_sample, String format) {
 
         prepare();
 
         bn = in_bn;
         n_sample = in_n_sample;
 
-        if (in_wr_path != null) {
+        if (in_wr_path == null)
+            return;
 
-            BufferedWriter bf_wr = new BufferedWriter(
-                    new OutputStreamWriter(
-                            new FileOutputStream(
-                                    in_wr_path),
-                            "utf-8"));
+            Writer bf_wr = getWriter(in_wr_path);
+            if (bf_wr == null)
+                return;
 
-            if (format.equals("dat"))
+            if (format.equals("dat")) {
                 wr = new DatFileLineWriter(in_bn, bf_wr);
-            else
+            } else {
                 wr = new ArffFileLineWriter(in_bn, bf_wr, "new");
-
+            }
 
             /*
-            bf_wr = new BufferedWriter(
-                    new OutputStreamWriter(
-                            new FileOutputStream(
-                                    String.format("%s.tab", in_wr_path)),
-                            "utf-8"));
+             bf_wr = new BufferedWriter(
+             new OutputStreamWriter(
+             new FileOutputStream(
+             String.format("%s.tab", in_wr_path)),
+             "utf-8"));
 
-            wr_dataframe = new DataFileWriter(in_bn, bf_wr, DataFileWriter.Format.Dataframe);
-            */
-        }
+             wr_dataframe = new DataFileWriter(in_bn, bf_wr, DataFileWriter.Format.Dataframe);
+             */
+
 
         if (missing) {
             missing_var = new TIntArrayList();
@@ -138,8 +134,7 @@ public class SamGe extends App {
 
                 wr.next(samp);
 
-                if (fill_tab) {
-                    //    wr_dataframe.next(thread, samp);
+                if (fill_tab) {// wr_dataframe.next(thread, samp);
                 }
             }
         } catch (Exception exp) {
@@ -173,13 +168,11 @@ public class SamGe extends App {
         } catch (Exception exp) {
             RandomStuff.logExp(log, exp);
         }
-        try {
-            /*
-            if (wr_dataframe != null) {
-                wr_dataframe.close();
-            }
-             */
-        } catch (Exception exp) {
+        try {/*
+             if (wr_dataframe != null) {
+             wr_dataframe.close();
+             }
+             */} catch (Exception exp) {
             RandomStuff.logExp(log, exp);
         }
     }
@@ -225,11 +218,11 @@ public class SamGe extends App {
         }
 
         /*
-        if (i == ar) {
-            log.severe(
-                    String.format("thread: %s - ar: %d r: %s probs: %s", i, ar, r,
-                            Arrays.toString(probs)));
-        }*/
+         if (i == ar) {
+         log.severe(
+         String.format("thread: %s - ar: %d r: %s probs: %s", i, ar, r,
+         Arrays.toString(probs)));
+         }*/
 
         if (i >= ar) {
             i = (short) (ar - 1);
@@ -248,7 +241,7 @@ public class SamGe extends App {
         }
     }
 
-    public void go(BayesianNetwork bn, String path, int n) throws FileNotFoundException, UnsupportedEncodingException {
+    public void go(BayesianNetwork bn, String path, int n) {
         go(bn, path, n, "dat");
     }
 }

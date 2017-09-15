@@ -17,15 +17,15 @@ import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
 public class ParLeSmoothApi extends ParLeApi {
 
-    private static final Logger log = Logger.getLogger(ParLeSmoothApi.class.getName());
+    private static final Logger log = Logger.getLogger(
+            ParLeSmoothApi.class.getName());
 
     @Option(name = "-va", required = true, usage = "Validation dataset")
     protected String ph_valid;
 
     public static void main(String[] args) {
-        defaultMain(args, new ParLeSmoothApi(), log);
+        defaultMain(args, new ParLeSmoothApi());
     }
-
 
     @Override
     public void exec() throws Exception {
@@ -34,6 +34,7 @@ public class ParLeSmoothApi extends ParLeApi {
         DataSet train = getDataSet(ph_dat);
 
         ParLeSmooth parLe = new ParLeSmooth();
+
         parLe.verbose = verbose;
         parLe.thread_pool_size = thread_pool_size;
 

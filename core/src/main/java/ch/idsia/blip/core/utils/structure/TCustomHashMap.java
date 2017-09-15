@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2009, Rob Eden All Rights Reserved.
 //
 // This library is free software; you can redistribute it and/or
@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 
 package ch.idsia.blip.core.utils.structure;
+
 
 import ch.idsia.blip.core.utils.data.HashFunctions;
 
@@ -50,7 +51,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         super();
     }
 
-
     /**
      * Creates a new <code>TCustomHashMap</code> instance with the default
      * capacity and load factor.
@@ -58,7 +58,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
     public TCustomHashMap(HashingStrategy<? super K> strategy) {
         super(strategy);
     }
-
 
     /**
      * Creates a new <code>TCustomHashMap</code> instance with a prime
@@ -71,7 +70,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         super(strategy, initialCapacity);
     }
 
-
     /**
      * Creates a new <code>TCustomHashMap</code> instance with a prime
      * capacity equal to or greater than <tt>initialCapacity</tt> and
@@ -81,11 +79,23 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      * @param loadFactor      a <code>float</code> value
      */
     public TCustomHashMap(HashingStrategy<? super K> strategy, int initialCapacity,
-                          float loadFactor) {
+            float loadFactor) {
 
         super(strategy, initialCapacity, loadFactor);
     }
 
+    /**
+     * Creates a new <code>TCustomHashMap</code> instance which contains the
+     * key/value pairs in <tt>map</tt>.
+     *
+     * @param map a <code>Map</code> value
+     */
+    public TCustomHashMap(HashingStrategy<? super K> strategy,
+            Map<? extends K, ? extends V> map) {
+
+        this(strategy, map.size());
+        putAll(map);
+    }
 
     /**
      * Creates a new <code>TCustomHashMap</code> instance which contains the
@@ -94,26 +104,11 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      * @param map a <code>Map</code> value
      */
     public TCustomHashMap(HashingStrategy<? super K> strategy,
-                          Map<? extends K, ? extends V> map) {
+            TCustomHashMap<? extends K, ? extends V> map) {
 
         this(strategy, map.size());
         putAll(map);
     }
-
-
-    /**
-     * Creates a new <code>TCustomHashMap</code> instance which contains the
-     * key/value pairs in <tt>map</tt>.
-     *
-     * @param map a <code>Map</code> value
-     */
-    public TCustomHashMap(HashingStrategy<? super K> strategy,
-                          TCustomHashMap<? extends K, ? extends V> map) {
-
-        this(strategy, map.size());
-        putAll(map);
-    }
-
 
     /**
      * initialize the value array of the map.
@@ -125,11 +120,10 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         int capacity;
 
         capacity = super.setUp(initialCapacity);
-        //noinspection unchecked
+        // noinspection unchecked
         _values = (V[]) new Object[capacity];
         return capacity;
     }
-
 
     /**
      * Inserts a key/value pair into the map.
@@ -141,9 +135,9 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      */
     public V put(K key, V value) {
         int index = insertKey(key);
+
         return doPut(value, index);
     }
-
 
     /**
      * Inserts a key/value pair into the map if the specified key is not already
@@ -156,16 +150,17 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      */
     public V putIfAbsent(K key, V value) {
         int index = insertKey(key);
+
         if (index < 0) {
             return _values[-index - 1];
         }
         return doPut(value, index);
     }
 
-
     private V doPut(V value, int index) {
         V previous = null;
         boolean isNewMapping = true;
+
         if (index < 0) {
             index = -index - 1;
             previous = _values[index];
@@ -181,7 +176,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         return previous;
     }
 
-
     /**
      * Compares this map with another map for equality of their stored
      * entries.
@@ -189,31 +183,31 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      * @param other an <code>Object</code> value
      * @return a <code>boolean</code> value
      */
-    @SuppressWarnings({"unchecked", "SimplifiableIfStatement"})
+    @SuppressWarnings({ "unchecked", "SimplifiableIfStatement"})
     public boolean equals(Object other) {
         if (!(other instanceof Map)) {
             return false;
         }
         Map<K, V> that = (Map<K, V>) other;
+
         if (that.size() != this.size()) {
             return false;
         }
         return forEachEntry(new EqProcedure<K, V>(that));
     }
 
-
     public int hashCode() {
         HashProcedure p = new HashProcedure();
+
         forEachEntry(p);
         return p.getHashCode();
     }
 
-
     public String toString() {
         final StringBuilder buf = new StringBuilder("{");
+
         forEachEntry(new TObjectObjectProcedure<K, V>() {
             private boolean first = true;
-
 
             public boolean execute(K key, V value) {
                 if (first) {
@@ -232,7 +226,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         return buf.toString();
     }
 
-
     private final class HashProcedure implements TObjectObjectProcedure<K, V> {
         private int h = 0;
 
@@ -241,19 +234,19 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         }
 
         public final boolean execute(K key, V value) {
-            h += HashFunctions.hash(key) ^ (value == null ? 0 : value.hashCode());
+            h += HashFunctions.hash(key)
+                    ^ (value == null ? 0 : value.hashCode());
             return true;
         }
     }
 
+
     private static final class EqProcedure<K, V> implements TObjectObjectProcedure<K, V> {
         private final Map<K, V> _otherMap;
-
 
         EqProcedure(Map<K, V> otherMap) {
             _otherMap = otherMap;
         }
-
 
         public final boolean execute(K key, V value) {
             // Check to make sure the key is there. This avoids problems that come up with
@@ -264,10 +257,10 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
             }
 
             V oValue = _otherMap.get(key);
+
             return oValue == value || (oValue != null && oValue.equals(value));
         }
     }
-
 
     /**
      * Executes <tt>procedure</tt> for each key in the map.
@@ -280,7 +273,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         return forEach(procedure);
     }
 
-
     /**
      * Executes <tt>procedure</tt> for each value in the map.
      *
@@ -291,16 +283,15 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
     public boolean forEachValue(TObjectProcedure<? super V> procedure) {
         V[] values = _values;
         Object[] set = _set;
-        for (int i = values.length; i-- > 0; ) {
-            if (set[i] != FREE
-                    && set[i] != REMOVED
+
+        for (int i = values.length; i-- > 0;) {
+            if (set[i] != FREE && set[i] != REMOVED
                     && !procedure.execute(values[i])) {
                 return false;
             }
         }
         return true;
     }
-
 
     /**
      * Executes <tt>procedure</tt> for each key/value entry in the
@@ -310,20 +301,19 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      * @return false if the loop over the entries terminated because
      * the procedure returned false for some entry.
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked"})
     public boolean forEachEntry(TObjectObjectProcedure<? super K, ? super V> procedure) {
         Object[] keys = _set;
         V[] values = _values;
-        for (int i = keys.length; i-- > 0; ) {
-            if (keys[i] != FREE
-                    && keys[i] != REMOVED
+
+        for (int i = keys.length; i-- > 0;) {
+            if (keys[i] != FREE && keys[i] != REMOVED
                     && !procedure.execute((K) keys[i], values[i])) {
                 return false;
             }
         }
         return true;
     }
-
 
     /**
      * Retains only those entries in the map for which the procedure
@@ -332,7 +322,7 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      * @param procedure determines which entries to keep
      * @return true if the map was modified.
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked"})
     public boolean retainEntries(TObjectObjectProcedure<? super K, ? super V> procedure) {
         boolean modified = false;
         Object[] keys = _set;
@@ -341,9 +331,8 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         // Temporarily disable compaction. This is a fix for bug #1738760
         tempDisableAutoCompaction();
         try {
-            for (int i = keys.length; i-- > 0; ) {
-                if (keys[i] != FREE
-                        && keys[i] != REMOVED
+            for (int i = keys.length; i-- > 0;) {
+                if (keys[i] != FREE && keys[i] != REMOVED
                         && !procedure.execute((K) keys[i], values[i])) {
                     removeAt(i);
                     modified = true;
@@ -356,7 +345,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         return modified;
     }
 
-
     /**
      * Transform the values in this map using <tt>function</tt>.
      *
@@ -365,20 +353,20 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
     public void transformValues(TObjectFunction<V, V> function) {
         V[] values = _values;
         Object[] set = _set;
-        for (int i = values.length; i-- > 0; ) {
+
+        for (int i = values.length; i-- > 0;) {
             if (set[i] != FREE && set[i] != REMOVED) {
                 values[i] = function.execute(values[i]);
             }
         }
     }
 
-
     /**
      * rehashes the map to the new capacity.
      *
      * @param newCapacity an <code>int</code> value
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked"})
     protected void rehash(int newCapacity) {
         int oldCapacity = _set.length;
         int oldSize = size();
@@ -391,18 +379,22 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
 
         // Process entries from the old array, skipping free and removed slots. Put the
         // values into the appropriate place in the new array.
-        for (int i = oldCapacity; i-- > 0; ) {
+        for (int i = oldCapacity; i-- > 0;) {
             Object o = oldKeys[i];
-            if (o == FREE || o == REMOVED) continue;
+
+            if (o == FREE || o == REMOVED) {
+                continue;
+            }
 
             int index = insertKey((K) o);
+
             if (index < 0) {
-                throwObjectContractViolation(_set[(-index - 1)], o, size(), oldSize, oldKeys);
+                throwObjectContractViolation(_set[(-index - 1)], o, size(),
+                        oldSize, oldKeys);
             }
             _values[index] = oldVals[i];
         }
     }
-
 
     /**
      * retrieves the value for <tt>key</tt>
@@ -410,15 +402,15 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      * @param key an <code>Object</code> value
      * @return the value of <tt>key</tt> or null if no such mapping exists.
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked"})
     public V get(Object key) {
         int index = index(key);
+
         if (index < 0 || !strategy.equals((K) _set[index], (K) key)) {
             return null;
         }
         return _values[index];
     }
-
 
     /**
      * Empties the map.
@@ -434,24 +426,23 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         Arrays.fill(_values, 0, _values.length, null);
     }
 
-
     /**
      * Deletes a key/value pair from the map.
      *
      * @param key an <code>Object</code> value
      * @return an <code>Object</code> value
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked"})
     public V remove(Object key) {
         V prev = null;
         int index = index(key);
+
         if (index >= 0) {
             prev = _values[index];
-            removeAt(index);    // clear key,state; adjust size
+            removeAt(index); // clear key,state; adjust size
         }
         return prev;
     }
-
 
     /**
      * removes the mapping at <tt>index</tt> from the map.
@@ -460,9 +451,8 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
      */
     public void removeAt(int index) {
         _values[index] = null;
-        super.removeAt(index);  // clear key, state; adjust size
+        super.removeAt(index); // clear key, state; adjust size
     }
-
 
     /**
      * Returns a view on the values of the map.
@@ -473,7 +463,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         return new ValueView();
     }
 
-
     /**
      * returns a Set view on the keys of the map.
      *
@@ -483,7 +472,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         return new KeyView();
     }
 
-
     /**
      * Returns a Set view on the entries of the map.
      *
@@ -492,7 +480,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
     public Set<Map.Entry<K, V>> entrySet() {
         return new EntryView();
     }
-
 
     /**
      * checks for the presence of <tt>val</tt> in the values of the map.
@@ -507,23 +494,22 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         // special case null values so that we don't have to
         // perform null checks before every call to equals()
         if (null == val) {
-            for (int i = vals.length; i-- > 0; ) {
-                if ((set[i] != FREE && set[i] != REMOVED) &&
-                        val == vals[i]) {
+            for (int i = vals.length; i-- > 0;) {
+                if ((set[i] != FREE && set[i] != REMOVED) && val == vals[i]) {
                     return true;
                 }
             }
         } else {
-            for (int i = vals.length; i-- > 0; ) {
-                if ((set[i] != FREE && set[i] != REMOVED) &&
-                        (val == vals[i] || strategy.equals((K) val, (K) vals[i]))) {
+            for (int i = vals.length; i-- > 0;) {
+                if ((set[i] != FREE && set[i] != REMOVED)
+                        && (val == vals[i]
+                                || strategy.equals((K) val, (K) vals[i]))) {
                     return true;
                 }
             }
         } // end of else
         return false;
     }
-
 
     /**
      * checks for the present of <tt>key</tt> in the keys of the map.
@@ -548,13 +534,12 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         }
     }
 
-
     /**
      * a view onto the values of the map.
      */
     protected class ValueView extends MapBackedView<V> {
 
-        @SuppressWarnings({"unchecked"})
+        @SuppressWarnings({ "unchecked"})
         public Iterator<V> iterator() {
             return new TObjectHashIterator(TCustomHashMap.this) {
                 protected V objectAtIndex(int index) {
@@ -563,20 +548,18 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
             };
         }
 
-
         public boolean containsElement(V value) {
             return containsValue(value);
         }
-
 
         public boolean removeElement(V value) {
             Object[] values = _values;
             Object[] set = _set;
 
-            for (int i = values.length; i-- > 0; ) {
-                if ((set[i] != FREE && set[i] != REMOVED) &&
-                        value == values[i] ||
-                        (null != values[i] && strategy.equals((K) values[i], (K) value))) {
+            for (int i = values.length; i-- > 0;) {
+                if ((set[i] != FREE && set[i] != REMOVED) && value == values[i]
+                        || (null != values[i]
+                                && strategy.equals((K) values[i], (K) value))) {
 
                     removeAt(i);
                     return true;
@@ -586,6 +569,7 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
             return false;
         }
     }
+
 
     /**
      * a view onto the entries of the map.
@@ -598,19 +582,16 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
                 super(map);
             }
 
-
-            @SuppressWarnings({"unchecked"})
+            @SuppressWarnings({ "unchecked"})
             public Entry objectAtIndex(final int index) {
                 return new Entry((K) _set[index], _values[index], index);
             }
         }
 
-
-        @SuppressWarnings({"unchecked"})
+        @SuppressWarnings({ "unchecked"})
         public Iterator<Map.Entry<K, V>> iterator() {
             return new EntryIterator(TCustomHashMap.this);
         }
-
 
         public boolean removeElement(Map.Entry<K, V> entry) {
             // have to effectively reimplement Map.remove here
@@ -626,105 +607,101 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
             int index;
 
             K key = keyForEntry(entry);
+
             index = index(key);
             if (index >= 0) {
                 val = valueForEntry(entry);
-                if (val == _values[index] ||
-                        (null != val && strategy.equals((K) val, (K) _values[index]))) {
-                    removeAt(index);    // clear key,state; adjust size
+                if (val == _values[index]
+                        || (null != val
+                                && strategy.equals((K) val, (K) _values[index]))) {
+                    removeAt(index); // clear key,state; adjust size
                     return true;
                 }
             }
             return false;
         }
 
-
         public boolean containsElement(Map.Entry<K, V> entry) {
             Object val = get(keyForEntry(entry));
             Object entryValue = entry.getValue();
-            return entryValue == val ||
-                    (null != val && strategy.equals((K) val, (K) entryValue));
-        }
 
+            return entryValue == val
+                    || (null != val && strategy.equals((K) val, (K) entryValue));
+        }
 
         protected V valueForEntry(Map.Entry<K, V> entry) {
             return entry.getValue();
         }
-
 
         protected K keyForEntry(Map.Entry<K, V> entry) {
             return entry.getKey();
         }
     }
 
+
     private abstract class MapBackedView<E> extends AbstractSet<E>
             implements Set<E>, Iterable<E> {
 
         public abstract Iterator<E> iterator();
 
-
         public abstract boolean removeElement(E key);
-
 
         public abstract boolean containsElement(E key);
 
-
-        @SuppressWarnings({"unchecked"})
+        @SuppressWarnings({ "unchecked"})
         public boolean contains(Object key) {
             return containsElement((E) key);
         }
 
-
-        @SuppressWarnings({"unchecked"})
+        @SuppressWarnings({ "unchecked"})
         public boolean remove(Object o) {
             return removeElement((E) o);
         }
 
-
-//        public boolean containsAll( Collection<?> collection ) {
-//            for ( Object element : collection ) {
-//                if ( !contains( element ) ) {
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }
+        // public boolean containsAll( Collection<?> collection ) {
+        // for ( Object element : collection ) {
+        // if ( !contains( element ) ) {
+        // return false;
+        // }
+        // }
+        // return true;
+        // }
 
 
         public void clear() {
             TCustomHashMap.this.clear();
         }
 
-
         public boolean add(E obj) {
             throw new UnsupportedOperationException();
         }
-
 
         public int size() {
             return TCustomHashMap.this.size();
         }
 
-
         public Object[] toArray() {
             Object[] result = new Object[size()];
             Iterator<E> e = iterator();
+
             for (int i = 0; e.hasNext(); i++) {
                 result[i] = e.next();
             }
             return result;
         }
 
-
-        @SuppressWarnings({"unchecked"})
+        @SuppressWarnings({ "unchecked"})
         public <T> T[] toArray(T[] a) {
             int size = size();
+
             if (a.length < size) {
-                a = (T[]) java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
+                a = (T[]) java.lang.reflect.Array.newInstance(
+                        a.getClass().getComponentType(), size);
             }
 
             Iterator<E> it = iterator();
             Object[] result = a;
+
             for (int i = 0; i < size; i++) {
                 result[i] = it.next();
             }
@@ -736,21 +713,19 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
             return a;
         }
 
-
         public boolean isEmpty() {
             return TCustomHashMap.this.isEmpty();
         }
-
 
         public boolean addAll(Collection<? extends E> collection) {
             throw new UnsupportedOperationException();
         }
 
-
-        @SuppressWarnings({"SuspiciousMethodCalls"})
+        @SuppressWarnings({ "SuspiciousMethodCalls"})
         public boolean retainAll(Collection<?> collection) {
             boolean changed = false;
             Iterator<E> i = iterator();
+
             while (i.hasNext()) {
                 if (!collection.contains(i.next())) {
                     i.remove();
@@ -762,39 +737,46 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
 
         public String toString() {
             Iterator<E> i = iterator();
-            if (!i.hasNext()) return "{}";
+
+            if (!i.hasNext()) {
+                return "{}";
+            }
 
             StringBuilder sb = new StringBuilder();
+
             sb.append('{');
-            for (; ; ) {
+            for (;;) {
                 E e = i.next();
+
                 sb.append(e == this ? "(this Collection)" : e);
-                if (!i.hasNext()) return sb.append('}').toString();
+                if (!i.hasNext()) {
+                    return sb.append('}').toString();
+                }
                 sb.append(", ");
             }
         }
     }
+
 
     /**
      * a view onto the keys of the map.
      */
     protected class KeyView extends MapBackedView<K> {
 
-        @SuppressWarnings({"unchecked"})
+        @SuppressWarnings({ "unchecked"})
         public Iterator<K> iterator() {
             return new TObjectHashIterator(TCustomHashMap.this);
         }
-
 
         public boolean removeElement(K key) {
             return null != TCustomHashMap.this.remove(key);
         }
 
-
         public boolean containsElement(K key) {
             return TCustomHashMap.this.contains(key);
         }
     }
+
 
     final class Entry implements Map.Entry<K, V> {
 
@@ -802,23 +784,19 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         private V val;
         private final int index;
 
-
         Entry(final K key, V value, final int index) {
             this.key = key;
             this.val = value;
             this.index = index;
         }
 
-
         public K getKey() {
             return key;
         }
 
-
         public V getValue() {
             return val;
         }
-
 
         public V setValue(V o) {
             if (_values[index] != val) {
@@ -826,37 +804,38 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
             }
             // need to return previous value
             V retval = val;
+
             // update this entry's value, in case setValue is called again
             _values[index] = o;
             val = o;
             return retval;
         }
 
-
         public boolean equals(Object o) {
             if (o instanceof Map.Entry) {
                 Map.Entry<K, V> e1 = this;
                 Map.Entry e2 = (Map.Entry) o;
-                return (e1.getKey() == null ? e2.getKey() == null :
-                        strategy.equals(e1.getKey(), (K) e2.getKey())) &&
-                        (e1.getValue() == null ? e2.getValue() == null :
-                                e1.getValue().equals(e2.getValue()));
+
+                return (e1.getKey() == null
+                        ? e2.getKey() == null
+                        : strategy.equals(e1.getKey(), (K) e2.getKey()))
+                                && (e1.getValue() == null
+                                        ? e2.getValue() == null
+                                        : e1.getValue().equals(e2.getValue()));
             }
             return false;
         }
 
-
         public int hashCode() {
-            return (getKey() == null ? 0 : getKey().hashCode()) ^ (getValue() == null ? 0 : getValue().hashCode());
+            return (getKey() == null ? 0 : getKey().hashCode())
+                    ^ (getValue() == null ? 0 : getValue().hashCode());
         }
-
 
         @Override
         public String toString() {
             return key + "=" + val;
         }
     }
-
 
     public void writeExternal(ObjectOutput out) throws IOException {
         // VERSION
@@ -869,7 +848,7 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         out.writeInt(_size);
 
         // ENTRIES
-        for (int i = _set.length; i-- > 0; ) {
+        for (int i = _set.length; i-- > 0;) {
             if (_set[i] != REMOVED && _set[i] != FREE) {
                 out.writeObject(_set[i]);
                 out.writeObject(_values[i]);
@@ -877,9 +856,8 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
         }
     }
 
-
     public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
+        throws IOException, ClassNotFoundException {
 
         // VERSION
         byte version = in.readByte();
@@ -891,14 +869,16 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K>
 
         // NUMBER OF ENTRIES
         int size = in.readInt();
+
         setUp(size);
 
         // ENTRIES
         while (size-- > 0) {
-            //noinspection unchecked
+            // noinspection unchecked
             K key = (K) in.readObject();
-            //noinspection unchecked
+            // noinspection unchecked
             V val = (V) in.readObject();
+
             put(key, val);
         }
     }

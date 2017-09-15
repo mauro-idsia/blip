@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.data.hash;
 
+
 import ch.idsia.blip.core.utils.data.HashFunctions;
 import ch.idsia.blip.core.utils.data.set.TPrimitiveHash;
 
@@ -26,7 +27,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      */
     transient int[] _set;
 
-
     /**
      * key that represents null
      * <p>
@@ -34,7 +34,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      * not final because of Externalization
      */
     int no_entry_key;
-
 
     /**
      * value that represents null
@@ -56,7 +55,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         no_entry_value = (double) 0;
     }
 
-
     /**
      * Creates a new <code>T#E#Hash</code> instance whose capacity
      * is the next highest prime above <tt>initialCapacity + 1</tt>
@@ -69,7 +67,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         no_entry_key = (int) 0;
         no_entry_value = (double) 0;
     }
-
 
     /**
      * Creates a new <code>TIntDoubleHash</code> instance with a prime
@@ -85,7 +82,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         no_entry_value = (double) 0;
     }
 
-
     /**
      * Creates a new <code>TIntDoubleHash</code> instance with a prime
      * value at or near the specified capacity and load factor.
@@ -96,12 +92,11 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
      * @param no_entry_value  value that represents null
      */
     TIntDoubleHash(int initialCapacity, float loadFactor,
-                   int no_entry_key, double no_entry_value) {
+            int no_entry_key, double no_entry_value) {
         super(initialCapacity, loadFactor);
         this.no_entry_key = no_entry_key;
         this.no_entry_value = no_entry_value;
     }
-
 
     /**
      * Returns the value that is used to represent null as a key. The default
@@ -114,7 +109,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         return no_entry_key;
     }
 
-
     /**
      * Returns the value that is used to represent null. The default
      * value is generally zero, but can be changed during construction
@@ -125,7 +119,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
     public double getNoEntryValue() {
         return no_entry_value;
     }
-
 
     /**
      * initializes the hashtable to a prime capacity which is at least
@@ -142,7 +135,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         return capacity;
     }
 
-
     /**
      * Searches the set for <tt>val</tt>
      *
@@ -153,7 +145,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         return index(val) >= 0;
     }
 
-
     /**
      * Releases the element currently stored at <tt>index</tt>.
      *
@@ -163,7 +154,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         _set[index] = no_entry_key;
         super.removeAt(index);
     }
-
 
     /**
      * Locates the index of <tt>val</tt>.
@@ -176,16 +166,19 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
 
         final byte[] states = _states;
         final int[] set = _set;
+
         length = states.length;
         hash = HashFunctions.hash(key) & 0x7fffffff;
         index = hash % length;
         byte state = states[index];
 
-        if (state == FREE)
+        if (state == FREE) {
             return -1;
+        }
 
-        if (state == FULL && set[index] == key)
+        if (state == FULL && set[index] == key) {
             return index;
+        }
 
         return indexRehashed(key, index, hash);
     }
@@ -202,18 +195,20 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
                 index += length;
             }
             byte state = _states[index];
-            //
-            if (state == FREE)
-                return -1;
 
             //
-            if (key == _set[index] && state != REMOVED)
+            if (state == FREE) {
+                return -1;
+            }
+
+            //
+            if (key == _set[index] && state != REMOVED) {
                 return index;
+            }
         } while (index != loopIndex);
 
         return -1;
     }
-
 
     /**
      * Locates the index at which <tt>val</tt> can be inserted.  if
@@ -236,11 +231,11 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
             consumeFreeSlot = true;
             insertKeyAt(index, val);
 
-            return index;       // empty, all done
+            return index; // empty, all done
         }
 
         if (state == FULL && _set[index] == val) {
-            return -index - 1;   // already stored
+            return -index - 1; // already stored
         }
 
         // already FULL or REMOVED, must probe
@@ -259,8 +254,9 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
          */
         do {
             // Identify first removed slot
-            if (state == REMOVED && firstRemoved == -1)
+            if (state == REMOVED && firstRemoved == -1) {
                 firstRemoved = index;
+            }
 
             index -= probe;
             if (index < 0) {
@@ -295,11 +291,12 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         }
 
         // Can a resizing strategy be found that resizes the set?
-        throw new IllegalStateException("No free or removed slots available. Key set full?!!");
+        throw new IllegalStateException(
+                "No free or removed slots available. Key set full?!!");
     }
 
     private void insertKeyAt(int index, int val) {
-        _set[index] = val;  // insert value
+        _set[index] = val; // insert value
         _states[index] = FULL;
     }
 
@@ -308,6 +305,7 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
 
         final byte[] states = _states;
         final int[] set = _set;
+
         length = states.length;
         hash = HashFunctions.hash(key) & 0x7fffffff;
         index = hash % length;
@@ -320,10 +318,10 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
             set[index] = key;
             states[index] = FULL;
 
-            return index;       // empty, all done
+            return index; // empty, all done
         } else if (state == FULL && set[index] == key) {
-            return -index - 1;   // already stored
-        } else {                // already FULL or REMOVED, must probe
+            return -index - 1; // already stored
+        } else { // already FULL or REMOVED, must probe
             // compute the double hash
             probe = 1 + (hash % (length - 2));
 
@@ -356,6 +354,7 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
             // one we have.
             if (state == REMOVED) {
                 int firstRemoved = index;
+
                 while (state != FREE && (state == REMOVED || set[index] != key)) {
                     index -= probe;
                     if (index < 0) {
@@ -386,7 +385,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         }
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -403,7 +401,6 @@ abstract public class TIntDoubleHash extends TPrimitiveHash {
         // NO_ENTRY_VALUE
         out.writeDouble(no_entry_value);
     }
-
 
     /**
      * {@inheritDoc}

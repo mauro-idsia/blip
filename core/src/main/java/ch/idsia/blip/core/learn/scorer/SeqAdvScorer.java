@@ -51,7 +51,7 @@ public class SeqAdvScorer extends BaseScorer {
             if (verbose > 2) {
                 log.info(
                         String.format("Starting with: %d, max time: %.2f", n,
-                                max_exec_time));
+                        max_exec_time));
             }
 
             ThreadMXBean bean = ManagementFactory.getThreadMXBean();

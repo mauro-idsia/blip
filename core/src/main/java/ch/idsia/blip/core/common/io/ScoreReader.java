@@ -51,8 +51,10 @@ public class ScoreReader implements Closeable {
             this.max_size = max_size;
 
             String ln = rd_scores.readLine();
-            while (ln.startsWith("#"))
+
+            while (ln.startsWith("#")) {
                 ln = rd_scores.readLine();
+            }
 
             n_var = Integer.parseInt(ln);
         } catch (FileNotFoundException e) {
@@ -84,8 +86,9 @@ public class ScoreReader implements Closeable {
 
     public ParentSet[][] readScores() throws IOException {
 
-        if (completed)
+        if (completed) {
             return new ParentSet[0][];
+        }
 
         int i, j = 0, k = 0;
 
@@ -95,8 +98,9 @@ public class ScoreReader implements Closeable {
 
         String l = rl();
 
-        while (l != null && (l.startsWith("#") || l.equals("")))
+        while (l != null && (l.startsWith("#") || l.equals(""))) {
             l = rl();
+        }
 
         for (i = 0; i < n_var; i++) {
 
@@ -156,12 +160,15 @@ public class ScoreReader implements Closeable {
     }
 
     private String rl() throws IOException {
-        if (rd_scores == null)
+        if (rd_scores == null) {
             throw new IOException("No reader defined!");
+        }
 
         String s = rd_scores.readLine();
-        if (s != null)
+
+        if (s != null) {
             s = s.trim();
+        }
         return s;
     }
 

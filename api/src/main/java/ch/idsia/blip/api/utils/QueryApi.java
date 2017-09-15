@@ -1,5 +1,6 @@
 package ch.idsia.blip.api.utils;
 
+
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.other.Query;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
+
 public class QueryApi extends Api {
 
     private static final Logger log = Logger.getLogger(QueryApi.class.getName());
@@ -23,7 +25,7 @@ public class QueryApi extends Api {
     protected String ph_evid;
 
     public static void main(String[] args) {
-        defaultMain(args, new QueryApi(), log);
+        defaultMain(args, new QueryApi());
     }
 
     @Override
@@ -32,6 +34,7 @@ public class QueryApi extends Api {
         TIntIntHashMap q = getEvidence(ph_evid);
 
         double res = Query.ex(dat_rd, q);
+
         pf("%.10f", res);
     }
 
@@ -39,11 +42,15 @@ public class QueryApi extends Api {
         String[] g = getContent(s);
 
         TIntIntHashMap evid = new TIntIntHashMap();
-        if (g.length <= 1)
+
+        if (g.length <= 1) {
             return evid;
+        }
         int n = Integer.valueOf(g[0]);
+
         for (int i = 0; i < n; i++) {
-            evid.put(Integer.valueOf(g[1 + 2 * i]), Integer.valueOf(g[2 + 2 * i]));
+            evid.put(Integer.valueOf(g[1 + 2 * i]),
+                    Integer.valueOf(g[2 + 2 * i]));
         }
         return evid;
     }
@@ -52,6 +59,7 @@ public class QueryApi extends Api {
         BufferedReader r = getReader(s);
         String l;
         String cnt = "";
+
         while ((l = r.readLine()) != null) {
             cnt += l + " ";
         }

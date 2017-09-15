@@ -2,6 +2,7 @@ package ch.idsia.blip.core.utils.structure;
 
 
 public interface TObjectProcedure<T> {
+
     /**
      * Executes this procedure. A false return value indicates that
      * the application executing this procedure should not invoke this

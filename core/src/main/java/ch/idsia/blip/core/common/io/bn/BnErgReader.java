@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.io.bn;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
@@ -9,6 +10,7 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.common.io.bn.BnUaiReader.readPotent;
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
+
 
 public class BnErgReader {
 
@@ -35,6 +37,7 @@ public class BnErgReader {
         int n = Integer.valueOf(rd.readLine().trim());
         BayesianNetwork bn = new BayesianNetwork(n);
         String[] ar = splitLine(rd);
+
         for (int i = 0; i < n; i++) {
             bn.l_ar_var[i] = Integer.valueOf(ar[i]);
         }
@@ -46,19 +49,23 @@ public class BnErgReader {
             ar = splitLine(rd);
             int p_ar = Integer.valueOf(ar[0]);
             TIntArrayList pars = new TIntArrayList();
+
             for (int j = 0; j < p_ar; j++) {
                 pars.add(Integer.valueOf(ar[j + 1]));
             }
 
             int[] parents = pars.toArray();
+
             orig_parents[i] = parents;
             Arrays.sort(parents);
             bn.l_parent_var[i] = parents;
         }
 
         String s = "";
-        while (!"/* Probabilities */".equals(s))
+
+        while (!"/* Probabilities */".equals(s)) {
             s = rd.readLine();
+        }
 
         readPotent(rd, n, bn, orig_parents);
 
@@ -71,8 +78,10 @@ public class BnErgReader {
 
     private int nextInt(BufferedReader br) throws IOException {
         String s = "";
-        while (s.trim().length() == 0)
+
+        while (s.trim().length() == 0) {
             s = br.readLine();
+        }
         return Integer.valueOf(s.trim());
     }
 }

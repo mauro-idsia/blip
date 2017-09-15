@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.other;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.io.dat.BaseFileLineReader;
 import ch.idsia.blip.core.utils.data.array.TDoubleArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSetReader;
+
 
 public class LLEval {
 
@@ -41,11 +43,13 @@ public class LLEval {
         short[] samp = new short[0];
 
         int cnt = 0;
+
         try {
             dat_rd.readMetaData();
             while (!dat_rd.concluded) {
                 samp = dat_rd.next();
                 double l;
+
                 if (this.log10) {
                     l = bn.getLogLik10(samp);
                 } else {
@@ -73,10 +77,12 @@ public class LLEval {
      * @return reordered sample
      */
     private short[] reorder(short[] samp, String[] data_names, List<String> bn_names)
-            throws Exception {
+        throws Exception {
         short[] n_samp = new short[samp.length];
+
         for (int ix = 0; ix < samp.length; ix++) {
             int n_ix = bn_names.indexOf(data_names[ix]);
+
             if (n_ix < 0) {
                 throw new Exception("Not found variable: " + data_names[ix]);
             }

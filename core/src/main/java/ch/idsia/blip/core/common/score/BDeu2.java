@@ -46,8 +46,8 @@ public class BDeu2 extends Score {
 
         for (int v = 0; v < arity; v++) {
             int weight = dat.row_values[n][v].length;
-            skore += Gamma.lgamma(a_ijk + weight)
-                    - Gamma.lgamma(a_ijk);
+
+            skore += Gamma.lgamma(a_ijk + weight) - Gamma.lgamma(a_ijk);
         }
         return skore;
     }
@@ -74,12 +74,12 @@ public class BDeu2 extends Score {
                 - (Gamma.lgamma(a_ijk) * p_arity * arity);
 
         /*
-        int i = 0;
+         int i = 0;
 
-        boolean gh = false;
-        if (n==6 && Arrays.toString(set_p).equals("[0, 3, 5]"))
-            gh = true;
-        */
+         boolean gh = false;
+         if (n==6 && Arrays.toString(set_p).equals("[0, 3, 5]"))
+         gh = true;
+         */
 
 
         for (int p_v = 0; p_v < p_values.length; p_v++) {
@@ -94,23 +94,23 @@ public class BDeu2 extends Score {
             int valcount;
 
             /*
-            if (gh) {
-                p("");
-                p(p_values[p_v].length);
-            }
-            */
+             if (gh) {
+             p("");
+             p(p_values[p_v].length);
+             }
+             */
 
             for (int v = 0; v < arity; v++) {
-                valcount = ArrayUtils.intersectN(dat.row_values[n][v], p_values[p_v]);
+                valcount = ArrayUtils.intersectN(dat.row_values[n][v],
+                        p_values[p_v]);
 
                 skore += Gamma.lgamma(a_ijk + valcount);
 
                 /*
-                if (gh)
-                    p(valcount);
-                    */
+                 if (gh)
+                 p(valcount);
+                 */
             }
-
 
         }
 
@@ -143,12 +143,12 @@ public class BDeu2 extends Score {
                 - (Gamma.lgamma(a_ijk) * p_arity * arity);
 
         /*
-        int i = 0;
+         int i = 0;
 
-        boolean gh = false;
-        if (n==6 && Arrays.toString(set_p).equals("[0, 3, 5]"))
-            gh = true;
-        */
+         boolean gh = false;
+         if (n==6 && Arrays.toString(set_p).equals("[0, 3, 5]"))
+         gh = true;
+         */
 
 
         for (int p_v = 0; p_v < p_values.length; p_v++) {
@@ -165,18 +165,19 @@ public class BDeu2 extends Score {
             int n_qx;
 
             /*
-            if (gh) {
-                p("");
-                p(p_values[p_v].length);
-            }
-            */
+             if (gh) {
+             p("");
+             p(p_values[p_v].length);
+             }
+             */
 
 
             for (int v = 0; v < arity; v++) {
                 n_px = ArrayUtils.intersectN(dat.row_values[n][v], p_values[p_v]);
 
                 for (int v_p2 = 0; v_p2 < dat.l_n_arity[p2]; v_p2++) {
-                    n_qx = ArrayUtils.intersectN(dat.row_values[n][v], dat.row_values[p2][v_p2]);
+                    n_qx = ArrayUtils.intersectN(dat.row_values[n][v],
+                            dat.row_values[p2][v_p2]);
 
                     valcount = (n_px * n_qx) / dat.row_values[n][v].length;
 
@@ -184,12 +185,11 @@ public class BDeu2 extends Score {
                 }
 
                 /*
-                if (gh)
-                    p(valcount);
-                    */
+                 if (gh)
+                 p(valcount);
+                 */
             }
         }
-
 
         // System.out.println(p_arity + " " + thread + " " + p_values.length);
 
@@ -200,6 +200,5 @@ public class BDeu2 extends Score {
     public String descr() {
         return f("BDeu (alpha: %.2f)", alpha);
     }
-
 
 }

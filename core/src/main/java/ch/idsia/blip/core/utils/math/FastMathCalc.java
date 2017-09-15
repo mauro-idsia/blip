@@ -1,8 +1,10 @@
 package ch.idsia.blip.core.utils.math;
 
+
 import java.io.PrintStream;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+
 
 /**
  * Class used to compute the classical functions tables.
@@ -22,48 +24,47 @@ class FastMathCalc {
      */
     private static final double FACT[] = new double[]
             {
-                    +1.0d,                        // 0
-                    +1.0d,                        // 1
-                    +2.0d,                        // 2
-                    +6.0d,                        // 3
-                    +24.0d,                       // 4
-                    +120.0d,                      // 5
-                    +720.0d,                      // 6
-                    +5040.0d,                     // 7
-                    +40320.0d,                    // 8
-                    +362880.0d,                   // 9
-                    +3628800.0d,                  // 10
-                    +39916800.0d,                 // 11
-                    +479001600.0d,                // 12
-                    +6227020800.0d,               // 13
-                    +87178291200.0d,              // 14
-                    +1307674368000.0d,            // 15
-                    +20922789888000.0d,           // 16
-                    +355687428096000.0d,          // 17
-                    +6402373705728000.0d,         // 18
-                    +121645100408832000.0d,       // 19
-            };
+        +1.0d, // 0
+        +1.0d, // 1
+        +2.0d, // 2
+        +6.0d, // 3
+        +24.0d, // 4
+        +120.0d, // 5
+        +720.0d, // 6
+        +5040.0d, // 7
+        +40320.0d, // 8
+        +362880.0d, // 9
+        +3628800.0d, // 10
+        +39916800.0d, // 11
+        +479001600.0d, // 12
+        +6227020800.0d, // 13
+        +87178291200.0d, // 14
+        +1307674368000.0d, // 15
+        +20922789888000.0d, // 16
+        +355687428096000.0d, // 17
+        +6402373705728000.0d, // 18
+        +121645100408832000.0d, // 19
+    };
 
     /**
      * Coefficients for slowLog.
      */
     private static final double LN_SPLIT_COEF[][] = {
-            {2.0, 0.0},
-            {0.6666666269302368, 3.9736429850260626E-8},
-            {0.3999999761581421, 2.3841857910019882E-8},
-            {0.2857142686843872, 1.7029898543501842E-8},
-            {0.2222222089767456, 1.3245471311735498E-8},
-            {0.1818181574344635, 2.4384203044354907E-8},
-            {0.1538461446762085, 9.140260083262505E-9},
-            {0.13333332538604736, 9.220590270857665E-9},
-            {0.11764700710773468, 1.2393345855018391E-8},
-            {0.10526403784751892, 8.251545029714408E-9},
-            {0.0952233225107193, 1.2675934823758863E-8},
-            {0.08713622391223907, 1.1430250008909141E-8},
-            {0.07842259109020233, 2.404307984052299E-9},
-            {0.08371849358081818, 1.176342548272881E-8},
-            {0.030589580535888672, 1.2958646899018938E-9},
-            {0.14982303977012634, 1.225743062930824E-8},
+        { 2.0, 0.0}, { 0.6666666269302368, 3.9736429850260626E-8},
+        { 0.3999999761581421, 2.3841857910019882E-8},
+        { 0.2857142686843872, 1.7029898543501842E-8},
+        { 0.2222222089767456, 1.3245471311735498E-8},
+        { 0.1818181574344635, 2.4384203044354907E-8},
+        { 0.1538461446762085, 9.140260083262505E-9},
+        { 0.13333332538604736, 9.220590270857665E-9},
+        { 0.11764700710773468, 1.2393345855018391E-8},
+        { 0.10526403784751892, 8.251545029714408E-9},
+        { 0.0952233225107193, 1.2675934823758863E-8},
+        { 0.08713622391223907, 1.1430250008909141E-8},
+        { 0.07842259109020233, 2.404307984052299E-9},
+        { 0.08371849358081818, 1.176342548272881E-8},
+        { 0.030589580535888672, 1.2958646899018938E-9},
+        { 0.14982303977012634, 1.225743062930824E-8},
     };
 
     /**
@@ -79,8 +80,7 @@ class FastMathCalc {
     /**
      * Private Constructor.
      */
-    private FastMathCalc() {
-    }
+    private FastMathCalc() {}
 
     /**
      * Build the sine and cosine tables.
@@ -95,8 +95,8 @@ class FastMathCalc {
      */
     @SuppressWarnings("unused")
     private static void buildSinCosTables(double[] SINE_TABLE_A, double[] SINE_TABLE_B,
-                                          double[] COSINE_TABLE_A, double[] COSINE_TABLE_B,
-                                          int SINE_TABLE_LEN, double[] TANGENT_TABLE_A, double[] TANGENT_TABLE_B) {
+            double[] COSINE_TABLE_A, double[] COSINE_TABLE_B,
+            int SINE_TABLE_LEN, double[] TANGENT_TABLE_A, double[] TANGENT_TABLE_B) {
         final double result[] = new double[2];
 
         /* Use taylor series for 0 <= x <= 6/8 */
@@ -205,6 +205,7 @@ class FastMathCalc {
         final double ys[] = new double[2];
         final double facts[] = new double[2];
         final double as[] = new double[2];
+
         split(x, xs);
         ys[0] = ys[1] = 0.0;
 
@@ -252,6 +253,7 @@ class FastMathCalc {
         final double ys[] = new double[2];
         final double facts[] = new double[2];
         final double as[] = new double[2];
+
         split(x, xs);
         ys[0] = ys[1] = 0.0;
 
@@ -285,7 +287,6 @@ class FastMathCalc {
         return ys[0] + ys[1];
     }
 
-
     /**
      * For x between 0 and 1, returns exp(x), uses extended precision
      *
@@ -299,6 +300,7 @@ class FastMathCalc {
         final double ys[] = new double[2];
         final double facts[] = new double[2];
         final double as[] = new double[2];
+
         split(x, xs);
         ys[0] = ys[1] = 0.0;
 
@@ -333,10 +335,12 @@ class FastMathCalc {
     private static void split(final double d, final double split[]) {
         if (d < 8e298 && d > -8e298) {
             final double a = d * HEX_40000000;
+
             split[0] = (d + a) - a;
             split[1] = d - split[0];
         } else {
             final double a = d * 9.31322574615478515625E-10;
+
             split[0] = (d + a - d) * HEX_40000000;
             split[1] = d - split[0];
         }
@@ -354,10 +358,12 @@ class FastMathCalc {
 
         if (c < 8e298 && c > -8e298) { // MAGIC NUMBER
             double z = c * HEX_40000000;
+
             a[0] = (c + z) - z;
             a[1] = c - a[0] + d;
         } else {
             double z = c * 9.31322574615478515625E-10;
+
             a[0] = (c + z - c) * HEX_40000000;
             a[1] = c - a[0] + d;
         }
@@ -432,12 +438,15 @@ class FastMathCalc {
         resplit(result);
 
         for (int i = 0; i < 2; i++) {
+
             /* this may be overkill, probably once is enough */
-            double err = 1.0 - result[0] * in[0] - result[0] * in[1] -
-                    result[1] * in[0] - result[1] * in[1];
-            /*err = 1.0 - err; */
+            double err = 1.0 - result[0] * in[0] - result[0] * in[1]
+                    - result[1] * in[0] - result[1] * in[1];
+
+            /* err = 1.0 - err; */
             err *= result[0] + result[1];
-            /*printf("err = %16e\n", err); */
+
+            /* printf("err = %16e\n", err); */
             result[1] += err;
         }
     }
@@ -467,6 +476,7 @@ class FastMathCalc {
         splitMult(xs, ys, zs);
 
         double tmp = result[0] + zs[0];
+
         result[1] -= tmp - result[0] - zs[0];
         result[0] = tmp;
         tmp = result[0] + zs[1];
@@ -506,16 +516,17 @@ class FastMathCalc {
      * @return exp(p) in standard precision (equal to result[0] + result[1])
      */
     static double expint(int p, final double result[]) {
-        //double x = M_E;
+        // double x = M_E;
         final double xs[] = new double[2];
         final double as[] = new double[2];
         final double ys[] = new double[2];
-        //split(x, xs);
-        //xs[1] = (double)(2.7182818284590452353602874713526625L - xs[0]);
-        //xs[0] = 2.71827697753906250000;
-        //xs[1] = 4.85091998273542816811e-06;
-        //xs[0] = Double.longBitsToDouble(0x4005bf0800000000L);
-        //xs[1] = Double.longBitsToDouble(0x3ed458a2bb4a9b00L);
+
+        // split(x, xs);
+        // xs[1] = (double)(2.7182818284590452353602874713526625L - xs[0]);
+        // xs[0] = 2.71827697753906250000;
+        // xs[1] = 4.85091998273542816811e-06;
+        // xs[0] = Double.longBitsToDouble(0x4005bf0800000000L);
+        // xs[1] = Double.longBitsToDouble(0x3ed458a2bb4a9b00L);
 
         /* E */
         xs[0] = 2.718281828459045;
@@ -589,9 +600,8 @@ class FastMathCalc {
         /* Square X -> X2*/
         splitMult(x, x, x2);
 
-
-        //x[0] -= 1.0;
-        //resplit(x);
+        // x[0] -= 1.0;
+        // resplit(x);
 
         y[0] = LN_SPLIT_COEF[LN_SPLIT_COEF.length - 1][0];
         y[1] = LN_SPLIT_COEF[LN_SPLIT_COEF.length - 1][1];
@@ -612,7 +622,6 @@ class FastMathCalc {
         return y;
     }
 
-
     /**
      * Print an array.
      *
@@ -626,6 +635,7 @@ class FastMathCalc {
         checkLen(expectedLen, array2d.length);
         out.println(TABLE_START_DECL + " ");
         int i = 0;
+
         for (double[] array : array2d) { // "double array[]" causes PMD parsing error
             out.print("        {");
             for (double d : array) { // assume inner array has very few entries
@@ -676,9 +686,10 @@ class FastMathCalc {
      * @throws Exception if the two lengths are not equal
      */
     private static void checkLen(int expectedLen, int actual)
-            throws Exception {
+        throws Exception {
         if (expectedLen != actual) {
-            throw new Exception(f("DimensionMismatchException %d %d", actual, expectedLen));
+            throw new Exception(
+                    f("DimensionMismatchException %d %d", actual, expectedLen));
         }
     }
 

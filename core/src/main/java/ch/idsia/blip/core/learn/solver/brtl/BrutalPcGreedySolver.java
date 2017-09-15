@@ -1,8 +1,10 @@
 package ch.idsia.blip.core.learn.solver.brtl;
 
+
 import ch.idsia.blip.core.learn.solver.SkelSolver;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.learn.solver.src.brutal.BrutalOldSearcher;
+
 
 /**
  * BRTL approach, A*

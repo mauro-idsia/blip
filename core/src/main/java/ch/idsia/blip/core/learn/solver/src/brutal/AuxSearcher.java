@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
+
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.samp.SimpleSampler;
 import ch.idsia.blip.core.learn.solver.src.WinSearcher;
@@ -25,13 +26,17 @@ public class AuxSearcher extends WinSearcher {
         Arrays.sort(this.clique);
 
         ParentSet[][] newPSet = new ParentSet[this.clique.length][];
+
         for (int i = 0; i < this.clique.length; i++) {
             List<ParentSet> l = new ArrayList();
+
             for (ParentSet orig : scores[this.clique[i]]) {
                 boolean keep = true;
                 int[] new_parents = new int[orig.parents.length];
+
                 for (int j = 0; j < orig.parents.length; j++) {
                     int pos = pos(orig.parents[j], this.clique);
+
                     if (pos >= 0) {
                         new_parents[j] = pos;
                     } else {
@@ -54,8 +59,10 @@ public class AuxSearcher extends WinSearcher {
 
     public ParentSet[] getComplete(ParentSet[][] scores, ParentSet[] best_str) {
         ParentSet[] comp = new ParentSet[scores.length];
+
         for (int i = 0; i < this.clique.length; i++) {
             int[] new_parents = new int[best_str[i].parents.length];
+
             for (int k = 0; k < best_str[i].parents.length; k++) {
                 new_parents[k] = this.clique[best_str[i].parents[k]];
             }

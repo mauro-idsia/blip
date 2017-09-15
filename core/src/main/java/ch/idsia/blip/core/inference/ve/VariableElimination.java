@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.inference.ve;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.inference.BaseInference;
@@ -12,8 +13,8 @@ import java.util.*;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.sameArray;
 
-public class VariableElimination
-        extends BaseInference {
+
+public class VariableElimination extends BaseInference {
     public EliminMethod elim = EliminMethod.Heu;
 
     public VariableElimination(BayesianNetwork bayesNet, boolean verb) {
@@ -26,6 +27,7 @@ public class VariableElimination
 
     private void shuffleGreedy(int[] greedy) {
         int n_inver = this.rand.nextInt(1 + greedy.length / 4);
+
         for (int i = 0; i < n_inver; i++) {
             int a = this.rand.nextInt(greedy.length - 1);
             int b = this.rand.nextInt(greedy.length - 1);
@@ -46,6 +48,7 @@ public class VariableElimination
 
             aux.add(v);
             int o;
+
             for (int i = 0; i < vars.size(); i++) {
                 o = vars.getQuick(i);
                 if ((o != v) && (arcs.check(v, o))) {
@@ -59,6 +62,7 @@ public class VariableElimination
                 aux.add(aux2[1]);
             }
             int size = 1;
+
             for (int a : aux.toArray()) {
                 size *= bn.arity(a);
             }
@@ -76,8 +80,8 @@ public class VariableElimination
         relevant.addAll(ev_keys.keys());
         for (int v = 0; v < bn.n_var; v++) {
             if (!relevant.contains(v)) {
-                if ((!containsOne(bn.getAncestors(v), relevant)) ||
-                        (!containsOne(bn.getDescendents(v), relevant))) {
+                if ((!containsOne(bn.getAncestors(v), relevant))
+                        || (!containsOne(bn.getDescendents(v), relevant))) {
                     nuisance.add(v);
                 }
             }
@@ -100,7 +104,8 @@ public class VariableElimination
 
     public BayesianFactor query(int[] query, TIntIntHashMap evidence) {
         if (this.verbose > 1) {
-            logf("New query. Query: %s, evidence: %s\n", Arrays.toString(query), evidence);
+            logf("New query. Query: %s, evidence: %s\n", Arrays.toString(query),
+                    evidence);
         }
         if ((query == null) || (query.length == 0)) {
             return new BayesianFactor();
@@ -114,6 +119,7 @@ public class VariableElimination
         TIntArrayList barren = findBarren(query, ev_keys);
 
         TIntArrayList rel2 = new TIntArrayList();
+
         for (int v = 0; v < this.bn.n_var; v++) {
             if (!barren.contains(v)) {
                 rel2.add(v);
@@ -122,6 +128,7 @@ public class VariableElimination
         int[] rel = rel2.toArray();
 
         TIntArrayList init = new TIntArrayList();
+
         for (int r : rel) {
             if ((!find(r, query)) && (!evidence.containsKey(r))) {
                 init.add(r);
@@ -130,6 +137,7 @@ public class VariableElimination
         int[] order = new int[0];
 
         long start = System.currentTimeMillis();
+
         if (!init.isEmpty()) {
             order = findEliminationOrder(init.toArray());
         }
@@ -139,8 +147,10 @@ public class VariableElimination
         }
         List<BayesianFactor> factors = new ArrayList<BayesianFactor>();
         int i;
+
         for (int v : rel) {
             BayesianFactor psi = new BayesianFactor(v, this.bn);
+
             for (int e : ev_keys) {
                 if (find(e, psi.dom)) {
                     psi = psi.reduction(e, evidence.get(e));
@@ -148,6 +158,7 @@ public class VariableElimination
             }
             for (i = 0; i < barren.size(); i++) {
                 int b = barren.get(i);
+
                 if (find(b, psi.dom)) {
                     psi = psi.marginalization(b);
                 }
@@ -190,7 +201,8 @@ public class VariableElimination
             if (n_psi.dom.length > 0) {
                 factors.add(n_psi);
                 if (this.verbose > 2) {
-                    System.out.printf(" # final: %s ", Arrays.toString(n_psi.dom));
+                    System.out.printf(" # final: %s ",
+                            Arrays.toString(n_psi.dom));
                 }
             }
         }
@@ -206,20 +218,21 @@ public class VariableElimination
             }
         }
         res.normalize();
-        if ((!sameArray(res.dom, query)) &&
-                (this.verbose > 0)) {
-            logf("Resulting factors has a domain (%s) different than query (%s)!",
+        if ((!sameArray(res.dom, query)) && (this.verbose > 0)) {
+            logf(
+                    "Resulting factors has a domain (%s) different than query (%s)!",
                     Arrays.toString(res.dom), Arrays.toString(query));
         }
         if (this.verbose > 1) {
-            logf(String.format("Result: %s - %d%n", Arrays.toString(res.dom),
+            logf(
+                    String.format("Result: %s - %d%n", Arrays.toString(res.dom),
                     res.potent.length));
         }
         return res;
     }
 
     public BayesianFactor query(int q, TIntIntHashMap e) {
-        return query(new int[]{q}, e);
+        return query(new int[] { q}, e);
     }
 
     public BayesianFactor query(int[] q) {
@@ -227,12 +240,13 @@ public class VariableElimination
     }
 
     public BayesianFactor query(int q, HashMap<Integer, double[]> e) {
-        return query(new int[]{q}, e);
+        return query(new int[] { q}, e);
     }
 
     private BayesianFactor query(int[] query, HashMap<Integer, double[]> evidence) {
         if (this.verbose > 1) {
-            logf("New query. Query: %s, evidence: %s\n", Arrays.toString(query), evidence);
+            logf("New query. Query: %s, evidence: %s\n", Arrays.toString(query),
+                    evidence);
         }
         if ((query == null) || (query.length == 0)) {
             return new BayesianFactor();
@@ -244,6 +258,7 @@ public class VariableElimination
         Set<Integer> s = evidence.keySet();
         int[] ev_keys = new int[s.size()];
         int j = 0;
+
         for (int c : s) {
             ev_keys[(j++)] = c;
         }
@@ -252,6 +267,7 @@ public class VariableElimination
         TIntArrayList barren = findBarren(query, ev_keys);
 
         TIntArrayList rel2 = new TIntArrayList();
+
         for (int v = 0; v < this.bn.n_var; v++) {
             if (!barren.contains(v)) {
                 rel2.add(v);
@@ -260,12 +276,14 @@ public class VariableElimination
         int[] rel = rel2.toArray();
 
         TIntArrayList init = new TIntArrayList();
+
         for (int r : rel) {
             if (!find(r, query)) {
                 init.add(r);
             }
         }
         int[] order = new int[0];
+
         if (!init.isEmpty()) {
             order = findEliminationOrder(init.toArray());
         }
@@ -273,6 +291,7 @@ public class VariableElimination
             System.out.printf("Elimination order: %s\n", Arrays.toString(order));
         }
         List<BayesianFactor> factors = new ArrayList<BayesianFactor>();
+
         for (int e : ev_keys) {
             BayesianFactor psi = new BayesianFactor(e, this.bn, evidence.get(e));
 
@@ -287,6 +306,7 @@ public class VariableElimination
         for (BayesianFactor psi : factors) {
             for (int i = 0; i < barren.size(); i++) {
                 int b = barren.get(i);
+
                 if (find(b, psi.dom)) {
                     psi = psi.marginalization(b);
                 }
@@ -299,6 +319,7 @@ public class VariableElimination
                 System.out.printf("\nEliminating: %d # ", o);
             }
             List<BayesianFactor> toMult = new ArrayList<BayesianFactor>();
+
             for (BayesianFactor psi : toMult) {
                 if (find(o, psi.dom)) {
                     toMult.add(psi);
@@ -320,7 +341,8 @@ public class VariableElimination
             if (n_psi.dom.length > 0) {
                 factors.add(n_psi);
                 if (this.verbose > 2) {
-                    System.out.printf(" # final: %s ", Arrays.toString(n_psi.dom));
+                    System.out.printf(" # final: %s ",
+                            Arrays.toString(n_psi.dom));
                 }
             }
         }
@@ -336,12 +358,14 @@ public class VariableElimination
             }
         }
         res.normalize();
-        if ((sameArray(res.dom, query)) &&
-                (this.verbose > 0)) {
-            logf("Resulting factors has a domain (%s) different than query (%s)!", Arrays.toString(res.dom), Arrays.toString(query));
+        if ((sameArray(res.dom, query)) && (this.verbose > 0)) {
+            logf(
+                    "Resulting factors has a domain (%s) different than query (%s)!",
+                    Arrays.toString(res.dom), Arrays.toString(query));
         }
         if (this.verbose > 1) {
-            logf(String.format("Result: %s - %d%n", Arrays.toString(res.dom),
+            logf(
+                    String.format("Result: %s - %d%n", Arrays.toString(res.dom),
                     res.potent.length));
         }
         return res;
@@ -352,11 +376,13 @@ public class VariableElimination
     }
 
     private int[] findNewEliminatonOrder(int[] vars) {
-        if ((this.elim == EliminMethod.MinFill) || (this.elim == EliminMethod.MinWidth)) {
+        if ((this.elim == EliminMethod.MinFill)
+                || (this.elim == EliminMethod.MinWidth)) {
             return tryEliminationOrder(vars, this.elim);
         }
         if (this.elim == EliminMethod.Greedy) {
             Simulation sim = new Simulation(this.bn, this.verbose);
+
             return greedyEliminationOrder(vars, sim);
         }
         Simulation sim = new Simulation(this.bn, this.verbose);
@@ -364,10 +390,12 @@ public class VariableElimination
         int[] ord = vars.clone();
         int[] bestOrd = vars.clone();
         double bestEval = Double.MAX_VALUE;
+
         for (int i = 0; i < vars.length * 2; i++) {
             shuffleGreedy(ord);
 
             double eval = sim.simulateInference(ord);
+
             if (eval < bestEval) {
                 bestOrd = ord.clone();
                 bestEval = eval;
@@ -382,14 +410,17 @@ public class VariableElimination
         int[] order = new int[n_vars.length];
 
         List<Simulation.FakeFactor> factors = new ArrayList<Simulation.FakeFactor>();
+
         for (int i = 0; i < vars.size(); i++) {
-            Simulation.FakeFactor psi = new Simulation.FakeFactor(vars.get(i), this.bn);
+            Simulation.FakeFactor psi = new Simulation.FakeFactor(vars.get(i),
+                    this.bn);
 
             factors.add(psi);
         }
         for (int i = 0; i < n_vars.length; i++) {
             int best_size = Integer.MAX_VALUE;
             int best_v = -1;
+
             for (int v : vars.toArray()) {
                 List<Simulation.FakeFactor> n_factors = new ArrayList<Simulation.FakeFactor>();
 
@@ -397,6 +428,7 @@ public class VariableElimination
                 sim.simulateElimin(v, n_factors);
 
                 int size = 0;
+
                 for (Simulation.FakeFactor psi : n_factors) {
                     size += psi.size;
                 }
@@ -421,14 +453,17 @@ public class VariableElimination
         Undirected arcs = new Undirected(this.bn);
 
         int k = 0;
+
         while (!vars.isEmpty()) {
             int bestV = -1;
             int bestHeur = Integer.MAX_VALUE;
             int v;
             int heur;
+
             for (int i = 0; i < vars.size(); i++) {
                 v = vars.getQuick(i);
-                heur = heuristicEliminationCriteria(v, this.bn, arcs, vars, method);
+                heur = heuristicEliminationCriteria(v, this.bn, arcs, vars,
+                        method);
                 if (heur < bestHeur) {
                     bestHeur = heur;
                     bestV = v;
@@ -449,11 +484,13 @@ public class VariableElimination
         Arrays.sort(ev_keys);
 
         TIntArrayList rev_topol = new TIntArrayList();
+
         rev_topol.addAll(this.bn.getTopologicalOrder());
 
         rev_topol.reverse();
         for (int i = 0; i < rev_topol.size(); i++) {
             int v = rev_topol.get(i);
+
             if (isBarren(query, ev_keys, barren, v)) {
                 barren.add(v);
             }
@@ -483,13 +520,14 @@ public class VariableElimination
     }
 
     public BayesianFactor query(int i) {
-        return query(new int[]{i});
+        return query(new int[] { i});
     }
 
     public int mpe(int i, TIntIntHashMap m) {
         BayesianFactor v = query(i, m);
         int max = -1;
         double max_p = -1.7976931348623157E308D;
+
         for (int j = 0; j < v.potent.length; j++) {
             if (v.potent[j] > max_p) {
                 max_p = v.potent[j];
@@ -502,7 +540,6 @@ public class VariableElimination
     public static enum EliminMethod {
         MinFill, Heu, Greedy, MinWidth;
 
-        private EliminMethod() {
-        }
+        private EliminMethod() {}
     }
 }

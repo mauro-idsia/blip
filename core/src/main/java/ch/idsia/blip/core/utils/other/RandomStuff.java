@@ -23,10 +23,11 @@ public class RandomStuff {
             RandomStuff.class.getName());
 
     public static String rmExt(String str) {
-        if (str.contains("."))
+        if (str.contains(".")) {
             return str.substring(0, str.lastIndexOf('.'));
-        else
+        } else {
             return str;
+        }
     }
 
     public static Random getRandom() {
@@ -53,11 +54,13 @@ public class RandomStuff {
     public static int waitForProc(Process process, double timeout) {
 
         Worker worker = new Worker(process);
+
         worker.start();
         try {
             worker.join((long) timeout);
-            if (worker.exit != null)
+            if (worker.exit != null) {
                 return worker.exit;
+            }
         } catch (InterruptedException ex) {
             worker.interrupt();
             Thread.currentThread().interrupt();
@@ -67,7 +70,6 @@ public class RandomStuff {
         }
         return -1;
     }
-
 
     public static <T extends Comparable<? super T>> List<T> asSortedList(Collection<T> c) {
         List<T> list = new ArrayList<T>(c);
@@ -291,11 +293,9 @@ public class RandomStuff {
         }
     }
 
-
     public static DataSet getDataSet(String dat_path) {
         return getDataSet(dat_path, false);
     }
-
 
     /**
      * Get a new data file reader from the argument
@@ -323,14 +323,15 @@ public class RandomStuff {
 
             DatFileReader dr;
 
-            if (ph.endsWith(".data"))
+            if (ph.endsWith(".data")) {
                 dr = new DataFileReader();
-            else if (ph.endsWith(".dat") || ph.equals("dat"))
+            } else if (ph.endsWith("dat") || ph.equals("dat")) {
                 dr = new DatFileReader();
-            else if (ph.endsWith(".arff"))
+            } else if (ph.endsWith(".arff")) {
                 dr = new ArffFileReader();
-            else
+            } else {
                 dr = new AnyFileReader();
+            }
 
             dr.init(ph, readMissing);
             return dr.read();
@@ -345,19 +346,20 @@ public class RandomStuff {
 
         try {
             DatFileWriter dWr = null;
-            if (ph.endsWith(".data"))
+
+            if (ph.endsWith(".data")) {
                 dWr = new DataFileWriter();
-            else if (ph.endsWith(".dat"))
+            } else if (ph.endsWith(".dat")) {
                 dWr = new DatFileWriter();
-            else if (ph.endsWith(".arff"))
+            } else if (ph.endsWith(".arff")) {
                 dWr = new ArffFileWriter();
+            }
 
             dWr.go(dat, ph);
         } catch (Exception ex) {
             logExp(log, ex);
         }
     }
-
 
     public static BaseFileLineReader getDataSetReader(String ph) {
 
@@ -375,14 +377,15 @@ public class RandomStuff {
                         "No valid data point path provided: " + ph);
             }
 
-            if (ph.endsWith(".data"))
+            if (ph.endsWith(".data")) {
                 return new DataFileLineReader(ph);
-            else if (ph.endsWith(".dat"))
+            } else if (ph.endsWith(".dat")) {
                 return new DatFileLineReader(ph);
-            else if (ph.endsWith(".arff"))
+            } else if (ph.endsWith(".arff")) {
                 return new ArffFileLineReader(ph);
-            else
+            } else {
                 return new AnyFileLineReader(ph);
+            }
         } catch (Exception ex) {
             logExp(log, ex);
         }
@@ -407,6 +410,7 @@ public class RandomStuff {
             }
 
             ArffFileReader rd = new ArffFileReader();
+
             rd.init(ph, true);
 
             return rd.read();
@@ -417,7 +421,9 @@ public class RandomStuff {
         return null;
     }
 
-
+    public static Writer getWriter(String ph) {
+        return getWriter(ph, false);
+    }
     /**
      * Get writer for the output scores
      *
@@ -426,7 +432,7 @@ public class RandomStuff {
      * @throws java.io.UnsupportedEncodingException error in stream creation
      * @throws java.io.FileNotFoundException        file path not valid
      */
-    public static Writer getWriter(String ph) {
+    public static Writer getWriter(String ph, boolean suppress) {
         Writer writer = null;
 
         try {
@@ -438,17 +444,16 @@ public class RandomStuff {
                 writer = new BufferedWriter(new OutputStreamWriter(System.out));
             }
         } catch (Exception e) {
+            if (!suppress)
             logExp(e);
         }
 
         return writer;
     }
 
-
     public static BufferedReader getReader(String format, Object... args) throws FileNotFoundException {
         return getReader(f(format, args));
     }
-
 
     public static BufferedReader getReader(String ph) throws FileNotFoundException {
         return new BufferedReader(new FileReader(ph));
@@ -479,7 +484,6 @@ public class RandomStuff {
         return getScoreReader(ph, 0);
     }
 
-
     /**
      * Get a new score file reader from the argument
      *
@@ -489,16 +493,18 @@ public class RandomStuff {
      * @throws java.io.FileNotFoundException if file is not found
      */
     public static ParentSet[][] getScoreReader(String ph, int debug)
-            throws IncorrectCallException, IOException {
+        throws IncorrectCallException, IOException {
 
         if (ph == null) {
             throw new IncorrectCallException("No score path provided: " + ph);
         }
 
-        if (!new File(ph).exists())
+        if (!new File(ph).exists()) {
             throw new IncorrectCallException("Score file not found: " + ph);
+        }
 
         ScoreReader s = new ScoreReader(ph, 10);
+
         s.readScores();
 
         return s.m_scores;
@@ -528,24 +534,24 @@ public class RandomStuff {
     }
 
     public static <K, V extends Comparable<? super V>>
-    SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
+            SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map) {
         return entriesSortedByValues(map, false);
     }
 
     public static <K, V extends Comparable<? super V>>
-    SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map, final boolean invert) {
+            SortedSet<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map, final boolean invert) {
         SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(
                 new Comparator<Map.Entry<K, V>>() {
 
-                    public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
-                        int res = e1.getValue().compareTo(e2.getValue());
+            public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
+                int res = e1.getValue().compareTo(e2.getValue());
 
-                        if (invert) {
-                            res = -res;
-                        }
-                        return res != 0 ? res : 1;
-                    }
-                });
+                if (invert) {
+                    res = -res;
+                }
+                return res != 0 ? res : 1;
+            }
+        });
 
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
@@ -559,24 +565,24 @@ public class RandomStuff {
     }
 
     public static <K extends Comparable<? super K>, V>
-    SortedSet<Map.Entry<K, V>> entriesSortedByKey(Map<K, V> map) {
+            SortedSet<Map.Entry<K, V>> entriesSortedByKey(Map<K, V> map) {
         return entriesSortedByKey(map, false);
     }
 
     public static <K extends Comparable<? super K>, V>
-    SortedSet<Map.Entry<K, V>> entriesSortedByKey(Map<K, V> map, final boolean b) {
+            SortedSet<Map.Entry<K, V>> entriesSortedByKey(Map<K, V> map, final boolean b) {
         SortedSet<Map.Entry<K, V>> sortedEntries = new TreeSet<Map.Entry<K, V>>(
                 new Comparator<Map.Entry<K, V>>() {
 
-                    public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
-                        int res = e1.getKey().compareTo(e2.getKey());
+            public int compare(Map.Entry<K, V> e1, Map.Entry<K, V> e2) {
+                int res = e1.getKey().compareTo(e2.getKey());
 
-                        if (b) {
-                            res = -res;
-                        }
-                        return res != 0 ? res : 1;
-                    }
-                });
+                if (b) {
+                    res = -res;
+                }
+                return res != 0 ? res : 1;
+            }
+        });
 
         sortedEntries.addAll(map.entrySet());
         return sortedEntries;
@@ -649,12 +655,14 @@ public class RandomStuff {
         // read any errors from the attempted command
         // System.out.printf("errors: ");
         StringBuilder st = new StringBuilder();
+
         while ((s = stdError.readLine()) != null) {
             st.append(s);
         }
 
-        if (st.length() > 0)
+        if (st.length() > 0) {
             pf("errors: %s \n", st.toString());
+        }
     }
 
     public static void pf(String format, Object... args) {
@@ -702,7 +710,6 @@ public class RandomStuff {
         folder.delete();
     }
 
-
     public static void copyDirectory(File src, File trg) {
         try {
             if (src.isDirectory()) {
@@ -712,6 +719,7 @@ public class RandomStuff {
 
                 for (File f : src.listFiles()) {
                     String s = f.getName();
+
                     if (f.isFile()) {
                         copySomething(new File(src, s), new File(trg, s));
                     } else {
@@ -719,10 +727,10 @@ public class RandomStuff {
                     }
 
                 }
-                //              String[] children = sourceLocation.listFiles();
-                //                for (int thread = 0; thread < children.length; thread++) {
-                //                      copyDirectory(new File(sourceLocation, children[thread]),
-                //                                new File(targetLocation, children[thread]));
+                // String[] children = sourceLocation.listFiles();
+                // for (int thread = 0; thread < children.length; thread++) {
+                // copyDirectory(new File(sourceLocation, children[thread]),
+                // new File(targetLocation, children[thread]));
 
             } else {
 
@@ -744,6 +752,7 @@ public class RandomStuff {
         // Copy the bits from instream to outstream
         byte[] buf = new byte[1024];
         int len;
+
         while ((len = in.read(buf)) > 0) {
             out.write(buf, 0, len);
         }
@@ -751,10 +760,10 @@ public class RandomStuff {
         out.close();
     }
 
-
     public static BayesianNetwork getBayesianNetwork(String s_bn) {
 
         BufferedReader rd_bn = null;
+
         try {
             rd_bn = new BufferedReader(new FileReader(s_bn));
         } catch (FileNotFoundException e) {
@@ -763,25 +772,28 @@ public class RandomStuff {
         }
 
         BayesianNetwork bn = null;
-        if (s_bn.endsWith(".net"))
+
+        if (s_bn.endsWith(".net")) {
             bn = BnNetReader.ex(rd_bn);
-        else if (s_bn.endsWith(".uai"))
+        } else if (s_bn.endsWith(".uai")) {
             bn = BnUaiReader.ex(rd_bn);
-        else if (s_bn.endsWith(".erg"))
+        } else if (s_bn.endsWith(".erg")) {
             bn = BnErgReader.ex(rd_bn);
-        else
+        } else {
             bn = BnResReader.ex(rd_bn);
+        }
         return bn;
     }
 
     public static void writeBayesianNetwork(BayesianNetwork bn, String path) {
 
-        if (path.endsWith(".uai"))
+        if (path.endsWith(".uai")) {
             BnUaiWriter.ex(path, bn);
-        else if (path.endsWith(".erg"))
+        } else if (path.endsWith(".erg")) {
             BnErgWriter.ex(path, bn);
-        else
+        } else {
             BnNetWriter.ex(bn, path);
+        }
 
     }
 
@@ -792,6 +804,7 @@ public class RandomStuff {
     public static void deleteDir(File file) {
 
         File[] contents = file.listFiles();
+
         if (contents != null) {
             for (File f : contents) {
                 deleteDir(f);
@@ -811,11 +824,13 @@ public class RandomStuff {
 
         while ((line = br.readLine()) != null) {
             line = line.trim();
-            if (line.length() > 0)
+            if (line.length() > 0) {
                 o.add(line);
+            }
         }
 
         int exitVal = proc.waitFor();
+
         // System.out.println("Process exitValue: " + exitVal);
 
         return o;
@@ -849,6 +864,7 @@ public class RandomStuff {
 
         // Write evidence
         PrintWriter w = new PrintWriter(evid_path, "UTF-8");
+
         // wf(w, "/* Evidence */ \n");
         wf(w, "%d ", sample.length);
         for (int j = 0; j < sample.length; j++) {
@@ -865,12 +881,15 @@ public class RandomStuff {
 
         // Write evidence
         PrintWriter w = new PrintWriter(evid_path, "UTF-8");
+
         // wf(w, "/* Evidence */ \n");
         wf(w, "%d ", a.size());
         int[] keys = a.keySet().toArray();
+
         Arrays.sort(keys);
-        for (int k : keys)
+        for (int k : keys) {
             wf(w, "%d %d ", k, a.get(k));
+        }
         w.close();
 
         return cmpIjgp(bn_path, evid_path);
@@ -891,11 +910,13 @@ public class RandomStuff {
 
         String res = f("%s/%s.PR", p, bn_name);
         BufferedReader rd = getReader(res);
+
         rd.readLine();
         bn_name = rd.readLine();
         rd.close();
 
         double v = 0;
+
         try {
             v = Double.valueOf(bn_name);
         } catch (Exception e) {

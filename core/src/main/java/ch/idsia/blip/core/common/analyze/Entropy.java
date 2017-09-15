@@ -32,8 +32,9 @@ public class Entropy extends Analyzer {
         for (int v = 0; v < dat.l_n_arity[x]; v++) {
             k = dat.row_values[x][v].length;
             p = getFreq(k, dat.l_n_arity[x]);
-            if (p == 0)
+            if (p == 0) {
                 continue;
+            }
 
             h += p * log(p);
         }
@@ -62,8 +63,9 @@ public class Entropy extends Analyzer {
                 double p_xy = getFreq(ArrayUtils.intersectN(r_x, r_y),
                         x_ar * y_ar);
 
-                if (p_xy > 0)
+                if (p_xy > 0) {
                     h += p_xy * log(p_xy / p_y);
+                }
 
                 // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, Fastlog(p_xy / (p_x * p_y)));
             }
@@ -111,8 +113,10 @@ public class Entropy extends Analyzer {
                 double p_y = getFreq(r_y.length, y_ar);
 
                 int r_xy = ArrayUtils.intersectN(r_x, r_y);
-                if (r_xy == 0)
+
+                if (r_xy == 0) {
                     continue;
+                }
 
                 // P(x, y)
                 double p_xy = getFreq(r_xy, x_ar * y_ar);
@@ -215,15 +219,18 @@ public class Entropy extends Analyzer {
                 int[] r_x = dat.row_values[x][x_i];
 
                 int r_xy = ArrayUtils.intersectN(r_x, r_y);
-                if (r_xy == 0)
+
+                if (r_xy == 0) {
                     continue;
+                }
 
                 double p_xy = getFreq(r_xy, x_ar * y_ar);
 
                 h += p_xy * log(p_xy);
 
-                if (Double.isNaN(h))
+                if (Double.isNaN(h)) {
                     p("ciao");
+                }
 
                 // System.out.printf(" %.5f * log ( %.5f / %.5f) - %.5f * %.5f \n", p_xy, p_xy, p_x * p_y, p_xy, Fastlog(p_xy / (p_x * p_y)));
             }

@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
+
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.other.ParentSet;
@@ -9,6 +10,7 @@ import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+
 
 public class BrutalAstarSearcher extends BrutalOldSearcher {
 
@@ -30,7 +32,6 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
         this.exp_limit = exp_limit;
     }
 
-
     @Override
     public ParentSet[] search() {
 
@@ -47,6 +48,7 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
 
         // Create first state
         State st = createState(tw + 1, new_str, handles);
+
         open.add(st);
 
         boolean completed = false;
@@ -61,8 +63,9 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
                 break;
             }
 
-            if (solver.verbose > 1)
+            if (solver.verbose > 1) {
                 solver.logf("considering state: %s \n", st);
+            }
 
             // get new variable to work on
             int v = vars[st.index];
@@ -80,7 +83,8 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
 
                 // add new handlers
                 for (int elim : h.set) {
-                    n_st.handles.add(new SIntSet(reduceAndIncreaseArray(h.set, v, elim)));
+                    n_st.handles.add(
+                            new SIntSet(reduceAndIncreaseArray(h.set, v, elim)));
                 }
 
                 // update score
@@ -90,22 +94,24 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
                 candidates.add(n_st);
             }
 
-
-            if (exp_limit == 0 || st.index <= tw + exp_limit)
+            if (exp_limit == 0 || st.index <= tw + exp_limit) {
                 // put everything
-                for (State c : candidates)
+                for (State c : candidates) {
                     addSuccessorState(c);
-            else
+                }
+            } else {
                 // If we are over the treeshold, put only the best
                 addSuccessorState(candidates.pollFirst());
+            }
 
             solver.checkTime();
 
             // pf("%d - %d\n", open.size(), st.index);
         }
 
-        if (completed)
+        if (completed) {
             return st.str;
+        }
 
         return null;
     }
@@ -146,10 +152,10 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
             open.pollLast();
             worstQueueScore = open.last().f_sk;
         } else // If we didn't drop any element, check if we have to update the current
-            // worst score!
-            if (n_st.f_sk < worstQueueScore) {
-                worstQueueScore = n_st.f_sk;
-            }
+        // worst score!
+        if (n_st.f_sk < worstQueueScore) {
+            worstQueueScore = n_st.f_sk;
+        }
 
         open.add(n_st);
     }
@@ -166,6 +172,7 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
 
         for (int i = tw + 1; i < n_var; i++) {
             int[] acceptable = new int[i];
+
             System.arraycopy(vars, 0, acceptable, 0, i);
             Arrays.sort(acceptable);
             int v = vars[i];
@@ -202,17 +209,20 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
             cloneStr(new_str, str);
 
             handles = new TreeSet<SIntSet>();
-            for (SIntSet s : new_handles)
+            for (SIntSet s : new_handles) {
                 handles.add(s);
+            }
         }
 
         @Override
         public int compareTo(State other) {
-            if (doubleEquals(f_sk, other.f_sk))
-                if (index < other.index)
+            if (doubleEquals(f_sk, other.f_sk)) {
+                if (index < other.index) {
                     return 1;
-                else
+                } else {
                     return -1;
+                }
+            }
 
             if (f_sk < other.f_sk) {
                 return 1;
@@ -226,12 +236,14 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
             // Exact part
             for (int i = 0; i < index; i++) {
                 int v = vars[i];
+
                 f_sk += str[v].sk;
             }
 
             // Heuristic part
-            for (int i = index; i < n_var; i++)
+            for (int i = index; i < n_var; i++) {
                 f_sk += heuStr[vars[i]];
+            }
 
         }
 

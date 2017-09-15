@@ -40,11 +40,9 @@ public class DivConqApi extends Api {
         dv = new DivConq();
     }
 
-
     public static void main(String[] args) throws IncorrectCallException {
-        defaultMain(args, new DivConqApi(), log);
+        defaultMain(args, new DivConqApi());
     }
-
 
     private void writeSubScores(ScoreReader sc, String sub_problem, int[] vars) {
         Writer w = null;
@@ -84,28 +82,29 @@ public class DivConqApi extends Api {
         return true;
     }
 
-/*
-    @Override
-    public void defineOpts(Options o) {
-         @Option(name="f", ph_dat, null, true,
-                "datapoints input file");
+    /*
+     @Override
+     public void defineOpts(Options o) {
+     @Option(name="f", ph_dat, null, true,
+     "datapoints input file");
 
-         @Option(name="set", ph_scores, null, true,
-                "scores input file");
+     @Option(name="set", ph_scores, null, true,
+     "scores input file");
 
-         @Option(name="o", ph_cluster, null, true,
-                "output file");
+     @Option(name="o", ph_cluster, null, true,
+     "output file");
 
-         @Option(name="tw", dv.k, 5, false,
-                "number of clusters");
+     @Option(name="tw", dv.k, 5, false,
+     "number of clusters");
 
-         @Option(name="v", dv.verbose, 0, false,
-                "verbose level (1: performance, 2: conclude, 3: eval order)");
-    }*/
+     @Option(name="v", dv.verbose, 0, false,
+     "verbose level (1: performance, 2: conclude, 3: eval order)");
+     }*/
 
     @Override
     public void exec() throws Exception {
         DataSet dat = getDataSet(ph_dat);
+
         checkPath(ph_cluster);
 
         dv.findKMedoids(dat);

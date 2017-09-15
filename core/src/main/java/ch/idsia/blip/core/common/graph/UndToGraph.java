@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.graph;
 
+
 import ch.idsia.blip.core.common.arcs.Undirected;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
+
 public class UndToGraph {
 
     TreeSet<String> highligth;
@@ -21,6 +23,7 @@ public class UndToGraph {
 
     public void go(Undirected u, String s) throws IOException {
         File index = new File(s);
+
         if (!index.exists()) {
             index.mkdir();
         }
@@ -30,6 +33,7 @@ public class UndToGraph {
         PrintWriter w = new PrintWriter(s + "/excluded", "UTF-8");
 
         Map<Undirected, Integer> sized = new HashMap<Undirected, Integer>();
+
         for (Undirected n_u : ls) {
             sized.put(n_u, n_u.n);
         }
@@ -37,6 +41,7 @@ public class UndToGraph {
         // pngSingle(bn, s);
 
         int i = 0;
+
         // Print each bn separated
         for (Undirected n_u : sized.keySet()) {
 
@@ -57,16 +62,17 @@ public class UndToGraph {
 
     private String twoIsBetter(Undirected b) {
 
-        if (b.n == 1)
+        if (b.n == 1) {
             return f("%s \n", b.name(0));
-
-        else
+        } else {
             return null;
+        }
     }
 
     private void pngSingle(Undirected und, String s) throws IOException {
         und.write(s + ".dot");
         String h = f("neato -Tpng %s.dot -o %s.png", s, s);
+
         exec(h);
     }
 

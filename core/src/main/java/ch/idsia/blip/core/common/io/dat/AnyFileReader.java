@@ -43,55 +43,56 @@ public class AnyFileReader extends DatFileReader {
         /*
          sample = new short[dSet.n_var][dSet.n_datapoints];
 
-        String line;
-        int j = 0; // row index
+         String line;
+         int j = 0; // row index
 
-        // First pass, fill raw sample
-        while ((line = rd_dat.readLine()) != null) {
+         // First pass, fill raw sample
+         while ((line = rd_dat.readLine()) != null) {
 
-            int i = 0; // variable index
-            int v; // value index
+         int i = 0; // variable index
+         int v; // value index
 
-            for (String aux : getSplit(line)) {
+         for (String aux : getSplit(line)) {
 
-                if ("?".equals(aux.trim())) {
-                    v = -1;
-                } else {
-                    v = Integer.parseInt(aux);
-                }
+         if ("?".equals(aux.trim())) {
+         v = -1;
+         } else {
+         v = Integer.parseInt(aux);
+         }
 
-                sample[i][j] = (short) v;
+         sample[i][j] = (short) v;
 
-                if ((v+1) >= dSet.l_n_arity[i])
-                    dSet.l_n_arity[i] = v+1;
-                i++;
-            }
-            j++;
-        }
+         if ((v+1) >= dSet.l_n_arity[i])
+         dSet.l_n_arity[i] = v+1;
+         i++;
+         }
+         j++;
+         }
 
-                   for (String aux :) {
+         for (String aux :) {
 
-                // For each variable
-                for (int i = 0; i < dSet.n_var; i++) {
-                    // For each row
-                    for (j = 0; j < dSet.n_datapoints; j++) {
-                        int v = sample[i][j];
-                        if (v < 0)
-                            v = dSet.l_n_arity[i];
-                        v_aux[i][v].add(j);
-                    }
-                }
+         // For each variable
+         for (int i = 0; i < dSet.n_var; i++) {
+         // For each row
+         for (j = 0; j < dSet.n_datapoints; j++) {
+         int v = sample[i][j];
+         if (v < 0)
+         v = dSet.l_n_arity[i];
+         v_aux[i][v].add(j);
+         }
+         }
 
-        */
+         */
 
         // Collect row values
-        List<List<TIntArrayList>> v_aux = new ArrayList<List<TIntArrayList>>(dSet.n_var);
+        List<List<TIntArrayList>> v_aux = new ArrayList<List<TIntArrayList>>(
+                dSet.n_var);
         List<HashMap<String, Integer>> values = new ArrayList<HashMap<String, Integer>>();
+
         for (int n = 0; n < dSet.n_var; n++) {
             v_aux.add(new ArrayList<TIntArrayList>());
             values.add(new HashMap<String, Integer>());
         }
-
 
         List<TIntArrayList> missing_aux_v = new ArrayList<TIntArrayList>();
         TIntArrayList missing_aux_l = new TIntArrayList();
@@ -101,14 +102,17 @@ public class AnyFileReader extends DatFileReader {
         Integer v;
         List<TIntArrayList> lu;
         HashMap<String, Integer> lv;
+
         dSet.n_datapoints = 0;
         while ((line = rd_dat.readLine()) != null) {
             line = line.trim();
-            if ("".equals(line))
+            if ("".equals(line)) {
                 continue;
+            }
 
-            if (!readMissing && line.contains("?"))
+            if (!readMissing && line.contains("?")) {
                 continue;
+            }
 
             sp = getSplit(line);
             if (sp.length != dSet.n_var) {
@@ -120,6 +124,7 @@ public class AnyFileReader extends DatFileReader {
             for (int i = 0; i < dSet.n_var; i++) {
                 if ("?".equals(sp[i])) {
                     int pos = index(i, missing_aux_l);
+
                     if (pos < 0) {
                         pos = missing_aux_l.size();
                         missing_aux_v.add(new TIntArrayList());
@@ -157,16 +162,15 @@ public class AnyFileReader extends DatFileReader {
         dSet.missing_l = new int[dSet.n_var][];
         for (int n = 0; n < dSet.n_var; n++) {
             int pos = index(n, missing_aux_l);
+
             if (pos >= 0) {
                 dSet.missing_l[n] = missing_aux_v.get(pos).toArray();
             }
         }
 
-
         rd_dat.close();
 
     }
-
 
     /**
      * Copy values from list of Integer to array of int.
@@ -208,22 +212,23 @@ public class AnyFileReader extends DatFileReader {
 
         // Read names
         String ln = rd_dat.readLine();
+
         dSet.l_nm_var = getSplit(ln);
         dSet.n_var = dSet.l_nm_var.length;
 
         // Read arities
         /*
-        ln = rd_dat.readLine();
-        String[] sp = getSplit(ln);
-        dSet.l_n_arity = new int[dSet.n_var];
-        if (sp.length != dSet.n_var) {
-            notifyError(2, sp.length);
-            return;
-        }
-        for (int i = 0; i < dSet.n_var; i++) {
-            dSet.l_n_arity[i] = Integer.parseInt(sp[i]);
-        }
-        */
+         ln = rd_dat.readLine();
+         String[] sp = getSplit(ln);
+         dSet.l_n_arity = new int[dSet.n_var];
+         if (sp.length != dSet.n_var) {
+         notifyError(2, sp.length);
+         return;
+         }
+         for (int i = 0; i < dSet.n_var; i++) {
+         dSet.l_n_arity[i] = Integer.parseInt(sp[i]);
+         }
+         */
 
         dSet.n_datapoints = 0;
         dSet.l_n_arity = new int[dSet.n_var];

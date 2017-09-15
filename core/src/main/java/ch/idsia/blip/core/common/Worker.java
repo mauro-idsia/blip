@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common;
 
+
 public class Worker extends Thread {
     private final Process process;
     public Integer exit;

@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.src.obs;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
@@ -35,13 +36,15 @@ public class InobsSearcher extends ObsSearcher {
         ParentSet[] best_str = null;
         int[] best_vars = new int[n_var];
         // Gain from the best switch
-        double best_sk = last_sk;
+        double best_sk = sk;
 
-        ParentSet[] new_str = cloneStr(last_str);
+        ParentSet[] new_str = cloneStr(str);
 
         int[] new_vars = new int[n_var];
-        for (int i = 0; i < n_var; i++)
+
+        for (int i = 0; i < n_var; i++) {
             new_vars[i] = vars[i];
+        }
 
         forbidden = new boolean[n_var];
         for (int i = 0; i < ix; i++) {
@@ -52,6 +55,7 @@ public class InobsSearcher extends ObsSearcher {
             // Switch in the order ix2 and ix
             varSwitch(ix2, new_str, new_vars, forbidden);
             double sk = skore(new_str);
+
             if (sk > best_sk) {
                 best_sk = sk;
                 best_str = cloneStr(new_str);
@@ -63,12 +67,13 @@ public class InobsSearcher extends ObsSearcher {
         }
 
         // If no best gain, return false
-        if (best_str == null)
+        if (best_str == null) {
             return false;
+        }
 
         // Save best
-        last_str = best_str;
-        last_sk = best_sk;
+        str = best_str;
+        sk = best_sk;
         cloneArray(best_vars, vars);
         return true;
 
@@ -77,16 +82,19 @@ public class InobsSearcher extends ObsSearcher {
     private void checkCorrect(ParentSet[] new_str, int[] new_vars) {
         for (int i = 0; i < n_var; i++) {
             int jx = ArrayUtils.index(i, new_vars);
+
             for (int p : new_str[i].parents) {
                 int jx2 = ArrayUtils.index(p, new_vars);
-                if (jx2 < jx)
-                    p("Cdgfgfgdf");
-            }
 
+                if (jx2 < jx) {
+                    p("Cdgfgfgdf");
+                }
+            }
 
         }
 
         BayesianNetwork bn = new BayesianNetwork(new_str);
+
         try {
             bn.checkAcyclic();
         } catch (CyclicGraphException e) {
@@ -96,8 +104,10 @@ public class InobsSearcher extends ObsSearcher {
 
     private ParentSet[] cloneStr(ParentSet[] s) {
         ParentSet[] new_s = new ParentSet[s.length];
-        for (int i = 0; i < s.length; i++)
+
+        for (int i = 0; i < s.length; i++) {
             new_s[i] = s[i];
+        }
         return new_s;
     }
 
@@ -116,7 +126,7 @@ public class InobsSearcher extends ObsSearcher {
 
         // pf("New parent set for %d: %s \n", b, str[b]);
 
-        //  pf("Old parent set for %d: %s \n", a, str[a]);
+        // pf("Old parent set for %d: %s \n", a, str[a]);
 
         // Find new best parent set for a, now that b is available
         forbidden[b] = false;
@@ -147,31 +157,32 @@ public class InobsSearcher extends ObsSearcher {
 
     }
 
-
     @Override
     public ParentSet[] search() {
 
         vars = smp.sample();
 
-        if (solver.verbose > 2)
+        if (solver.verbose > 2) {
             solver.log("going! \n");
+        }
 
         // Find initial structure!
         super.search();
 
         if (solver.verbose > 2) {
-            solver.logf("Initial: %.5f (check: %.5f) \n",
-                    last_sk, checkSk());
+            solver.logf("Initial: %.5f (check: %.5f) \n", sk, checkSk());
         }
 
         solver.checkTime();
         int cnt = 0;
+
         while (solver.still_time) {
 
-            if (greedy(vars))
+            if (greedy(vars)) {
                 cnt = 0;
-            else
+            } else {
                 cnt++;
+            }
 
             if (cnt > n_var) {
                 break;
@@ -180,11 +191,11 @@ public class InobsSearcher extends ObsSearcher {
             solver.checkTime();
         }
 
+        if (solver.verbose > 2) {
+            solver.logf("After greedy! %.5f - %.3f \n", solver.elapsed, sk);
+        }
 
-        if (solver.verbose > 2)
-            solver.logf("After greedy! %.5f - %.3f \n", solver.elapsed, last_sk);
-
-        return last_str;
+        return str;
     }
 
 }

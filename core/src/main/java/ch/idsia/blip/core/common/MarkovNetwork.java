@@ -51,7 +51,6 @@ public class MarkovNetwork {
 
     private int[][] l_vars_assign;
 
-
     /**
      * Construct void network
      *
@@ -95,17 +94,22 @@ public class MarkovNetwork {
     public void resample(short[] sample, int v, Random rand) {
         // Initial potential
         double[] pt = new double[arity(v)];
-        for (int j = 0; j < arity(v); j++)
+
+        for (int j = 0; j < arity(v); j++) {
             pt[j] = 1.0;
+        }
         // Multiply with all the cliques where it appears
         for (int clique : l_vars_assign[v]) {
             multiply(pt, v, clique, sample);
         }
         double tot = 0;
-        for (double p : pt)
+
+        for (double p : pt) {
             tot += p;
+        }
         double r = rand.nextDouble() * tot;
         int i = 0;
+
         while ((i < arity(v)) && (pt[i] < r)) { // Select a value from the probabilities given the random
             r -= pt[i];
             i++;
@@ -130,27 +134,33 @@ public class MarkovNetwork {
             for (int i = vars.length - 1; i >= 0; i--) {
                 int p = vars[i];
                 int val;
-                if (p == v)
+
+                if (p == v) {
                     val = a;
-                else
+                } else {
                     val = sample[p];
+                }
 
                 ix += val * ix_ml; // Shift index
                 ix_ml *= arity(p); // Compute cumulative shifter
 
             }
             double p = l_pot_cliques[clique][ix];
+
             pt[a] *= p;
         }
     }
 
     public void updateCliqueAssignments() {
-        if (l_vars_assign != null)
+        if (l_vars_assign != null) {
             return;
+        }
 
         TIntArrayList[] aux = new TIntArrayList[n_var];
-        for (int i = 0; i < n_var; i++)
+
+        for (int i = 0; i < n_var; i++) {
             aux[i] = new TIntArrayList();
+        }
 
         for (int i = 0; i < n_cliques; i++) {
             for (int v : l_vars_cliques[i]) {
@@ -163,7 +173,6 @@ public class MarkovNetwork {
             l_vars_assign[i] = aux[i].toArray();
         }
     }
-
 
     private int arity(int i) {
         return l_ar_var[i];

@@ -1,7 +1,9 @@
 package ch.idsia.blip.core.learn.param;
 
+
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
+
 
 public class ParLeWeight extends ParLe {
 
@@ -28,13 +30,15 @@ public class ParLeWeight extends ParLe {
 
         // System.out.println(var + " ... " + ar + " .... " + vl_var.length);
         // if (verbose > 1 && parents_var.length < 50 )
-        //   pf("WARNING! Variable %s, less than 50 datapoints in parent configuration! There are: %d \n", bn.name(var), parents_var.length);
+        // pf("WARNING! Variable %s, less than 50 datapoints in parent configuration! There are: %d \n", bn.name(var), parents_var.length);
 
         // For every variable configuration, compute the n's
         for (int v = 0; v < ar; v++) {
             int[] lg = ArrayUtils.intersect(parents_var, vl_var[v]);
-            for (int g : lg)
+
+            for (int g : lg) {
                 n_ij[v] += weight[g];
+            }
         }
         return n_ij;
     }
@@ -62,6 +66,7 @@ public class ParLeWeight extends ParLe {
         double alpha_ij = alpha / n_potent;
 
         TIntIntHashMap conf = new TIntIntHashMap();
+
         conf.put(var, 0);
         for (int p : parents) {
             conf.put(p, 0);
@@ -79,6 +84,7 @@ public class ParLeWeight extends ParLe {
             }
 
             int ix = j * ar;
+
             for (int v = 0; v < ar; v++) {
                 potent[ix++] = (n_ij[v] + alpha_ij) / (n_j + alpha_j);
             }
@@ -99,6 +105,7 @@ public class ParLeWeight extends ParLe {
         double sum = 0;
 
         double[] n_i = new double[ar];
+
         for (int v = 0; v < ar; v++) {
             for (int g : vl_var[v]) {
                 n_i[v] += weight[g];
@@ -108,8 +115,7 @@ public class ParLeWeight extends ParLe {
 
         for (int v = 0; v < ar; v++) {
 
-            double p = (n_i[v] + alpha_ij)
-                    / (sum + alpha_j);
+            double p = (n_i[v] + alpha_ij) / (sum + alpha_j);
 
             potent[v] = p;
         }

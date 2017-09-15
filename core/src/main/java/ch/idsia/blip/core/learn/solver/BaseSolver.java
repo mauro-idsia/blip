@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver;
 
+
 import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.common.TopologicalOrder;
 import ch.idsia.blip.core.common.arcs.Directed;
@@ -22,13 +23,14 @@ import java.util.logging.Logger;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.sameArray;
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
+
 public abstract class BaseSolver extends App {
 
     private final Logger log = Logger.getLogger(BaseSolver.class.getName());
 
     public ParentSet[][] sc;
 
-    //Best structure found yet
+    // Best structure found yet
     public double best_sk = -Double.MAX_VALUE;
 
     // Best structure found yet
@@ -83,8 +85,9 @@ public abstract class BaseSolver extends App {
         best_sk = -Double.MAX_VALUE;
         best_str = new ParentSet[n_var];
 
-        if (out_solutions > 1)
+        if (out_solutions > 1) {
             open = new TreeSet<Solution>();
+        }
 
         counter = System.currentTimeMillis();
 
@@ -100,10 +103,12 @@ public abstract class BaseSolver extends App {
     protected void writeStructure(String res_path) {
         writeStructure(res_path, this.best_sk, this.best_str);
         int i;
+
         if ((this.out_solutions > 1) && (this.write_solutions)) {
             i = 0;
             for (Solution s : this.open) {
-                writeStructure(RandomStuff.f("%s-%d", res_path, i++), s.sk, s.str);
+                writeStructure(RandomStuff.f("%s-%d", res_path, i++), s.sk,
+                        s.str);
             }
         }
     }
@@ -113,6 +118,7 @@ public abstract class BaseSolver extends App {
         prepare();
 
         Provider pro = getProvider();
+
         if (this.verbose > 0) {
             log("Read scores... \n");
         }
@@ -124,8 +130,9 @@ public abstract class BaseSolver extends App {
             ExecutorService es = Executors.newCachedThreadPool();
 
             for (int i = 0; i < thread_pool_size; i++) {
-                if (verbose > 0)
+                if (verbose > 0) {
                     logf("Starting %d searcher \n", i);
+                }
                 es.execute(getNewSearcher(i));
             }
 
@@ -144,8 +151,9 @@ public abstract class BaseSolver extends App {
     }
 
     protected void almost() {
-        if (tryFirst == null)
+        if (tryFirst == null) {
             return;
+        }
 
         for (Solution s : tryFirst) {
             tryNow(s);
@@ -154,6 +162,7 @@ public abstract class BaseSolver extends App {
 
     protected void tryNow(Solution s) {
         ParentSet[] t = new ParentSet[this.n_var];
+
         for (int i = 0; i < this.n_var; i++) {
             t[i] = findParSet(s.str[i].parents, this.sc[i]);
             if (t[i] == null) {
@@ -165,8 +174,9 @@ public abstract class BaseSolver extends App {
 
     private ParentSet findParSet(int[] pset, ParentSet[] sc) {
         for (ParentSet p : sc) {
-            if (sameArray(p.parents, pset))
+            if (sameArray(p.parents, pset)) {
                 return p;
+            }
         }
 
         return null;
@@ -194,7 +204,9 @@ public abstract class BaseSolver extends App {
             still_time = false;
         }
 
-        if (delta > 0 && (System.currentTimeMillis() - last_improvement) / 1000.0 > delta) {
+        if (delta > 0
+                && (System.currentTimeMillis() - last_improvement) / 1000.0
+                        > delta) {
             still_time = false;
         }
     }
@@ -210,12 +222,14 @@ public abstract class BaseSolver extends App {
 
     public void writeGraph(String s, String[] nm) {
         Directed d = new Directed(best_str);
+
         d.names = nm;
         d.graph(s);
     }
 
     public void writeGraph(String s) {
         Directed d = new Directed(best_str);
+
         d.graph(s);
     }
 
@@ -233,7 +247,6 @@ public abstract class BaseSolver extends App {
         try {
             w = getWriter(s);
 
-
             // writer.graph("Quick Structure: " + printQuick(best_str));
 
             // writer.graph("\n\nExpanded Structure: \n\n");
@@ -242,13 +255,14 @@ public abstract class BaseSolver extends App {
 
                     ParentSet pSet = str[i];
 
-                    if (pSet != null)
+                    if (pSet != null) {
                         wf(w, "%d: %.2f %s\n", i, pSet.sk,
                                 (pSet.parents.length > 0
-                                        ? " (" + combine(pSet.parents, ",") + ")"
-                                        : ""));
-                    else
+                                ? " (" + combine(pSet.parents, ",") + ")"
+                                : ""));
+                    } else {
                         wf(w, "%d: 0 0\n", i);
+                    }
                 }
             }
 
@@ -309,8 +323,9 @@ public abstract class BaseSolver extends App {
     public boolean testAcyclic(ParentSet[] new_str) {
 
         synchronized (lock) {
-            for (int i = 0; i < n_var; i++)
+            for (int i = 0; i < n_var; i++) {
                 test_parent[i] = new_str[i].parents;
+            }
         }
         int[] res = TopologicalOrder.find(n_var, test_parent);
 
@@ -319,8 +334,9 @@ public abstract class BaseSolver extends App {
 
     public void newStructure(ParentSet[] new_str) {
 
-        if (new_str == null)
+        if (new_str == null) {
             return;
+        }
 
         synchronized (lock) {
 
@@ -336,16 +352,18 @@ public abstract class BaseSolver extends App {
                 log.severe("Network NOT COMPLETE!");
             }
 
-            if (verbose > 0)
+            if (verbose > 0) {
                 sk_proposed.add(new_sk);
+            }
 
             if (new_sk > best_sk) {
 
                 checkTime();
 
-                if (verbose > 0)
+                if (verbose > 0) {
                     logf("New improvement! %.5f (after %.1f s.)\n", new_sk,
                             elapsed);
+                }
 
                 best_sk = new_sk;
 
@@ -362,11 +380,12 @@ public abstract class BaseSolver extends App {
                 last_improvement = System.currentTimeMillis();
             }
 
-            if (verbose > 1)
-                if ((System.currentTimeMillis() - counter) / 1000.0 > 1) {
+            if (verbose > 2) {
+                if ((System.currentTimeMillis() - counter) / 10000.0 > 1) {
                     logf("%.5f %.1f \n", best_sk, elapsed);
                     counter = System.currentTimeMillis();
                 }
+            }
 
             // logf("%d \n", numIter);
 
@@ -375,18 +394,20 @@ public abstract class BaseSolver extends App {
             }
 
             /*
-            p(new_sk);
-            p(best_sk);
-            for (ParentSet p: new_str)
-            p(p);
-            */
+             p(new_sk);
+             p(best_sk);
+             for (ParentSet p: new_str)
+             p(p);
+             */
         }
     }
 
     public ParentSet[] getPSetArray(int[] new_str, ParentSet[][] pps) {
         ParentSet[] ps = new ParentSet[new_str.length];
-        for (int v = 0; v < new_str.length; v++)
+
+        for (int v = 0; v < new_str.length; v++) {
             ps[v] = getPSet(new_str, v, pps);
+        }
         return ps;
     }
 
@@ -397,10 +418,13 @@ public abstract class BaseSolver extends App {
     private boolean testComplete(ParentSet[] new_str) {
         for (int i = 0; i < n_var; i++) {
             ParentSet ps = new_str[i];
-            if (ps == null)
+
+            if (ps == null) {
                 return false;
-            if (ps.sk > sc[i][0].sk)
+            }
+            if (ps.sk > sc[i][0].sk) {
                 return false;
+            }
         }
         return true;
     }
@@ -420,8 +444,9 @@ public abstract class BaseSolver extends App {
         }
 
         for (Solution s : open) {
-            if (s.same(new_str))
+            if (s.same(new_str)) {
                 return;
+            }
         }
 
         // Drop worst element in queue, to make room!
@@ -429,16 +454,17 @@ public abstract class BaseSolver extends App {
             open.pollLast();
             worstSolScore = open.last().sk;
         } else // If we didn't drop any element, check if we have to update the current
-            // worst score!
-            if (new_sk < worstSolScore) {
-                worstSolScore = new_sk;
-            }
+        // worst score!
+        if (new_sk < worstSolScore) {
+            worstSolScore = new_sk;
+        }
 
         open.add(new Solution(new_sk, new_str));
     }
 
     protected double getSk(ParentSet[] new_str) {
         double new_sk = 0;
+
         for (ParentSet p : new_str) {
             new_sk += p.sk;
         }
@@ -481,6 +507,7 @@ public abstract class BaseSolver extends App {
 
                 // Obtains a new candidate solution
                 ParentSet[] str = src.search();
+
                 // Propose the new solution
                 newStructure(str);
 
@@ -489,6 +516,7 @@ public abstract class BaseSolver extends App {
 
         }
     }
+
 
     public static class Solution implements Comparable<Solution> {
         public final ParentSet[] str;
@@ -509,12 +537,14 @@ public abstract class BaseSolver extends App {
 
         public boolean same(ParentSet[] o_str) {
 
-            if (str.length != o_str.length)
+            if (str.length != o_str.length) {
                 return false;
+            }
 
             for (int i = 0; i < str.length; i++) {
-                if (!sameArray(str[i].parents, o_str[i].parents))
+                if (!sameArray(str[i].parents, o_str[i].parents)) {
                     return false;
+                }
             }
 
             return true;

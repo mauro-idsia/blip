@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2001, Eric D. Friedman All Rights Reserved.
 // Copyright (c) 2009, Rob Eden All Rights Reserved.
 // Copyright (c) 2009, Jeff Randall All Rights Reserved.
@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 
 
 package ch.idsia.blip.core.utils.structure;
@@ -35,16 +35,15 @@ public class TObjectHashIterator<E> extends THashIterator<E> {
 
     protected final TObjectHash _objectHash;
 
-
     public TObjectHashIterator(TObjectHash<E> hash) {
         super(hash);
         _objectHash = hash;
     }
 
-
     @SuppressWarnings("unchecked")
     protected E objectAtIndex(int index) {
         Object obj = _objectHash._set[index];
+
         if (obj == TObjectHash.FREE || obj == TObjectHash.REMOVED) {
             return null;
         }

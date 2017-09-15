@@ -14,6 +14,7 @@ public class ArrayUtils {
 
     public static final void swap(int[] a, int i, int j) {
         int temp = a[i];
+
         a[i] = a[j];
         a[j] = temp;
     }
@@ -78,9 +79,11 @@ public class ArrayUtils {
     }
 
     public static boolean findAll(int[] arr1, int[] arr2) {
-        for (int a1 : arr1)
-            if (!find(a1, arr2))
+        for (int a1 : arr1) {
+            if (!find(a1, arr2)) {
                 return false;
+            }
+        }
         return true;
     }
 
@@ -131,6 +134,7 @@ public class ArrayUtils {
             } else if (arr2[j] < arr1[i]) {
                 j++;
             } else {
+
                 /* equal! */
                 i++;
                 j++;
@@ -209,7 +213,6 @@ public class ArrayUtils {
         return aux;
     }
 
-
     /**
      * Reduce the array
      *
@@ -231,8 +234,10 @@ public class ArrayUtils {
 
     public static int[] removeElementAt(int[] original, int element) {
         int[] n = new int[original.length - 1];
+
         System.arraycopy(original, 0, n, 0, element);
-        System.arraycopy(original, element + 1, n, element, original.length - element - 1);
+        System.arraycopy(original, element + 1, n, element,
+                original.length - element - 1);
         return n;
     }
 
@@ -241,6 +246,7 @@ public class ArrayUtils {
      */
     public static int[] addArray(int[] a, int p) {
         int[] b = new int[a.length + 1];
+
         System.arraycopy(a, 0, b, 0, a.length);
         b[a.length] = p;
         return b;
@@ -251,11 +257,11 @@ public class ArrayUtils {
      */
     public static int[] addArray(int p, int[] a) {
         int[] b = new int[a.length + 1];
+
         System.arraycopy(a, 0, b, 1, a.length);
         b[0] = p;
         return b;
     }
-
 
     /**
      * Expand the array (keeps ordering)
@@ -305,6 +311,7 @@ public class ArrayUtils {
      */
     public static void swapArray(int[] v, int i, int j) {
         int t = v[i];
+
         v[i] = v[j];
         v[j] = t;
     }
@@ -334,7 +341,7 @@ public class ArrayUtils {
             return new int[0];
         }
         if (hash == 0) {
-            return new int[]{0};
+            return new int[] { 0};
         }
 
         int s = (int) (Math.log(hash) / Math.log(n)) + 1;
@@ -362,12 +369,14 @@ public class ArrayUtils {
 
     public static double[] cloneArray(double[] a) {
         double[] b = new double[a.length];
+
         cloneArray(a, b);
         return b;
     }
 
     public static String[] cloneArray(String[] a) {
         String[] b = new String[a.length];
+
         cloneArray(a, b);
         return b;
     }
@@ -382,6 +391,7 @@ public class ArrayUtils {
 
     public static int[] cloneArray(int[] a) {
         int[] b = new int[a.length];
+
         System.arraycopy(a, 0, b, 0, a.length);
         return b;
     }
@@ -389,8 +399,11 @@ public class ArrayUtils {
     public static String toString(int[] v) {
 
         StringBuilder sb = new StringBuilder();
+
         for (int n : v) {
-            if (sb.length() > 0) sb.append(',');
+            if (sb.length() > 0) {
+                sb.append(',');
+            }
             sb.append(n);
         }
         return sb.toString();
@@ -571,27 +584,36 @@ public class ArrayUtils {
     public static void reverse(int[] v) {
         for (int i = 0; i < v.length / 2; i++) {
             int temp = v[i];
+
             v[i] = v[v.length - i - 1];
             v[v.length - i - 1] = temp;
         }
     }
 
-
     public static int index(int p, int[] v) {
-        for (int i = 0; i < v.length; i++)
-            if (v[i] == p) return i;
+        for (int i = 0; i < v.length; i++) {
+            if (v[i] == p) {
+                return i;
+            }
+        }
         return -1;
     }
 
     public static int index(int p, TIntArrayList v) {
-        for (int i = 0; i < v.size(); i++)
-            if (v.get(i) == p) return i;
+        for (int i = 0; i < v.size(); i++) {
+            if (v.get(i) == p) {
+                return i;
+            }
+        }
         return -1;
     }
 
     public static int index(String p, String[] v) {
-        for (int i = 0; i < v.length; i++)
-            if (v[i].equals(p.trim())) return i;
+        for (int i = 0; i < v.length; i++) {
+            if (v[i].equals(p.trim())) {
+                return i;
+            }
+        }
         return -1;
     }
 }

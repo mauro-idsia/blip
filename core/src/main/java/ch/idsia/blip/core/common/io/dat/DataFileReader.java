@@ -43,11 +43,12 @@ public class DataFileReader extends DatFileReader {
     public void readValuesCache() throws IOException {
 
         // Collect row values
-        List<List<TIntArrayList>> v_aux = new ArrayList<List<TIntArrayList>>(dSet.n_var);
+        List<List<TIntArrayList>> v_aux = new ArrayList<List<TIntArrayList>>(
+                dSet.n_var);
+
         for (int n = 0; n < dSet.n_var; n++) {
             v_aux.add(new ArrayList<TIntArrayList>());
         }
-
 
         List<TIntArrayList> missing_aux_v = new ArrayList<TIntArrayList>();
         TIntArrayList missing_aux_l = new TIntArrayList();
@@ -55,14 +56,18 @@ public class DataFileReader extends DatFileReader {
         String[] sp;
         short v;
         List<TIntArrayList> lu;
+
         dSet.n_datapoints = 0;
         while (nextLine != null) {
             String line = nextLine.trim();
-            if ("".equals(line))
-                continue;
 
-            if (readMissing && line.contains("?"))
+            if ("".equals(line)) {
                 continue;
+            }
+
+            if (readMissing && line.contains("?")) {
+                continue;
+            }
 
             sp = getSplit(line);
             if (sp.length != dSet.n_var) {
@@ -74,6 +79,7 @@ public class DataFileReader extends DatFileReader {
             for (int i = 0; i < dSet.n_var; i++) {
                 if ("?".equals(sp[i])) {
                     int pos = index(i, missing_aux_l);
+
                     if (pos < 0) {
                         pos = missing_aux_l.size();
                         missing_aux_v.add(new TIntArrayList());
@@ -109,6 +115,7 @@ public class DataFileReader extends DatFileReader {
         dSet.missing_l = new int[dSet.n_var][];
         for (int n = 0; n < dSet.n_var; n++) {
             int pos = index(n, missing_aux_l);
+
             if (pos >= 0) {
                 dSet.missing_l[n] = missing_aux_v.get(pos).toArray();
             }

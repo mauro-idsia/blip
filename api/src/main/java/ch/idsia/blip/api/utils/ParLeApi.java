@@ -40,7 +40,7 @@ public class ParLeApi extends Api {
     protected String s_method = "bayes";
 
     public static void main(String[] args) {
-        defaultMain(args, new ParLeApi(), log);
+        defaultMain(args, new ParLeApi());
     }
 
     /**
@@ -68,7 +68,6 @@ public class ParLeApi extends Api {
         return null;
     }
 
-
     @Override
     public void exec() throws Exception {
 
@@ -76,21 +75,23 @@ public class ParLeApi extends Api {
         DataSet dat_rd = getDataSet(ph_dat);
 
         ParLe parLe = new ParLeBayes(d_alpha);
+
         parLe.verbose = verbose;
-               /*
-                Method method = getMethodValueOf(s_method);
+
+        /*
+         Method method = getMethodValueOf(s_method);
 
          if (method == Method.Ent) {
-                parLe = new ParLe.ParLeEnt(d_alpha, epsilon);
-            } else if (method == Method.Mle) {
-                parLe = new ParLe.ParLeMle();
-            } else if (method == Method.Avg) {
-                parLe = new ParLe.ParLeAvg(5);
-            } else if (method == Method.Cano) {
-                parLe = new ParLe.ParLeCano(5);
-            } else {
-                parLe = new ParLeBayes(d_alpha);
-            } */
+         parLe = new ParLe.ParLeEnt(d_alpha, epsilon);
+         } else if (method == Method.Mle) {
+         parLe = new ParLe.ParLeMle();
+         } else if (method == Method.Avg) {
+         parLe = new ParLe.ParLeAvg(5);
+         } else if (method == Method.Cano) {
+         parLe = new ParLe.ParLeCano(5);
+         } else {
+         parLe = new ParLeBayes(d_alpha);
+         } */
 
         BayesianNetwork newBn = parLe.go(res, dat_rd);
 

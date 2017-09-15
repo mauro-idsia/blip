@@ -19,8 +19,7 @@ import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
  */
 public class S2Solver extends BaseS2Solver {
 
-    private static final Logger log = Logger.getLogger(
-            S2Solver.class.getName());
+    private static final Logger log = Logger.getLogger(S2Solver.class.getName());
 
     public String ph_dat;
 
@@ -44,8 +43,7 @@ public class S2Solver extends BaseS2Solver {
     protected void almost() {
         super.almost();
 
-        sampler = new KTreeSampler(n_var, tw, mi, sc,
-                this);
+        sampler = new KTreeSampler(n_var, tw, mi, sc, this);
     }
 
     private void prepareMI() {

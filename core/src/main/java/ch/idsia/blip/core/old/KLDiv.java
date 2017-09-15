@@ -1,11 +1,13 @@
 package ch.idsia.blip.core.old;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.inference.ve.BayesianFactor;
 import ch.idsia.blip.core.inference.ve.VariableElimination;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.pos;
+
 
 /**
  * KL divergence

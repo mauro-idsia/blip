@@ -6,13 +6,14 @@ import ch.idsia.blip.core.learn.solver.brtl.QuietGreedySolver;
 
 import java.util.logging.Logger;
 
+
 public class QuietMcSolverApi extends TwSolverApi {
 
     private static final Logger log = Logger.getLogger(
             QuietMcSolverApi.class.getName());
 
     public static void main(String[] args) {
-        defaultMain(args, new QuietMcSolverApi(), log);
+        defaultMain(args, new QuietMcSolverApi());
     }
 
     @Override

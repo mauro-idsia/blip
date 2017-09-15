@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.data.set;
 
+
 import ch.idsia.blip.core.utils.data.Constants;
 import ch.idsia.blip.core.utils.data.HashFunctions;
 
@@ -32,7 +33,6 @@ abstract public class TIntHash extends TPrimitiveHash {
 
     boolean consumeFreeSlot;
 
-
     /**
      * Creates a new <code>TIntHash</code> instance with the default
      * capacity and load factor.
@@ -40,12 +40,11 @@ abstract public class TIntHash extends TPrimitiveHash {
     TIntHash() {
         super();
         no_entry_value = Constants.DEFAULT_INT_NO_ENTRY_VALUE;
-        //noinspection RedundantCast
+        // noinspection RedundantCast
         if (no_entry_value != (int) 0) {
             Arrays.fill(_set, no_entry_value);
         }
     }
-
 
     /**
      * Creates a new <code>TIntHash</code> instance whose capacity
@@ -57,12 +56,11 @@ abstract public class TIntHash extends TPrimitiveHash {
     TIntHash(int initialCapacity) {
         super(initialCapacity);
         no_entry_value = Constants.DEFAULT_INT_NO_ENTRY_VALUE;
-        //noinspection RedundantCast
+        // noinspection RedundantCast
         if (no_entry_value != (int) 0) {
             Arrays.fill(_set, no_entry_value);
         }
     }
-
 
     /**
      * Creates a new <code>TIntHash</code> instance with a prime
@@ -75,12 +73,11 @@ abstract public class TIntHash extends TPrimitiveHash {
     TIntHash(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
         no_entry_value = Constants.DEFAULT_INT_NO_ENTRY_VALUE;
-        //noinspection RedundantCast
+        // noinspection RedundantCast
         if (no_entry_value != (int) 0) {
             Arrays.fill(_set, no_entry_value);
         }
     }
-
 
     /**
      * Creates a new <code>TIntHash</code> instance with a prime
@@ -94,12 +91,11 @@ abstract public class TIntHash extends TPrimitiveHash {
     TIntHash(int initialCapacity, float loadFactor, int no_entry_value) {
         super(initialCapacity, loadFactor);
         this.no_entry_value = no_entry_value;
-        //noinspection RedundantCast
+        // noinspection RedundantCast
         if (no_entry_value != (int) 0) {
             Arrays.fill(_set, no_entry_value);
         }
     }
-
 
     /**
      * Returns the value that is used to represent null. The default
@@ -111,7 +107,6 @@ abstract public class TIntHash extends TPrimitiveHash {
     public int getNoEntryValue() {
         return no_entry_value;
     }
-
 
     /**
      * initializes the hashtable to a prime capacity which is at least
@@ -127,7 +122,6 @@ abstract public class TIntHash extends TPrimitiveHash {
         _set = new int[capacity];
         return capacity;
     }
-
 
     /**
      * Searches the set for <tt>val</tt>
@@ -149,7 +143,6 @@ abstract public class TIntHash extends TPrimitiveHash {
         super.removeAt(index);
     }
 
-
     /**
      * Locates the index of <tt>val</tt>.
      *
@@ -161,16 +154,19 @@ abstract public class TIntHash extends TPrimitiveHash {
 
         final byte[] states = _states;
         final int[] set = _set;
+
         length = states.length;
         hash = HashFunctions.hash(val) & 0x7fffffff;
         index = hash % length;
         byte state = states[index];
 
-        if (state == FREE)
+        if (state == FREE) {
             return -1;
+        }
 
-        if (state == FULL && set[index] == val)
+        if (state == FULL && set[index] == val) {
             return index;
+        }
 
         return indexRehashed(val, index, hash);
     }
@@ -187,13 +183,16 @@ abstract public class TIntHash extends TPrimitiveHash {
                 index += length;
             }
             byte state = _states[index];
-            //
-            if (state == FREE)
-                return -1;
 
             //
-            if (key == _set[index] && state != REMOVED)
+            if (state == FREE) {
+                return -1;
+            }
+
+            //
+            if (key == _set[index] && state != REMOVED) {
                 return index;
+            }
         } while (index != loopIndex);
 
         return -1;
@@ -220,11 +219,11 @@ abstract public class TIntHash extends TPrimitiveHash {
             consumeFreeSlot = true;
             insertKeyAt(index, val);
 
-            return index;       // empty, all done
+            return index; // empty, all done
         }
 
         if (state == FULL && _set[index] == val) {
-            return -index - 1;   // already stored
+            return -index - 1; // already stored
         }
 
         // already FULL or REMOVED, must probe
@@ -243,8 +242,9 @@ abstract public class TIntHash extends TPrimitiveHash {
          */
         do {
             // Identify first removed slot
-            if (state == REMOVED && firstRemoved == -1)
+            if (state == REMOVED && firstRemoved == -1) {
                 firstRemoved = index;
+            }
 
             index -= probe;
             if (index < 0) {
@@ -279,11 +279,12 @@ abstract public class TIntHash extends TPrimitiveHash {
         }
 
         // Can a resizing strategy be found that resizes the set?
-        throw new IllegalStateException("No free or removed slots available. Key set full?!!");
+        throw new IllegalStateException(
+                "No free or removed slots available. Key set full?!!");
     }
 
     private void insertKeyAt(int index, int val) {
-        _set[index] = val;  // insert value
+        _set[index] = val; // insert value
         _states[index] = FULL;
     }
 

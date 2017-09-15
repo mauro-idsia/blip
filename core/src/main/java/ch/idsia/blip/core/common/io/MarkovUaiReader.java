@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.io;
 
+
 import ch.idsia.blip.core.common.MarkovNetwork;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+
 
 public class MarkovUaiReader {
 
@@ -32,6 +34,7 @@ public class MarkovUaiReader {
     private MarkovNetwork go(BufferedReader rd) throws IOException {
 
         String s = rd.readLine().trim();
+
         if (!s.equals("MARKOV")) {
             p("NOAAOAOAOAOAO");
             return null;
@@ -40,6 +43,7 @@ public class MarkovUaiReader {
         int n_vars = Integer.valueOf(rd.readLine().trim());
         MarkovNetwork mk = new MarkovNetwork(n_vars);
         String[] ar = splitLine(rd);
+
         for (int i = 0; i < n_vars; i++) {
             mk.l_ar_var[i] = Integer.valueOf(ar[i]);
         }
@@ -54,6 +58,7 @@ public class MarkovUaiReader {
             ar = splitLine(rd);
             int p_ar = Integer.valueOf(ar[0]);
             TIntArrayList pars = new TIntArrayList();
+
             for (int j = 0; j < p_ar; j++) {
                 pars.add(Integer.valueOf(ar[j + 1]));
             }
@@ -70,10 +75,12 @@ public class MarkovUaiReader {
 
     public static void readPotent(BufferedReader rd, int n, MarkovNetwork mn) throws IOException {
         String[] ar;
+
         for (int i = 0; i < mn.n_cliques; i++) {
             int n_pt = nextInt(rd);
             double[] pt = new double[n_pt];
             int t = 0;
+
             ar = splitLine(rd);
             for (String a : ar) {
                 pt[t++] = Double.valueOf(a);
@@ -89,8 +96,10 @@ public class MarkovUaiReader {
 
     public static int nextInt(BufferedReader br) throws IOException {
         String s = "";
-        while (s.trim().length() == 0)
+
+        while (s.trim().length() == 0) {
             s = br.readLine();
+        }
         return Integer.valueOf(s.trim());
     }
 }

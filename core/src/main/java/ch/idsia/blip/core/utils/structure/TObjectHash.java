@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.structure;
 
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -10,9 +11,8 @@ import java.util.Set;
 
 abstract public class TObjectHash<T> extends THash {
 
-    @SuppressWarnings({"UnusedDeclaration"})
+    @SuppressWarnings({ "UnusedDeclaration"})
     static final long serialVersionUID = -3461112548087185871L;
-
 
     /**
      * the set of Objects
@@ -27,7 +27,6 @@ abstract public class TObjectHash<T> extends THash {
      */
     protected boolean consumeFreeSlot;
 
-
     /**
      * Creates a new <code>TObjectHash</code> instance with the
      * default capacity and load factor.
@@ -35,7 +34,6 @@ abstract public class TObjectHash<T> extends THash {
     public TObjectHash() {
         super();
     }
-
 
     /**
      * Creates a new <code>TObjectHash</code> instance whose capacity
@@ -47,7 +45,6 @@ abstract public class TObjectHash<T> extends THash {
     public TObjectHash(int initialCapacity) {
         super(initialCapacity);
     }
-
 
     /**
      * Creates a new <code>TObjectHash</code> instance with a prime
@@ -61,17 +58,14 @@ abstract public class TObjectHash<T> extends THash {
         super(initialCapacity, loadFactor);
     }
 
-
     public int capacity() {
         return _set.length;
     }
-
 
     protected void removeAt(int index) {
         _set[index] = REMOVED;
         super.removeAt(index);
     }
-
 
     /**
      * initializes the Object set of this hash table.
@@ -88,7 +82,6 @@ abstract public class TObjectHash<T> extends THash {
         return capacity;
     }
 
-
     /**
      * Executes <tt>procedure</tt> for each element in the set.
      *
@@ -96,12 +89,12 @@ abstract public class TObjectHash<T> extends THash {
      * @return false if the loop over the set terminated because
      *         the procedure returned false for some value.
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked"})
     public boolean forEach(TObjectProcedure<? super T> procedure) {
         Object[] set = _set;
+
         for (int i = set.length; i-- > 0;) {
-            if (set[i] != FREE
-                    && set[i] != REMOVED
+            if (set[i] != FREE && set[i] != REMOVED
                     && !procedure.execute((T) set[i])) {
                 return false;
             }
@@ -109,18 +102,16 @@ abstract public class TObjectHash<T> extends THash {
         return true;
     }
 
-
     /**
      * Searches the set for <tt>obj</tt>
      *
      * @param obj an <code>Object</code> value
      * @return a <code>boolean</code> value
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked"})
     public boolean contains(Object obj) {
         return index(obj) >= 0;
     }
-
 
     /**
      * Locates the index of <tt>obj</tt>.
@@ -129,14 +120,14 @@ abstract public class TObjectHash<T> extends THash {
      * @return the index of <tt>obj</tt> or -1 if it isn't in the set.
      */
     protected int index(Object obj) {
-        if (obj == null)
+        if (obj == null) {
             return indexForNull();
+        }
 
         // From here on we know obj to be non-null
         final int hash = hash(obj) & 0x7fffffff;
         int index = hash % _set.length;
         Object cur = _set[index];
-
 
         if (cur == FREE) {
             return -1;
@@ -174,12 +165,14 @@ abstract public class TObjectHash<T> extends THash {
             }
             cur = set[index];
             //
-            if (cur == FREE)
+            if (cur == FREE) {
                 return -1;
+            }
 
             //
-            if ((cur == obj || equals(obj, cur)))
+            if ((cur == obj || equals(obj, cur))) {
                 return index;
+            }
         } while (index != loopIndex);
 
         return -1;
@@ -198,12 +191,15 @@ abstract public class TObjectHash<T> extends THash {
      */
     private int indexForNull() {
         int index = 0;
-        for (Object o : _set) {
-            if (o == null)
-                return index;
 
-            if (o == FREE)
+        for (Object o : _set) {
+            if (o == null) {
+                return index;
+            }
+
+            if (o == FREE) {
                 return -1;
+            }
 
             index++;
         }
@@ -239,8 +235,9 @@ abstract public class TObjectHash<T> extends THash {
     protected int insertKey(T key) {
         consumeFreeSlot = false;
 
-        if (key == null)
+        if (key == null) {
             return insertKeyForNull();
+        }
 
         final int hash = hash(key) & 0x7fffffff;
         int index = hash % _set.length;
@@ -248,12 +245,12 @@ abstract public class TObjectHash<T> extends THash {
 
         if (cur == FREE) {
             consumeFreeSlot = true;
-            _set[index] = key;  // insert value
-            return index;       // empty, all done
+            _set[index] = key; // insert value
+            return index; // empty, all done
         }
 
         if (cur == key || equals(key, cur)) {
-            return -index - 1;   // already stored
+            return -index - 1; // already stored
         }
 
         return insertKeyRehash(key, index, hash, cur);
@@ -283,8 +280,9 @@ abstract public class TObjectHash<T> extends THash {
          */
         do {
             // Identify first removed slot
-            if (cur == REMOVED && firstRemoved == -1)
+            if (cur == REMOVED && firstRemoved == -1) {
                 firstRemoved = index;
+            }
 
             index -= probe;
             if (index < 0) {
@@ -299,7 +297,7 @@ abstract public class TObjectHash<T> extends THash {
                     return firstRemoved;
                 } else {
                     consumeFreeSlot = true;
-                    _set[index] = key;  // insert value
+                    _set[index] = key; // insert value
                     return index;
                 }
             }
@@ -319,7 +317,8 @@ abstract public class TObjectHash<T> extends THash {
         }
 
         // Can a resizing strategy be found that resizes the set?
-        throw new IllegalStateException("No free or removed slots available. Key set full?!!");
+        throw new IllegalStateException(
+                "No free or removed slots available. Key set full?!!");
     }
 
     /**
@@ -338,8 +337,9 @@ abstract public class TObjectHash<T> extends THash {
         // Look for a slot containing the 'null' value as key
         for (Object o : _set) {
             // Locate first removed
-            if (o == REMOVED && firstRemoved == -1)
+            if (o == REMOVED && firstRemoved == -1) {
                 firstRemoved = index;
+            }
 
             if (o == FREE) {
                 if (firstRemoved != -1) {
@@ -347,7 +347,7 @@ abstract public class TObjectHash<T> extends THash {
                     return firstRemoved;
                 } else {
                     consumeFreeSlot = true;
-                    _set[index] = null;  // insert value
+                    _set[index] = null; // insert value
                     return index;
                 }
             }
@@ -368,9 +368,9 @@ abstract public class TObjectHash<T> extends THash {
 
         // We scanned the entire key set and found nothing, is set full?
         // Can a resizing strategy be found that resizes the set?
-        throw new IllegalStateException("Could not find insertion index for null key. Key set full!?!!");
+        throw new IllegalStateException(
+                "Could not find insertion index for null key. Key set full!?!!");
     }
-
 
     /**
      * Convenience methods for subclasses to use in throwing exceptions about
@@ -385,7 +385,7 @@ abstract public class TObjectHash<T> extends THash {
      * @throws IllegalArgumentException the whole point of this method.
      */
     protected final void throwObjectContractViolation(Object o1, Object o2)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         throw buildObjectContractViolation(o1, o2, "");
     }
 
@@ -404,9 +404,8 @@ abstract public class TObjectHash<T> extends THash {
      * @param oldKeys @throws IllegalArgumentException the whole point of this method.
      */
     protected final void throwObjectContractViolation(Object o1, Object o2, int size, int oldSize, Object[] oldKeys)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
         String extra = dumpExtraInfo(o1, o2, size(), oldSize, oldKeys);
-
 
         throw buildObjectContractViolation(o1, o2, extra);
     }
@@ -423,20 +422,22 @@ abstract public class TObjectHash<T> extends THash {
      * @param o2 the second of the equal elements with unequal hash codes.
      * @throws IllegalArgumentException the whole point of this method.
      */
-    protected final IllegalArgumentException buildObjectContractViolation(Object o1, Object o2, String extra ) {
-        return new IllegalArgumentException("Equal objects must have equal hashcodes. " +
-                "During rehashing, Trove discovered that the following two objects claim " +
-                "to be equal (as in java.lang.Object.equals()) but their hashCodes (or " +
-                "those calculated by your TObjectHashingStrategy) are not equal." +
-                "This violates the general contract of java.lang.Object.hashCode().  See " +
-                "bullet point two in that method's documentation. object #1 =" + objectInfo(o1) +
-                "; object #2 =" + objectInfo(o2) + "\n" + extra);
+    protected final IllegalArgumentException buildObjectContractViolation(Object o1, Object o2, String extra) {
+        return new IllegalArgumentException(
+                "Equal objects must have equal hashcodes. "
+                        + "During rehashing, Trove discovered that the following two objects claim "
+                        + "to be equal (as in java.lang.Object.equals()) but their hashCodes (or "
+                        + "those calculated by your TObjectHashingStrategy) are not equal."
+                        + "This violates the general contract of java.lang.Object.hashCode().  See "
+                        + "bullet point two in that method's documentation. object #1 ="
+                        + objectInfo(o1) + "; object #2 =" + objectInfo(o2)
+                        + "\n" + extra);
     }
 
-
     protected boolean equals(Object notnull, Object two) {
-        if (two == null || two == REMOVED)
+        if (two == null || two == REMOVED) {
             return false;
+        }
 
         return notnull.equals(two);
     }
@@ -448,9 +449,11 @@ abstract public class TObjectHash<T> extends THash {
     protected static String reportPotentialConcurrentMod(int newSize, int oldSize) {
         // Note that we would not be able to detect concurrent paired of put()-remove()
         // operations with this simple check
-        if (newSize != oldSize)
-            return "[Warning] apparent concurrent modification of the key set. " +
-                    "Size before and after rehash() do not match " + oldSize + " vs " + newSize;
+        if (newSize != oldSize) {
+            return "[Warning] apparent concurrent modification of the key set. "
+                    + "Size before and after rehash() do not match " + oldSize
+                    + " vs " + newSize;
+        }
 
         return "";
     }
@@ -465,6 +468,7 @@ abstract public class TObjectHash<T> extends THash {
      */
     protected String dumpExtraInfo(Object newVal, Object oldVal, int currentSize, int oldSize, Object[] oldKeys) {
         StringBuilder b = new StringBuilder();
+
         //
         b.append(dumpKeyTypes(newVal, oldVal));
 
@@ -473,7 +477,8 @@ abstract public class TObjectHash<T> extends THash {
 
         // Is de same object already present? Double insert?
         if (newVal == oldVal) {
-            b.append("Inserting same object twice, rehashing bug. Object= ").append(oldVal);
+            b.append("Inserting same object twice, rehashing bug. Object= ").append(
+                    oldVal);
         }
 
         return b.toString();
@@ -488,10 +493,14 @@ abstract public class TObjectHash<T> extends THash {
     private static String detectKeyLoss(Object[] keys, int oldSize) {
         StringBuilder buf = new StringBuilder();
         Set<Object> k = makeKeySet(keys);
+
         if (k.size() != oldSize) {
-            buf.append("\nhashCode() and/or equals() have inconsistent implementation");
-            buf.append("\nKey set lost entries, now got ").append(k.size()).append(" instead of ").append(oldSize);
-            buf.append(". This can manifest itself as an apparent duplicate key.");
+            buf.append(
+                    "\nhashCode() and/or equals() have inconsistent implementation");
+            buf.append("\nKey set lost entries, now got ").append(k.size()).append(" instead of ").append(
+                    oldSize);
+            buf.append(
+                    ". This can manifest itself as an apparent duplicate key.");
         }
 
         return buf.toString();
@@ -499,9 +508,10 @@ abstract public class TObjectHash<T> extends THash {
 
     private static Set<Object> makeKeySet(Object[] keys) {
         Set<Object> types = new HashSet<Object>();
+
         for (Object o : keys) {
             if (o != FREE && o != REMOVED) {
-                    types.add(o);
+                types.add(o);
             }
         }
 
@@ -510,15 +520,18 @@ abstract public class TObjectHash<T> extends THash {
 
     private static String equalsSymmetryInfo(Object a, Object b) {
         StringBuilder buf = new StringBuilder();
+
         if (a == b) {
             return  "a == b";
         }
 
         if (a.getClass() != b.getClass()) {
-            buf.append("Class of objects differ a=").append(a.getClass()).append(" vs b=").append(b.getClass());
+            buf.append("Class of objects differ a=").append(a.getClass()).append(" vs b=").append(
+                    b.getClass());
 
             boolean aEb = a.equals(b);
             boolean bEa = b.equals(a);
+
             if (aEb != bEa) {
                 buf.append("\nequals() of a or b object are asymmetric");
                 buf.append("\na.equals(b) =").append(aEb);
@@ -530,25 +543,30 @@ abstract public class TObjectHash<T> extends THash {
     }
 
     protected static String objectInfo(Object o) {
-        return (o == null ? "class null" : o.getClass()) + " id= " + System.identityHashCode(o)
-                + " hashCode= " + (o == null ? 0 : o.hashCode()) + " toString= " + String.valueOf(o);
+        return (o == null ? "class null" : o.getClass()) + " id= "
+                + System.identityHashCode(o) + " hashCode= "
+                + (o == null ? 0 : o.hashCode()) + " toString= "
+                + String.valueOf(o);
     }
 
     private String dumpKeyTypes(Object newVal, Object oldVal) {
         StringBuilder buf = new StringBuilder();
         Set<Class<?>> types = new HashSet<Class<?>>();
+
         for (Object o : _set) {
             if (o != FREE && o != REMOVED) {
-                if (o != null)
+                if (o != null) {
                     types.add(o.getClass());
-                else
+                } else {
                     types.add(null);
+                }
             }
         }
 
         if (types.size() > 1) {
-            buf.append("\nMore than one type used for keys. Watch out for asymmetric equals(). " +
-                    "Read about the 'Liskov substitution principle' and the implications for equals() in java.");
+            buf.append(
+                    "\nMore than one type used for keys. Watch out for asymmetric equals(). "
+                            + "Read about the 'Liskov substitution principle' and the implications for equals() in java.");
 
             buf.append("\nKey types: ").append(types);
             buf.append(equalsSymmetryInfo(newVal, oldVal));
@@ -556,7 +574,6 @@ abstract public class TObjectHash<T> extends THash {
 
         return buf.toString();
     }
-
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -567,10 +584,9 @@ abstract public class TObjectHash<T> extends THash {
         super.writeExternal(out);
     }
 
-
     @Override
     public void readExternal(ObjectInput in)
-            throws IOException, ClassNotFoundException {
+        throws IOException, ClassNotFoundException {
 
         // VERSION
         in.readByte();

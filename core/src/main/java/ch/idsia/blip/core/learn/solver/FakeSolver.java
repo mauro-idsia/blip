@@ -1,13 +1,14 @@
 package ch.idsia.blip.core.learn.solver;
 
+
 import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.samp.SimpleSampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.utils.other.ParentSet;
 
-public class FakeSolver
-        extends BaseSolver {
+
+public class FakeSolver extends BaseSolver {
     public FakeSolver(BaseSolver solver) {
         this.rand = solver.rand;
     }
@@ -28,6 +29,5 @@ public class FakeSolver
         return null;
     }
 
-    public void newStructure(ParentSet[] new_str) {
-    }
+    public void newStructure(ParentSet[] new_str) {}
 }

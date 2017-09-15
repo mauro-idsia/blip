@@ -1,6 +1,8 @@
 package ch.idsia.blip.core.learn.param;
 
+
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
+
 
 /**
  * Implementation for Bayes
@@ -37,6 +39,7 @@ public class ParLeBayes extends ParLe {
         double alpha_ij = alpha / n_potent;
 
         TIntIntHashMap conf = new TIntIntHashMap();
+
         conf.put(var, 0);
         for (int p : parents) {
             conf.put(p, 0);
@@ -54,6 +57,7 @@ public class ParLeBayes extends ParLe {
             }
 
             int ix = j * ar;
+
             for (int v = 0; v < ar; v++) {
                 potent[ix++] = (n_ij[v] + alpha_ij) / (n_j + alpha_j);
             }
@@ -61,7 +65,6 @@ public class ParLeBayes extends ParLe {
 
         return potent;
     }
-
 
     public double[] computePotentialsSimple(int var) {
         int ar = bn.arity(var);

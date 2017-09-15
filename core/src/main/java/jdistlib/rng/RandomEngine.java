@@ -17,6 +17,7 @@
  */
 package jdistlib.rng;
 
+
 /**
  * @author Roby Joehanes
  */

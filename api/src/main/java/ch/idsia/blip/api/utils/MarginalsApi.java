@@ -1,5 +1,6 @@
 package ch.idsia.blip.api.utils;
 
+
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.common.DataSet;
 import ch.idsia.blip.core.utils.other.Marginals;
@@ -11,9 +12,11 @@ import java.util.logging.Logger;
 import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
 import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
 
+
 public class MarginalsApi extends Api {
 
-    private static final Logger log = Logger.getLogger(MarginalsApi.class.getName());
+    private static final Logger log = Logger.getLogger(
+            MarginalsApi.class.getName());
 
     @Option(name = "-o", required = true, usage = "Result output")
     protected String ph_out;
@@ -22,7 +25,7 @@ public class MarginalsApi extends Api {
     protected String ph_dat;
 
     public static void main(String[] args) {
-        defaultMain(args, new MarginalsApi(), log);
+        defaultMain(args, new MarginalsApi());
     }
 
     @Override

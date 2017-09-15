@@ -50,8 +50,7 @@ public class AdvK2 extends BaseScorer {
         executor.shutdown();
         executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
-        for (int n = 0; n < this.dat.n_var; n++) {
-            // writeScores(writer, n, sc);
+        for (int n = 0; n < this.dat.n_var; n++) {// writeScores(writer, n, sc);
         }
     }
 
@@ -74,7 +73,7 @@ public class AdvK2 extends BaseScorer {
             if (verbose > 2) {
                 log.info(
                         String.format("Starting with max time: %.2f",
-                                max_exec_time));
+                        max_exec_time));
             }
 
             ThreadMXBean bean = ManagementFactory.getThreadMXBean();

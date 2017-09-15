@@ -14,8 +14,10 @@
  */
 package jdistlib.generic;
 
+
 import jdistlib.rng.MersenneTwister;
 import jdistlib.rng.RandomEngine;
+
 
 /**
  * An interface for a generic distribution. All parameters have to be encoded (either as fields or otherwise).
@@ -37,8 +39,10 @@ public abstract class GenericDistribution {
     private double[] density(double[] x, boolean log) {
         int n = x.length;
         double[] v = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             v[i] = density(x[i], log);
+        }
         return v;
     }
 
@@ -65,8 +69,10 @@ public abstract class GenericDistribution {
     private double[] cumulative(double[] p, boolean lower_tail, boolean log_p) {
         int n = p.length;
         double[] v = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             v[i] = cumulative(p[i], lower_tail, log_p);
+        }
         return v;
     }
 
@@ -83,8 +89,10 @@ public abstract class GenericDistribution {
     private double[] quantile(double[] q, boolean lower_tail, boolean log_p) {
         int n = q.length;
         double[] v = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             v[i] = quantile(q[i], lower_tail, log_p);
+        }
         return v;
     }
 
@@ -110,8 +118,10 @@ public abstract class GenericDistribution {
 
     public double[] random(int n) {
         double[] rand = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             rand[i] = random();
+        }
         return rand;
     }
 
@@ -125,14 +135,17 @@ public abstract class GenericDistribution {
     private double hazard(double t, boolean give_log) {
         double pdf = density(t, true);
         double cdf = cumulative(t, false, true);
+
         return give_log ? pdf - cdf : Math.exp(pdf - cdf);
     }
 
     public double[] hazard(double[] t, boolean give_log) {
         int n = t.length;
         double[] v = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             v[i] = hazard(t[i], give_log);
+        }
         return v;
     }
 
@@ -149,8 +162,10 @@ public abstract class GenericDistribution {
     public double[] cumulative_hazard(double[] p) {
         int n = p.length;
         double[] v = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             v[i] = cumulative(p[i], false, true);
+        }
         return v;
     }
 
@@ -167,8 +182,10 @@ public abstract class GenericDistribution {
     public double[] survival(double[] p, boolean log_p) {
         int n = p.length;
         double[] v = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             v[i] = cumulative(p[i], false, log_p);
+        }
         return v;
     }
 
@@ -196,8 +213,10 @@ public abstract class GenericDistribution {
     public double[] inverse_survival(double[] p, boolean log_p) {
         int n = p.length;
         double[] v = new double[n];
-        for (int i = 0; i < n; i++)
+
+        for (int i = 0; i < n; i++) {
             v[i] = quantile(p[i], false, log_p);
+        }
         return v;
     }
 
@@ -218,8 +237,10 @@ public abstract class GenericDistribution {
      */
     public double random(RandomEngine r) {
         RandomEngine temp = random;
+
         random = r;
         double v = random();
+
         random = temp;
         return v;
     }

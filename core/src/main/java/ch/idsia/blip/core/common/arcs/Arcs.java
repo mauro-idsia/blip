@@ -36,11 +36,9 @@ public abstract class Arcs {
         }
     }
 
-    protected Arcs() {
-    }
+    protected Arcs() {}
 
-    void prepare() {
-    }
+    void prepare() {}
 
     Arcs(int n_var) {
         this(n_var, false);
@@ -170,10 +168,11 @@ public abstract class Arcs {
     }
 
     public String name(int v) {
-        if (names != null)
+        if (names != null) {
             return names[v];
-        else
+        } else {
             return "N" + v;
+        }
     }
 
 }

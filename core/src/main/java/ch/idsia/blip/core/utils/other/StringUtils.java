@@ -1,10 +1,12 @@
 package ch.idsia.blip.core.utils.other;
 
+
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.List;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+
 
 public class StringUtils {
 
@@ -22,10 +24,12 @@ public class StringUtils {
             return null;
         }
         final int noOfItems = endIndex - startIndex;
+
         if (noOfItems <= 0) {
             return EMPTY;
         }
         final StringBuilder buf = new StringBuilder(noOfItems * 16);
+
         for (int i = startIndex; i < endIndex; i++) {
             if (i > startIndex) {
                 buf.append(s);
@@ -56,10 +60,12 @@ public class StringUtils {
             return null;
         }
         final int noOfItems = endIndex - startIndex;
+
         if (noOfItems <= 0) {
             return EMPTY;
         }
         final StringBuilder buf = new StringBuilder(noOfItems * 16);
+
         for (int i = startIndex; i < endIndex; i++) {
             if (i > startIndex) {
                 buf.append(separator);
@@ -90,10 +96,12 @@ public class StringUtils {
             return null;
         }
         final int noOfItems = endIndex - startIndex;
+
         if (noOfItems <= 0) {
             return EMPTY;
         }
         final StringBuilder buf = new StringBuilder(noOfItems * 16);
+
         for (int i = startIndex; i < endIndex; i++) {
             if (i > startIndex) {
                 buf.append(separator);
@@ -124,10 +132,12 @@ public class StringUtils {
             return null;
         }
         final int noOfItems = endIndex - startIndex;
+
         if (noOfItems <= 0) {
             return EMPTY;
         }
         final StringBuilder buf = new StringBuilder(noOfItems * 16);
+
         for (int i = startIndex; i < endIndex; i++) {
             if (i > startIndex) {
                 buf.append(separator);
@@ -158,10 +168,12 @@ public class StringUtils {
             return null;
         }
         final int noOfItems = endIndex - startIndex;
+
         if (noOfItems <= 0) {
             return EMPTY;
         }
         final StringBuilder buf = new StringBuilder(noOfItems * 16);
+
         for (int i = startIndex; i < endIndex; i++) {
             if (i > startIndex) {
                 buf.append(separator);

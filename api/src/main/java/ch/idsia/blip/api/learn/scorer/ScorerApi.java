@@ -3,17 +3,20 @@ package ch.idsia.blip.api.learn.scorer;
 
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.learn.scorer.BaseScorer;
+import ch.idsia.blip.core.utils.other.IncorrectCallException;
 import org.kohsuke.args4j.Option;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.other.RandomStuff.p;
 
 
 abstract class ScorerApi extends Api {
 
-    private static final Logger log = Logger.getLogger(
-            ScorerApi.class.getName());
+    private static final Logger log = Logger.getLogger(ScorerApi.class.getName());
 
     @Option(name = "-d", required = true, usage = "Datafile path (.dat format)")
     public String ph_dat;
@@ -44,8 +47,20 @@ abstract class ScorerApi extends Api {
 
     @Override
     public void exec() throws Exception {
+
         scorer.init(options());
         scorer.go(getDataSet(ph_dat));
+    }
+
+    @Override
+    protected void check() throws IncorrectCallException {
+        if ( ! new File(ph_dat).exists()) {
+            throw new IncorrectCallException( "Data input file  ("+ph_dat +") does not exists.");
+        }
+
+        if ( getWriter(ph_scores, true) == null) {
+            throw new IncorrectCallException( "Can't write to score result file ("+ph_scores +").");
+        }
     }
 
     protected abstract BaseScorer getScorer();

@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.data.SIntSet;
@@ -9,6 +10,7 @@ import ch.idsia.blip.core.utils.other.ParentSet;
 import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
+
 
 /**
  * IMPROVES again?!
@@ -48,8 +50,9 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
 
             checkOptimals(i);
 
-            if (already[i])
+            if (already[i]) {
                 continue;
+            }
 
             int v = vars[i];
 
@@ -62,6 +65,7 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
             // add new handler = new clique with size tw
             // created  just now
             SIntSet h = res.getSecond();
+
             for (int elim : h.set) {
                 addHandler(new SIntSet(reduceAndIncreaseArray(h.set, v, elim)));
             }
@@ -77,6 +81,7 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
 
     private void write(int i) {
         BayesianNetwork best = new BayesianNetwork(new_str);
+
         // best.writeGraph("/home/loskana/Desktop/what/" + i);
         solver.writeStructure("/home/loskana/Desktop/what/" + i, -10, new_str);
 
@@ -94,8 +99,9 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
 
         for (int j = start; j < n_var; j++) {
 
-            if (already[j])
+            if (already[j]) {
                 continue;
+            }
 
             int v = vars[j];
 
@@ -104,12 +110,14 @@ public class BrutalNewGreedySearcher extends BrutalGreedySearcher {
 
             // check if there are already some handlers
             TreeSet<SIntSet> good = evaluate(best);
+
             if (good.size() > 0) {
                 SIntSet h = rand(good);
 
                 update(v, best);
                 for (int elim : h.set) {
-                    addHandler(new SIntSet(reduceAndIncreaseArray(h.set, v, elim)));
+                    addHandler(
+                            new SIntSet(reduceAndIncreaseArray(h.set, v, elim)));
                 }
 
                 already[j] = true;

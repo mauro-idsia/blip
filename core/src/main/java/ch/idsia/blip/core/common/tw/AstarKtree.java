@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.tw;
 
+
 import ch.idsia.blip.core.common.analyze.MutualInformation;
 import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.learn.solver.ktree.S2PlusSolver;
@@ -9,6 +10,7 @@ import java.io.*;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+
 
 public class AstarKtree {
 
@@ -49,10 +51,12 @@ public class AstarKtree {
             // Write file command
             String cmd = f("%s/cmd%d.m", path, i);
             File f = new File(cmd);
+
             if (!f.exists()) {
                 f.createNewFile();
                 FileWriter fw = new FileWriter(f.getAbsoluteFile());
                 BufferedWriter bw = new BufferedWriter(fw);
+
                 writeCommands(bw, i);
                 bw.close();
                 update(f("file %s printed", cmd));
@@ -61,7 +65,9 @@ public class AstarKtree {
             // Execute
             String run = "matlab -nodisplay -nodesktop -nojvm < cmd%d.m > log%d-%d 2>&1 ";
             String r = f(run, i, i, index);
-            Process proc = Runtime.getRuntime().exec(r, new String[0], new File(path));
+            Process proc = Runtime.getRuntime().exec(r, new String[0],
+                    new File(path));
+
             update(f("available time: %.2f", availableTime / 1000.0));
             int exitVal = waitForProc(proc, availableTime);
 
@@ -69,12 +75,14 @@ public class AstarKtree {
 
             // Check if there is output
             File f1 = new File(f("%s/out%d", path, i));
+
             if (!f1.exists()) {
                 log.severe("NO KTREE CREATED!");
                 return null;
             }
 
             File f2 = new File(f("%s/out%d-%d", path, i, index));
+
             f1.renameTo(f2);
             KTree k = readKtree(f2);
 
@@ -100,18 +108,22 @@ public class AstarKtree {
 
         String s;
         int i1 = 0;
+
         while ((s = br.readLine()) != null) {
             String[] aux = s.split(",");
 
-            for (int i2 = i1 + 1; i2 < n; i2++)
-                if (aux[i2].equals("1"))
+            for (int i2 = i1 + 1; i2 < n; i2++) {
+                if (aux[i2].equals("1")) {
                     u.mark(i1, i2);
+                }
+            }
             i1++;
         }
 
         u.graph(path + "graph");
 
         KTree k = new KTree(u);
+
         return k;
     }
 
@@ -124,7 +136,9 @@ public class AstarKtree {
         for (int i1 = 0; i1 < n; i1++) {
 
             for (int i2 = i1 + 1; i2 < n; i2++) {
-                c.write(f("M(%d, %d) = %.8f; \n", i2 + 1, i1 + 1, mi.getMI(i1, i2)));
+                c.write(
+                        f("M(%d, %d) = %.8f; \n", i2 + 1, i1 + 1,
+                        mi.getMI(i1, i2)));
             }
         }
         c.write("M=tril(M,-1)+tril(M)';\n");
@@ -132,7 +146,7 @@ public class AstarKtree {
 
         c.write("t = cputime; \n");
         c.write(f("i = %d; \n", i));
-        //c.graph(f("while (cputime - t) < %d \n", solv.max_exec_time) );
+        // c.graph(f("while (cputime - t) < %d \n", solv.max_exec_time) );
         c.write("    rng shuffle; \n");
         c.write("    R = randsample(n,tw+1)'; \n");
         c.write("    disp(i); \n");
@@ -148,6 +162,7 @@ public class AstarKtree {
 
     private String prune(String res) {
         String[] p = res.split("ans =");
+
         return p[1].replace(">>", "").trim();
     }
 }

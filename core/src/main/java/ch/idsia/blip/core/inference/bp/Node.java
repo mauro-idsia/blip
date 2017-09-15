@@ -1,8 +1,10 @@
 package ch.idsia.blip.core.inference.bp;
 
+
 import java.util.ArrayList;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
+
 
 public class Node {
 
@@ -36,7 +38,6 @@ public class Node {
         this.oldoutgoing = new ArrayList<double[]>();
     }
 
-
     public void reset() {
         this.enabled = true;
     }
@@ -60,17 +61,16 @@ public class Node {
         }
     }
 
-    public void normalizeMessages() {
-        // Normalize to sum to 1
+    public void normalizeMessages() {// Normalize to sum to 1
         /* for (this.outgoing)
-        this.outgoing = [x / np.sum(x) for x in this.outgoing] */
-    }
+         this.outgoing = [x / np.sum(x) for x in this.outgoing] */}
 
     public void receiveMessage(Node f, double[] m) {
-        //  Places new message into correct location in new message list
+        // Places new message into correct location in new message list
 
         if (this.enabled) {
             int i = this.nbrs.indexOf(f);
+
             this.incoming.set(i, m);
         }
     }
@@ -78,24 +78,30 @@ public class Node {
     public void sendMessages() {
         // Sends all outgoing messages
 
-        for (int i = 0; i < this.outgoing.size(); i++)
+        for (int i = 0; i < this.outgoing.size(); i++) {
             nbrs.get(i).receiveMessage(this, this.outgoing.get(i));
+        }
     }
 
     public boolean checkConvergence() {
         // Check if any messages have changed
 
-        if (!enabled)
+        if (!enabled) {
             return true;
+        }
 
-        for (int i = 0; i < outgoing.size(); i++)
+        for (int i = 0; i < outgoing.size(); i++) {
             // check messages have same shape
-//             this.oldoutgoing[i].shape = this.outgoing[i].shape
+            // this.oldoutgoing[i].shape = this.outgoing[i].shape
             for (int j = 0; j < outgoing.get(i).length; j++) {
-                double delta = (Math.abs(outgoing.get(i)[j] - oldoutgoing.get(i)[j]));
-                if (delta > epsilon)
+                double delta = (Math.abs(
+                        outgoing.get(i)[j] - oldoutgoing.get(i)[j]));
+
+                if (delta > epsilon) {
                     return false;
+                }
             }
+        }
 
         return true;
     }

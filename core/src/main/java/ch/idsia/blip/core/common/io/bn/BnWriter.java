@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.io.bn;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.utils.other.RandomStuff;
 
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
+
 public abstract class BnWriter {
 
     private static final DecimalFormat fmt = new DecimalFormat("#.######");
@@ -19,6 +21,7 @@ public abstract class BnWriter {
 
     public void go(String net, BayesianNetwork bn) {
         Writer g = null;
+
         try {
             g = getWriter(net);
             go(g, bn);
@@ -46,21 +49,26 @@ public abstract class BnWriter {
         }
     }
 
-
     protected void writePotential(Writer wr, BayesianNetwork bn, int i) throws IOException {
         wf(wr, "\n");
         double[] pt = bn.potentials(i);
         int t = 0;
+
         wf(wr, "%d\n", pt.length);
         int ar = bn.l_ar_var[i];
-        if (ar == 0)
+
+        if (ar == 0) {
             p("whatttt");
+        }
         int n_par = pt.length / ar;
+
         for (int j = 0; j < n_par; j++) {
             wf(wr, " ");
             double sum = 0;
+
             for (int z = 0; z < ar - 1; z++) {
                 double p = pt[t++];
+
                 p = Math.floor(p * 1000000d) / 1000000d;
                 writeP(wr, p);
                 sum += p;

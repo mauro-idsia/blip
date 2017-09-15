@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
+
 import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.common.arcs.Und;
 import ch.idsia.blip.core.learn.solver.brtl.BrutalUndirectedSolver;
@@ -16,6 +17,7 @@ import java.util.TreeSet;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
 import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+
 
 /**
  * Brutal on Undirected
@@ -61,8 +63,7 @@ public class BrutalUndirectedSearcher extends Base implements Searcher {
     }
 
     @Override
-    public void init(ParentSet[][] scores, int thread) {
-        // does nothing with scores
+    public void init(ParentSet[][] scores, int thread) {// does nothing with scores
     }
 
     // Greedily optimize a network!
@@ -81,7 +82,6 @@ public class BrutalUndirectedSearcher extends Base implements Searcher {
         initClique();
 
         Result res;
-
 
         // Greedy behaviour (follow sampling)
         for (int i = tw + 1; i < n_var; i++) {
@@ -112,6 +112,7 @@ public class BrutalUndirectedSearcher extends Base implements Searcher {
         // add new handler = new clique with size tw
         // created  just now
         SIntSet h = res.handle;
+
         for (int elim : h.set) {
             addHandler(new SIntSet(reduceAndIncreaseArray(h.set, res.v, elim)));
         }
@@ -133,6 +134,7 @@ public class BrutalUndirectedSearcher extends Base implements Searcher {
         // Update parent set
         for (int i1 = 0; i1 < initCl.length; i1++) {
             int v1 = initCl[i1];
+
             for (int i2 = i1 + 1; i2 < initCl.length; i2++) {
                 int v2 = initCl[i2];
 
@@ -183,9 +185,9 @@ public class BrutalUndirectedSearcher extends Base implements Searcher {
             }
         }
 
-
-        if (max_sk == 0)
+        if (max_sk == 0) {
             return new Result(v, new int[0], rand(handles));
+        }
 
         int[] fin = ArrayUtils.intersect(und.neigh[v], max_h.set);
 
@@ -203,6 +205,7 @@ public class BrutalUndirectedSearcher extends Base implements Searcher {
     protected SIntSet rand(TreeSet<SIntSet> h) {
         int v = solver.randInt(0, h.size());
         Iterator<SIntSet> i = h.iterator();
+
         while (v > 1) {
             i.next();
             v--;
@@ -224,44 +227,51 @@ public class BrutalUndirectedSearcher extends Base implements Searcher {
 
         @Override
         public int compareTo(Result o) {
-            if (neigh.length < o.neigh.length)
+            if (neigh.length < o.neigh.length) {
                 return 1;
-            if (neigh.length > o.neigh.length)
+            }
+            if (neigh.length > o.neigh.length) {
                 return -1;
+            }
 
-            if (v < o.v)
+            if (v < o.v) {
                 return 1;
-            if (v > o.v)
+            }
+            if (v > o.v) {
                 return -1;
+            }
 
-            if (equals(o))
+            if (equals(o)) {
                 return 0;
-            else return -1;
+            } else {
+                return -1;
+            }
         }
 
-//        @Override
-//        public boolean equals(Object o) {
-//            if (this == o) return true;
-//            if (o == null || getClass() != o.getClass()) return false;
-//
-//            Result result = (Result) o;
-//
-//            if (v != result.v) return false;
-//            if (handle != null ? !handle.equals(result.handle) : result.handle != null) return false;
-//            return Arrays.equals(neigh, result.neigh);
-//        }
-//
-//        @Override
-//        public int hashCode() {
-//            int result = handle != null ? handle.hashCode() : 0;
-//            result = 31 * result + v;
-//            result = 31 * result + Arrays.hashCode(neigh);
-//            return result;
-//        }
+        // @Override
+        // public boolean equals(Object o) {
+        // if (this == o) return true;
+        // if (o == null || getClass() != o.getClass()) return false;
+        //
+        // Result result = (Result) o;
+        //
+        // if (v != result.v) return false;
+        // if (handle != null ? !handle.equals(result.handle) : result.handle != null) return false;
+        // return Arrays.equals(neigh, result.neigh);
+        // }
+        //
+        // @Override
+        // public int hashCode() {
+        // int result = handle != null ? handle.hashCode() : 0;
+        // result = 31 * result + v;
+        // result = 31 * result + Arrays.hashCode(neigh);
+        // return result;
+        // }
 
         @Override
         public String toString() {
-            return f("%d %s %s", v, Arrays.toString(neigh), Arrays.toString(handle.set));
+            return f("%d %s %s", v, Arrays.toString(neigh),
+                    Arrays.toString(handle.set));
         }
     }
 }

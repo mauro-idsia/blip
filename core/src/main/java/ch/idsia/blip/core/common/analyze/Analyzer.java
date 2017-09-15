@@ -30,8 +30,9 @@ public class Analyzer extends Base {
     public Analyzer(DataSet dat) {
         this.dat = dat;
 
-        if (max_cache > 0)
+        if (max_cache > 0) {
             cache = new LRUCache<SIntSet, int[][]>(max_cache);
+        }
     }
 
     protected double getFreq(int v, int i) {
@@ -40,11 +41,11 @@ public class Analyzer extends Base {
         return (v * 1.0 / dat.n_datapoints);
         // double d = ((v + (alpha / i)) / (dat.n_datapoints + alpha));
         // double d1 = d+ d * (new Random().nextDouble() - 0.5) / 10.0;
-//        return d;
+        // return d;
     }
 
     public int[][] computeParentSetValues(int p) {
-        return computeParentSetValues(new int[]{p});
+        return computeParentSetValues(new int[] { p});
     }
 
     public int[][] computeParentSetValues(int[] set_p) {
@@ -53,13 +54,13 @@ public class Analyzer extends Base {
         return computeParentSetValues(set_p, dat.row_values);
 
         /*
-        int[][] values = cache.get(set_p);
-        if (values == null) {
-            values = computeParentSetValues(set_p, dat.row_values);
-            cache.put(set_p, values);
-        }
+         int[][] values = cache.get(set_p);
+         if (values == null) {
+         values = computeParentSetValues(set_p, dat.row_values);
+         cache.put(set_p, values);
+         }
 
-        return values;*/
+         return values;*/
     }
 
     public int[][] expandParentSetValues(int[] s, int[][] p_values, int new_p) {
@@ -77,8 +78,9 @@ public class Analyzer extends Base {
      */
     public int[][] computeParentSetValues(int[] set_p, int[][][] rows) {
 
-        if (set_p.length == 1)
+        if (set_p.length == 1) {
             return dat.row_values[set_p[0]];
+        }
 
         int p_arity = 1;
 
@@ -131,7 +133,6 @@ public class Analyzer extends Base {
 
         int p;
 
-
         for (int i = 0; i < p_arity; i++) {
 
             int n = i;
@@ -150,38 +151,40 @@ public class Analyzer extends Base {
 
                 n /= ar;
 
-                if (p == new_p)
+                if (p == new_p) {
                     new_ix = val;
-                else {
+                } else {
                     old_ix += val * ix_ml; // Shift index
                     ix_ml *= ar; // Compute cumulative shifter
                 }
             }
 
-            p_values[i] = ArrayUtils.intersect(old_p_values[old_ix], dat.row_values[new_p][new_ix]);
+            p_values[i] = ArrayUtils.intersect(old_p_values[old_ix],
+                    dat.row_values[new_p][new_ix]);
         }
 
         return p_values;
     }
 
     /*
-    protected boolean containsMissing(int n, int[] set_p) {
-        for (int p : set_p) {
-            int ar = dat.l_n_arity[p] + 1;
-            short val = (short) (n % ar);
+     protected boolean containsMissing(int n, int[] set_p) {
+     for (int p : set_p) {
+     int ar = dat.l_n_arity[p] + 1;
+     short val = (short) (n % ar);
 
-            n /= ar;
+     n /= ar;
 
-            if (val == dat.l_n_arity[p]) {
-                return true;
-            }
-        }
-        return false;
-    }*/
+     if (val == dat.l_n_arity[p]) {
+     return true;
+     }
+     }
+     return false;
+     }*/
 
     protected double log(double p) {
-        if (base2)
+        if (base2) {
             return FastMath.log(p) / FastMath.log(2);
+        }
         return FastMath.log(p);
     }
 }

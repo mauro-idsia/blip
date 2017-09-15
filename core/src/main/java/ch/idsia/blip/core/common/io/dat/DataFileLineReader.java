@@ -18,7 +18,6 @@ public class DataFileLineReader extends DatFileLineReader {
     private static final Logger log = Logger.getLogger(
             DatFileLineReader.class.getName());
 
-
     public DataFileLineReader(String s) throws FileNotFoundException {
         super(s);
     }
@@ -45,5 +44,4 @@ public class DataFileLineReader extends DatFileLineReader {
         return false;
     }
 }
-
 

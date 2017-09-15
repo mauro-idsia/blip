@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.data.common;
 
+
 /**
  * Implements all iterator functions for the hashed object set.
  * Subclasses may override objectAtIndex to vary the object
@@ -21,6 +22,7 @@ package ch.idsia.blip.core.utils.data.common;
  * you aren't in a performance critical spot.</p>
  */
 public interface TPrimitiveIterator extends TIterator {
+
     /**
      * Returns true if the iterator can be advanced past its current
      * location.
@@ -28,7 +30,6 @@ public interface TPrimitiveIterator extends TIterator {
      * @return a <code>boolean</code> value
      */
     boolean hasNext();
-
 
     /**
      * Removes the last entry returned by the iterator.

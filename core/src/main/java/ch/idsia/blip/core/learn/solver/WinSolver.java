@@ -4,6 +4,8 @@ package ch.idsia.blip.core.learn.solver;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.learn.solver.src.WinSearcher;
 
+import java.util.HashMap;
+
 import static ch.idsia.blip.core.utils.other.RandomStuff.f;
 
 
@@ -12,7 +14,7 @@ import static ch.idsia.blip.core.utils.other.RandomStuff.f;
  */
 public class WinSolver extends ScoreSolver {
 
-    public int max_windows = 4;
+    public int max_windows;
 
     @Override
     public void prepare() {
@@ -33,8 +35,10 @@ public class WinSolver extends ScoreSolver {
         return f("WinAsobs %d", max_windows);
     }
 
-    public void init(int max_windows) {
-        this.max_windows = max_windows;
-        super.init();
+    @Override
+    public void init(HashMap<String, String> options) {
+        super.init(options);
+        max_windows = gInt("win", 4);
     }
 }
+

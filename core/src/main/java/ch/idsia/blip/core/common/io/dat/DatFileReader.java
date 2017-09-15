@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.index;
+import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
 
 
 /**
@@ -47,14 +48,17 @@ public class DatFileReader implements Closeable {
     public void readValuesCache() throws IOException {
 
         // Collect row values
-        List<List<TIntArrayList>> v_aux = new ArrayList<List<TIntArrayList>>(dSet.n_var);
+        List<List<TIntArrayList>> v_aux = new ArrayList<List<TIntArrayList>>(
+                dSet.n_var);
+
         for (int n = 0; n < dSet.n_var; n++) {
             ArrayList<TIntArrayList> aux = new ArrayList<TIntArrayList>();
-            for (int v = 0; v < dSet.l_n_arity[n]; v++)
+
+            for (int v = 0; v < dSet.l_n_arity[n]; v++) {
                 aux.add(new TIntArrayList(5000));
+            }
             v_aux.add(aux);
         }
-
 
         List<TIntArrayList> missing_aux_v = new ArrayList<TIntArrayList>();
         TIntArrayList missing_aux_l = new TIntArrayList();
@@ -62,14 +66,21 @@ public class DatFileReader implements Closeable {
         String[] sp;
         short v;
         List<TIntArrayList> lu;
+
         dSet.n_datapoints = 0;
         while (nextLine != null) {
-            String line = nextLine.trim();
-            if ("".equals(line))
-                continue;
 
-            if (!readMissing && line.contains("?"))
+            String line = nextLine.trim();
+
+            if ("".equals(line)) {
+                nextLine = rd_dat.readLine();
                 continue;
+            }
+
+            if (!readMissing && line.contains("?")) {
+                nextLine = rd_dat.readLine();
+                continue;
+            }
 
             sp = getSplit(line);
             if (sp.length != dSet.n_var) {
@@ -81,9 +92,10 @@ public class DatFileReader implements Closeable {
             for (int i = 0; i < dSet.n_var; i++) {
                 if ("?".equals(sp[i])) {
                     int pos = index(i, missing_aux_l);
+
                     if (pos < 0) {
                         pos = missing_aux_l.size();
-                        missing_aux_v.add(new TIntArrayList());
+                        missing_aux_v.add(new TIntArrayList(5000));
                         missing_aux_l.add(i);
                     }
 
@@ -91,13 +103,17 @@ public class DatFileReader implements Closeable {
                 } else {
                     lu = v_aux.get(i);
                     v = Short.valueOf(sp[i]);
+                    for (int j = this.dSet.l_n_arity[i]; j <= v; j++) {
+                        this.dSet.l_n_arity[i] += 1;
+                        lu.add(new TIntArrayList(5000));
+                        pf("WARNING - value higher than cardinality (var %d, row %d)\n", i, this.dSet.n_datapoints);
+                    }
                     lu.get(v).add(dSet.n_datapoints);
                 }
             }
 
-            dSet.n_datapoints++;
-
             nextLine = rd_dat.readLine();
+            dSet.n_datapoints++;
         }
 
         dSet.row_values = new int[dSet.n_var][][];
@@ -112,6 +128,7 @@ public class DatFileReader implements Closeable {
         dSet.missing_l = new int[dSet.n_var][];
         for (int n = 0; n < dSet.n_var; n++) {
             int pos = index(n, missing_aux_l);
+
             if (pos >= 0) {
                 dSet.missing_l[n] = missing_aux_v.get(pos).toArray();
             }
@@ -121,9 +138,11 @@ public class DatFileReader implements Closeable {
 
     }
 
-
     protected void notifyError(int line, int found) {
-        log.severe(String.format("Problem in file at line %d: found %d cardinalities, %d variables.", line, dSet.n_var, found));
+        log.severe(
+                String.format(
+                        "Problem in file at line %d: found %d cardinalities, %d variables.",
+                        line, dSet.n_var, found));
     }
 
     protected String[] getSplit(String ln) {
@@ -163,6 +182,7 @@ public class DatFileReader implements Closeable {
         // Read arities
         nextLine = rd_dat.readLine();
         String[] sp = getSplit(nextLine);
+
         dSet.l_n_arity = new int[dSet.n_var];
         if (sp.length != dSet.n_var) {
             notifyError(2, sp.length);

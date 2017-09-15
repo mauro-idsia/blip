@@ -265,17 +265,23 @@ public class Undirected extends Arcs {
 
     public int n_adj(int j) {
         int t = 0;
-        for (int i = 0; i < n; i++)
-            if ((i != j) && (check(i, j)))
+
+        for (int i = 0; i < n; i++) {
+            if ((i != j) && (check(i, j))) {
                 t++;
+            }
+        }
         return t;
     }
 
     public int[] adj(int j) {
         TIntArrayList t = new TIntArrayList();
-        for (int i = 0; i < n; i++)
-            if ((i != j) && (check(i, j)))
+
+        for (int i = 0; i < n; i++) {
+            if ((i != j) && (check(i, j))) {
                 t.add(i);
+            }
+        }
         return t.toArray();
     }
 
@@ -284,9 +290,12 @@ public class Undirected extends Arcs {
         int n = Integer.valueOf(br.readLine().trim());
         Undirected u = new Undirected(n);
         String l;
+
         while ((l = br.readLine()) != null) {
             String[] aux = l.split("-");
-            u.mark(Integer.valueOf(aux[0].trim()), Integer.valueOf(aux[1].trim()));
+
+            u.mark(Integer.valueOf(aux[0].trim()),
+                    Integer.valueOf(aux[1].trim()));
         }
         return u;
     }
@@ -294,8 +303,10 @@ public class Undirected extends Arcs {
     public Undirected getSubUndirected(TIntSet s) {
 
         int[] ar = s.toArray();
+
         Arrays.sort(ar);
         Undirected n_u = new Undirected(ar.length);
+
         n_u.names = new String[ar.length];
         for (int i = 0; i < ar.length; i++) {
             int a = ar[i];
@@ -303,8 +314,10 @@ public class Undirected extends Arcs {
             n_u.names[i] = name(a);
 
             int[] adj = adj(a);
+
             for (int j = 0; j < adj.length; j++) {
                 int n_adj = Arrays.binarySearch(ar, adj[j]);
+
                 n_u.mark(i, n_adj);
             }
         }
@@ -343,10 +356,12 @@ public class Undirected extends Arcs {
 
     public int numEdges() {
         int t = 0;
+
         for (int i = 0; i < n; i++) {
             for (int n : neigh[i].toArray()) {
-                if (n > i)
+                if (n > i) {
                     t++;
+                }
             }
         }
         return t;

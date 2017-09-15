@@ -45,8 +45,8 @@ public class ExpectationMaximization extends Analyzer {
 
         this.ar = dat.l_n_arity[missingVar];
 
-        //   new_values = new short[dat.sample[missingVar].length];
-        //   ArrayUtils.cloneArray(dat.sample[missingVar], new_values);
+        // new_values = new short[dat.sample[missingVar].length];
+        // ArrayUtils.cloneArray(dat.sample[missingVar], new_values);
 
         this.missing_row = dat.row_values[missingVar][ar];
         this.p_values = computeParentSetValues(set_p);

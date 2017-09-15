@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.utils.other;
 
+
 import ch.idsia.blip.core.App;
 import ch.idsia.blip.core.common.io.ScoreReader;
 import ch.idsia.blip.core.common.io.ScoreWriter;
@@ -8,6 +9,7 @@ import ch.idsia.blip.core.common.tw.KTree;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.TreeSet;
+
 
 public class KTreeScore extends App {
 
@@ -21,6 +23,7 @@ public class KTreeScore extends App {
         prepare();
 
         ScoreReader sc = new ScoreReader(ph_scores.toString(), 0);
+
         sc.readScores();
 
         ParentSet[][] orig = sc.m_scores.clone();
@@ -75,12 +78,11 @@ public class KTreeScore extends App {
     @Override
     public void init(HashMap<String, String> options) {
         super.init(options);
-        this.max_tw = gInt("max_tw");
+        this.max_tw = gInt("tw");
         this.num_outputs = gInt("num_outputs");
         this.ph_output = gStr("ph_output");
         this.ph_scores = gStr("ph_scores");
     }
-
 
     private class OpenScores implements Comparable<OpenScores> {
         private final ParentSet[][] p;
@@ -96,7 +98,6 @@ public class KTreeScore extends App {
                 n += p1.length;
             }
         }
-
 
         public int compareTo(OpenScores other) {
             if (sk < other.sk) {

@@ -1,13 +1,16 @@
 package ch.idsia.blip.core.utils.data.array;
 
+
 import ch.idsia.blip.core.utils.data.common.TIntCollection;
 
 import java.util.Random;
+
 
 /**
  * Interface for Trove list implementations.
  */
 public interface TIntList extends TIntCollection {
+
     /**
      * Returns the value that is used to represent null. The default
      * value is generally zero, but can be changed during construction
@@ -17,7 +20,6 @@ public interface TIntList extends TIntCollection {
      */
     int getNoEntryValue();
 
-
     /**
      * Returns the number of values in the list.
      *
@@ -25,14 +27,12 @@ public interface TIntList extends TIntCollection {
      */
     int size();
 
-
     /**
      * Tests whether this list contains any values.
      *
      * @return true if the list is empty.
      */
     boolean isEmpty();
-
 
     /**
      * Adds <tt>val</tt> to the end of the list, growing as needed.
@@ -42,7 +42,6 @@ public interface TIntList extends TIntCollection {
      */
     boolean add(int val);
 
-
     /**
      * Adds the values in the array <tt>vals</tt> to the end of the
      * list, in order.
@@ -50,7 +49,6 @@ public interface TIntList extends TIntCollection {
      * @param vals an <code>int[]</code> value
      */
     void add(int[] vals);
-
 
     /**
      * Adds a subset of the values in the array <tt>vals</tt> to the
@@ -62,7 +60,6 @@ public interface TIntList extends TIntCollection {
      */
     void add(int[] vals, int offset, int length);
 
-
     /**
      * Inserts <tt>value</tt> into the list at <tt>offset</tt>.  All
      * values including and to the right of <tt>offset</tt> are shifted
@@ -73,7 +70,6 @@ public interface TIntList extends TIntCollection {
      */
     void insert(int offset, int value);
 
-
     /**
      * Inserts the array of <tt>values</tt> into the list at
      * <tt>offset</tt>.  All values including and to the right of
@@ -83,7 +79,6 @@ public interface TIntList extends TIntCollection {
      * @param values an <code>int[]</code> value
      */
     void insert(int offset, int[] values);
-
 
     /**
      * Inserts a slice of the array of <tt>values</tt> into the list
@@ -98,7 +93,6 @@ public interface TIntList extends TIntCollection {
      */
     void insert(int offset, int[] values, int valOffset, int len);
 
-
     /**
      * Returns the value at the specified offset.
      *
@@ -106,7 +100,6 @@ public interface TIntList extends TIntCollection {
      * @return an <code>int</code> value
      */
     int get(int offset);
-
 
     /**
      * Sets the value at the specified offset.
@@ -117,7 +110,6 @@ public interface TIntList extends TIntCollection {
      */
     int set(int offset, int val);
 
-
     /**
      * Replace the values in the list starting at <tt>offset</tt> with
      * the contents of the <tt>values</tt> array.
@@ -126,7 +118,6 @@ public interface TIntList extends TIntCollection {
      * @param values the source of the new values
      */
     void set(int offset, int[] values);
-
 
     /**
      * Replace the values in the list starting at <tt>offset</tt> with
@@ -140,7 +131,6 @@ public interface TIntList extends TIntCollection {
      */
     void set(int offset, int[] values, int valOffset, int length);
 
-
     /**
      * Sets the value at the specified offset and returns the
      * previously stored value.
@@ -151,13 +141,11 @@ public interface TIntList extends TIntCollection {
      */
     int replace(int offset, int val);
 
-
     /**
      * Flushes the internal state of the list, resetting the capacity
      * to the default.
      */
     void clear();
-
 
     /**
      * Removes <tt>value</tt> from the list.
@@ -166,7 +154,6 @@ public interface TIntList extends TIntCollection {
      * @return true if the list was modified by the remove operation.
      */
     boolean remove(int value);
-
 
     /**
      * Removes <tt>value</tt> at a given offset from the list.
@@ -177,7 +164,6 @@ public interface TIntList extends TIntCollection {
      */
     int removeAt(int offset);
 
-
     /**
      * Removes <tt>length</tt> values from the list, starting at
      * <tt>offset</tt>
@@ -187,12 +173,10 @@ public interface TIntList extends TIntCollection {
      */
     void remove(int offset, int length);
 
-
     /**
      * Reverse the order of the elements in the list.
      */
     void reverse();
-
 
     /**
      * Reverse the order of the elements in the range of the list.
@@ -202,7 +186,6 @@ public interface TIntList extends TIntCollection {
      */
     void reverse(int from, int to);
 
-
     /**
      * Shuffle the elements of the list using the specified random
      * number generator.
@@ -210,7 +193,6 @@ public interface TIntList extends TIntCollection {
      * @param rand a <code>Random</code> value
      */
     void shuffle(Random rand);
-
 
     /**
      * Returns a sublist of this list.
@@ -223,14 +205,12 @@ public interface TIntList extends TIntCollection {
      */
     TIntList subList(int begin, int end);
 
-
     /**
      * Copies the contents of the list into a native array.
      *
      * @return an <code>int[]</code> value
      */
     int[] toArray();
-
 
     /**
      * Copies a slice of the list into a native array.
@@ -240,7 +220,6 @@ public interface TIntList extends TIntCollection {
      * @return an <code>int[]</code> value
      */
     int[] toArray(int offset, int len);
-
 
     /**
      * Copies a slice of the list into a native array.
@@ -261,7 +240,6 @@ public interface TIntList extends TIntCollection {
      */
     int[] toArray(int[] dest);
 
-
     /**
      * Copies a slice of the list into a native array.
      *
@@ -271,7 +249,6 @@ public interface TIntList extends TIntCollection {
      * @return the array passed in.
      */
     int[] toArray(int[] dest, int offset, int len);
-
 
     /**
      * Copies a slice of the list into a native array.
@@ -292,7 +269,6 @@ public interface TIntList extends TIntCollection {
      */
     void sort();
 
-
     /**
      * Sort a slice of the list (ascending) using the Sun quicksort
      * implementation.
@@ -303,14 +279,12 @@ public interface TIntList extends TIntCollection {
      */
     void sort(int fromIndex, int toIndex);
 
-
     /**
      * Fills every slot in the list with the specified value.
      *
      * @param val the value to use when filling
      */
     void fill(int val);
-
 
     /**
      * Fills a range in the list with the specified value.
@@ -320,7 +294,6 @@ public interface TIntList extends TIntCollection {
      * @param val       the value to use when filling
      */
     void fill(int fromIndex, int toIndex, int val);
-
 
     /**
      * Performs a binary search for <tt>value</tt> in the entire list.
@@ -332,7 +305,6 @@ public interface TIntList extends TIntCollection {
      * negative insertion point into the sorted list.
      */
     int binarySearch(int value);
-
 
     /**
      * Performs a binary search for <tt>value</tt> in the specified
@@ -347,7 +319,6 @@ public interface TIntList extends TIntCollection {
      */
     int binarySearch(int value, int fromIndex, int toIndex);
 
-
     /**
      * Searches the list front to back for the index of
      * <tt>value</tt>.
@@ -358,7 +329,6 @@ public interface TIntList extends TIntCollection {
      * @see #binarySearch for faster searches on sorted lists
      */
     int indexOf(int value);
-
 
     /**
      * Searches the list front to back for the index of
@@ -373,7 +343,6 @@ public interface TIntList extends TIntCollection {
      */
     int indexOf(int offset, int value);
 
-
     /**
      * Searches the list back to front for the last index of
      * <tt>value</tt>.
@@ -384,7 +353,6 @@ public interface TIntList extends TIntCollection {
      * @see #binarySearch for faster searches on sorted lists
      */
     int lastIndexOf(int value);
-
 
     /**
      * Searches the list back to front for the last index of
@@ -398,7 +366,6 @@ public interface TIntList extends TIntCollection {
      * @see #binarySearch for faster searches on sorted lists
      */
     int lastIndexOf(int offset, int value);
-
 
     /**
      * Searches the list for <tt>value</tt>
@@ -416,7 +383,6 @@ public interface TIntList extends TIntCollection {
      */
     int max();
 
-
     /**
      * Finds the minimum value in the list.
      *
@@ -424,7 +390,6 @@ public interface TIntList extends TIntCollection {
      * @throws IllegalStateException if the list is empty
      */
     int min();
-
 
     /**
      * Calculates the sum of all the values in the list.

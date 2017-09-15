@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.graph;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.io.bn.BnNetWriter;
 
@@ -11,9 +12,11 @@ import java.util.regex.Pattern;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 
+
 public class BetterNets extends NetToGraph {
 
-    private static final Logger log = Logger.getLogger(BetterNets.class.getName());
+    private static final Logger log = Logger.getLogger(
+            BetterNets.class.getName());
 
     private static final Pattern ptrn = Pattern.compile(
             "node \\(([^\\\\)]+)\\) \\{([^\\}]+)\\}");
@@ -32,12 +35,15 @@ public class BetterNets extends NetToGraph {
         try {
             BufferedReader r = new BufferedReader(new FileReader(s + ".plain"));
             String content;
+
             while (r.ready()) {
                 content = r.readLine().trim();
-                if (!content.startsWith("node"))
+                if (!content.startsWith("node")) {
                     continue;
+                }
                 String[] g = content.split(" ");
                 double[] p = new double[2];
+
                 p[0] = Double.valueOf(g[2]) * 100;
                 p[1] = Double.valueOf(g[3]) * 100;
                 bn.positions.put(g[1], p);

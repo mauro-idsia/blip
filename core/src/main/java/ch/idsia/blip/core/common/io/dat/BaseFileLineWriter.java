@@ -13,7 +13,6 @@ import java.io.Writer;
  */
 public abstract class BaseFileLineWriter {
 
-
     // Writer for data
     protected Writer wr;
 

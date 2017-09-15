@@ -13,7 +13,7 @@ public class SeqAdvScorerApi extends ScorerApi {
             SeqAdvScorerApi.class.getName());
 
     public static void main(String[] args) {
-        defaultMain(args, new SeqAdvScorerApi(), log);
+        defaultMain(args, new SeqAdvScorerApi());
     }
 
     @Override

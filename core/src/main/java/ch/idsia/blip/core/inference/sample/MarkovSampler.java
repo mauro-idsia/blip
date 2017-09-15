@@ -1,11 +1,13 @@
 package ch.idsia.blip.core.inference.sample;
 
+
 import ch.idsia.blip.core.common.MarkovNetwork;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 
 import java.util.Arrays;
 import java.util.HashMap;
+
 
 public class MarkovSampler extends BaseSampler {
 
@@ -21,7 +23,6 @@ public class MarkovSampler extends BaseSampler {
         mn.updateCliqueAssignments();
     }
 
-
     @Override
     public short[] MMAP(TIntIntHashMap evidence, int[] query, double max_time) {
 
@@ -29,9 +30,11 @@ public class MarkovSampler extends BaseSampler {
 
         // Prepare non-evidence variables to change
         TIntArrayList aux_freedom = new TIntArrayList();
+
         for (int i = 0; i < mn.n_var; i++) {
-            if (!find(i, vars))
+            if (!find(i, vars)) {
                 aux_freedom.add(i);
+            }
         }
         int[] freedom = aux_freedom.toArray();
 
@@ -42,23 +45,28 @@ public class MarkovSampler extends BaseSampler {
         // Loop until we have time
         while (thereIsTime()) {
 
-            if (sample(freedom)) continue;
+            if (sample(freedom)) {
+                continue;
+            }
 
             sol = new short[query.length];
-            for (int i = 0; i < query.length; i++)
+            for (int i = 0; i < query.length; i++) {
                 sol[i] = sample[query[i]];
+            }
 
             MpeSol s = new MpeSol(sol);
 
-            if (cache.containsKey(s))
+            if (cache.containsKey(s)) {
                 cache.put(s, cache.get(s) + 1);
-            else if (cache.size() < max_size)
+            } else if (cache.size() < max_size) {
                 cache.put(s, 1);
+            }
             // Update in cache count
         }
 
         int max = 0;
         MpeSol best = null;
+
         for (MpeSol s : cache.keySet()) {
             // pf("%s %d \n", Arrays.toString(s.set), cache.get(s));
             if (cache.get(s) > max) {
@@ -77,9 +85,11 @@ public class MarkovSampler extends BaseSampler {
 
         // Prepare non-evidence variables to change
         TIntArrayList aux_freedom = new TIntArrayList();
+
         for (int i = 0; i < mn.n_var; i++) {
-            if (!find(i, vars))
+            if (!find(i, vars)) {
                 aux_freedom.add(i);
+            }
         }
         int[] freedom = aux_freedom.toArray();
 
@@ -88,19 +98,23 @@ public class MarkovSampler extends BaseSampler {
         // Loop until we have time
         while (thereIsTime()) {
 
-            if (sample(freedom)) continue;
+            if (sample(freedom)) {
+                continue;
+            }
 
             MpeSol s = new MpeSol(sample);
 
-            if (cache.containsKey(s))
+            if (cache.containsKey(s)) {
                 cache.put(s, cache.get(s) + 1);
-            else if (cache.size() < max_size)
+            } else if (cache.size() < max_size) {
                 cache.put(s, 1);
+            }
             // Update in cache count
         }
 
         int max = 0;
         MpeSol best = null;
+
         for (MpeSol s : cache.keySet()) {
             // pf("%s %d \n", Arrays.toString(s.set), cache.get(s));
             if (cache.get(s) > max) {
@@ -141,7 +155,6 @@ public class MarkovSampler extends BaseSampler {
         return false;
     }
 
-
     @Override
     public double[][] MAR(TIntIntHashMap evidence, double max_time) {
 
@@ -149,22 +162,28 @@ public class MarkovSampler extends BaseSampler {
 
         // Prepare non-evidence variables to change
         TIntArrayList aux_freedom = new TIntArrayList();
+
         for (int i = 0; i < mn.n_var; i++) {
-            if (!find(i, vars))
+            if (!find(i, vars)) {
                 aux_freedom.add(i);
+            }
         }
         int[] freedom = aux_freedom.toArray();
 
         int tot = 0;
 
         double[][] cnt = new double[mn.n_var][];
-        for (int i = 0; i < mn.n_var; i++)
+
+        for (int i = 0; i < mn.n_var; i++) {
             cnt[i] = new double[mn.l_ar_var[i]];
+        }
 
         // Loop until we have time
         while (thereIsTime()) {
 
-            if (sample(freedom)) continue;
+            if (sample(freedom)) {
+                continue;
+            }
 
             // Finally, sample!
             for (int i = 0; i < mn.n_var; i++) {
@@ -177,8 +196,9 @@ public class MarkovSampler extends BaseSampler {
         }
 
         for (int i = 0; i < mn.n_var; i++) {
-            for (int v = 0; v < mn.l_ar_var[i]; v++)
+            for (int v = 0; v < mn.l_ar_var[i]; v++) {
                 cnt[i][v] /= tot;
+            }
         }
 
         return cnt;
@@ -189,20 +209,21 @@ public class MarkovSampler extends BaseSampler {
 
         prepare(max_time, evidence);
 
-
         int[] ord = new int[n_var];
+
         for (int i = 0; i < mn.n_var; i++) {
             ord[i] = i;
         }
 
         // Prepare evidence values to compare
         int[] vars = evidence.keys();
+
         Arrays.sort(vars);
         int[] res = new int[vars.length];
+
         for (int i = 0; i < vars.length; i++) {
             res[i] = evidence.get(vars[i]);
         }
-
 
         boolean ok;
         int cnt = 0;
@@ -210,7 +231,9 @@ public class MarkovSampler extends BaseSampler {
 
         while (thereIsTime()) {
 
-            if (sample(ord)) continue;
+            if (sample(ord)) {
+                continue;
+            }
 
             // Update counters
             ok = true;
@@ -218,8 +241,9 @@ public class MarkovSampler extends BaseSampler {
                 ok = (sample[this.vars[i]] == res[i]);
             }
 
-            if (ok)
+            if (ok) {
                 cnt += 1;
+            }
 
             tot += 1;
 
@@ -241,6 +265,7 @@ public class MarkovSampler extends BaseSampler {
 
     private void ShuffleArray(int[] array) {
         int index, temp;
+
         for (int i = array.length - 1; i > 0; i--) {
             index = rand.nextInt(i + 1);
             temp = array[index];

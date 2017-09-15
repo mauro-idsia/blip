@@ -16,7 +16,7 @@ public class IambBMi extends Iamb {
 
     @Override
     public double[] getTresholds() {
-        return new double[]{0.005};
+        return new double[] { 0.005};
     }
 
     // Mutual information
@@ -26,8 +26,7 @@ public class IambBMi extends Iamb {
     }
 
     @Override
-    protected void prepare() {
-    }
+    protected void prepare() {}
 
     @Override
     protected double computeCMI(int x, int y, int[] z) {
@@ -36,10 +35,11 @@ public class IambBMi extends Iamb {
 
     @Override
     protected boolean condInd(int x, int y, int[] z, double alpha) {
-        if (forward)
+        if (forward) {
             return bmi.computeCMI(x, y, z, 0.05) < alpha;
-        else
+        } else {
             return bmi.computeCMI(x, y, z, 0.95) < alpha;
+        }
 
     }
 

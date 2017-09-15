@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.cache;
 
+
 class Node<T1, T2> {
     T1 key;
     T2 value;

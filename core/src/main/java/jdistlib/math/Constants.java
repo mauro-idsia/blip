@@ -1,4 +1,4 @@
-/*  DistLib : A C Library of Special Functions
+/* DistLib : A C Library of Special Functions
  *  Copyright (C) 1998 R Core Team
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,9 @@
 
 package jdistlib.math;
 
+
 import static java.lang.Math.sqrt;
+
 
 /**
  * Class defining constants.
@@ -29,11 +31,13 @@ import static java.lang.Math.sqrt;
 
 public class Constants { 
 
-	/* 30 Decimal-place constants computed with bc -l (scale=32; proper round) */
+    /* 30 Decimal-place constants computed with bc -l (scale=32; proper round) */
 
     public static final double M_SQRT_2 = 1.41421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157273501384623091229702;
+
     /* 1/sqrt(2) */
     public static final double M_1_SQRT_2 = 0.70710678118654752440084436210484903928483593768847403658833986899536623923105351942519376716382078636750692311545614851;
+
     /* sqrt(32) */
     public static final double M_SQRT_32 = 5.65685424949238019520675489683879231427868750150779229270671895196292991384842815540155013731056629094005538492364918809;
 
@@ -50,8 +54,10 @@ public class Constants {
 
     /* pi/2 */
     public static final double M_PI_2 = 1.57079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105853399107404325664115332;
+
     /* pi/4 */
     public static final double M_PI_4 = 0.785398163397448309615660845819875721049292349843776455243736148076954101571552249657008706335529266995537021628320576661;
+
     /* pi*pi/8 */
     public static final double M_PISQ_8 = 1.2337005501361698273543113749845188919142124259050988283016686720275056028024006553752216754648190289780032392217528930097;
 
@@ -64,8 +70,10 @@ public class Constants {
 
     /* log(sqrt(pi)) = log(pi)/2 : */
     public static final double M_LN_SQRT_PI = 0.57236494292470008707171367567652935582364740645765578575681153573606888494241303989181163513774485385100490611434899457;
+
     /* log(sqrt(2*pi)) = log(2*pi)/2 : */
     public static final double M_LN_SQRT_2PI = 0.91893853320467274178032973640561763986139747363778341281715154048276569592726039769474329863595419762200564662463433744;
+
     /* log(sqrt(pi/2)) = log(pi/2)/2 : */
     public static final double M_LN_SQRT_PId2 = 0.22579135264472743236309761494744107178589733927752815869647153098937207395756568208887997163953551008000416560406365171;
 
@@ -76,7 +84,8 @@ public class Constants {
     public static final double ME_PRECISION = 4;
     public static final double ME_UNDERFLOW = 5;
 
-	/* constants taken from float.h for gcc 2.90.29 for Linux 2.0 i386  */
+    /* constants taken from float.h for gcc 2.90.29 for Linux 2.0 i386  */
+    
     /* -- should match Java since both are supposed to be IEEE 754 compliant */
 
     /* Radix of exponent representation */

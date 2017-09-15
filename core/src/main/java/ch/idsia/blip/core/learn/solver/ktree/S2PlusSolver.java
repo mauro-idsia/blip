@@ -25,8 +25,9 @@ public class S2PlusSolver extends S2Solver {
     @Override
     protected void almost() {
         vars = new int[n_var];
-        for (int j = 0; j < n_var; j++)
+        for (int j = 0; j < n_var; j++) {
             vars[j] = j + 1;
+        }
 
         sampler = new AstarKtree(n_var, tw, this);
     }
@@ -43,9 +44,11 @@ public class S2PlusSolver extends S2Solver {
         ArrayUtils.shuffleArray(vars, rand);
 
         int[] R = new int[tw];
+
         System.arraycopy(vars, 0, R, 0, tw);
 
         KTree k = sampler.go(R, availableTime(), i, j);
+
         return k;
     }
 }

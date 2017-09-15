@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.common.io;
 
+
 import ch.idsia.blip.core.common.arcs.Undirected;
 import ch.idsia.blip.core.common.graph.UndToGraph;
 import ch.idsia.blip.core.common.io.dat.DatFileLineReader;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+
 
 public class MatrixArcVisualizer {
 
@@ -52,12 +54,14 @@ public class MatrixArcVisualizer {
 
         for (int i = 0; i < m && i < n_arcs; i++) {
             aux = rd.readLine().split(",");
-            n.mark(Integer.valueOf(aux[0].trim()), Integer.valueOf(aux[2].trim()));
+            n.mark(Integer.valueOf(aux[0].trim()),
+                    Integer.valueOf(aux[2].trim()));
         }
 
         n.names = dat.l_s_names;
 
         UndToGraph utg = new UndToGraph();
+
         utg.go(n, ph_out);
 
     }

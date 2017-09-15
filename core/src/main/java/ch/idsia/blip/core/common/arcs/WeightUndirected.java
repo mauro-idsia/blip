@@ -48,7 +48,6 @@ public class WeightUndirected extends Undirected {
         weight.put(i, w);
     }
 
-
     @Override
     public void empty(int v1, int v2) {
         super.empty(v1, v2);
@@ -64,11 +63,14 @@ public class WeightUndirected extends Undirected {
     public void write(Writer w) throws IOException {
         wf(w, "graph Base {\n");
         int j = 0;
+
         for (int v1 = 0; v1 < n; v1++) {
             for (int v2 = v1 + 1; v2 < n; v2++) {
                 if (check(v1, v2)) {
                     double we = (weight.get(index(v1, v2)) * 3);
-                    wf(w, "\"%s\" -- \"%s\" [penwidth=%.2f]\n", name(v1), name(v2), we, weight.get(index(v1, v2)));
+
+                    wf(w, "\"%s\" -- \"%s\" [penwidth=%.2f]\n", name(v1),
+                            name(v2), we, weight.get(index(v1, v2)));
                     j++;
                 }
             }
@@ -82,8 +84,10 @@ public class WeightUndirected extends Undirected {
     public Undirected getSubUndirected(TIntSet s) {
 
         int[] ar = s.toArray();
+
         Arrays.sort(ar);
         WeightUndirected n_u = new WeightUndirected(ar.length);
+
         n_u.names = new String[ar.length];
         for (int i = 0; i < ar.length; i++) {
             int a = ar[i];
@@ -91,9 +95,11 @@ public class WeightUndirected extends Undirected {
             n_u.names[i] = name(a);
 
             int[] adj = adj(a);
+
             for (int j = 0; j < adj.length; j++) {
                 int n_adj = Arrays.binarySearch(ar, adj[j]);
                 double w = weight.get(index(a, adj[j]));
+
                 n_u.mark(i, n_adj, w);
             }
         }

@@ -1,8 +1,10 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.Random;
+
 
 public class EntropyBSampler extends EntropySampler {
 
@@ -49,11 +51,13 @@ public class EntropyBSampler extends EntropySampler {
         super.init();
 
         weight_r = new double[n];
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             weight_r[i] = 1.0 / weight[i];
+        }
 
         vars = new TIntArrayList();
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             vars.add(i);
+        }
     }
 }

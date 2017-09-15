@@ -16,7 +16,6 @@ import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
  */
 public class DatFileLineWriter extends BaseFileLineWriter {
 
-
     public DatFileLineWriter(BayesianNetwork bn, Writer writer) {
         super(bn, writer);
     }

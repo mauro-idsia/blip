@@ -9,11 +9,8 @@ import java.util.logging.Logger;
 
 public class GreedyScorerApi extends ScorerApi {
 
-    private static final Logger log = Logger.getLogger(
-            GreedyScorerApi.class.getName());
-
     public static void main(String[] args) {
-        defaultMain(args, new GreedyScorerApi(), log);
+        defaultMain(args, new GreedyScorerApi());
     }
 
     @Override

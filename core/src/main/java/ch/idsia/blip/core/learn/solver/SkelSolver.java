@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver;
 
+
 import ch.idsia.blip.core.common.arcs.Directed;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.ps.SkelProvider;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+
 
 public abstract class SkelSolver extends BaseSolver {
 
@@ -58,33 +60,31 @@ public abstract class SkelSolver extends BaseSolver {
                 best_str_c = new TreeSet<String>();
             }
 
-            if (new_sk != best_sk)
+            if (new_sk != best_sk) {
                 return;
+            }
 
             String c = getDescr(str);
 
-            if (best_str_c.contains(c))
+            if (best_str_c.contains(c)) {
                 return;
+            }
 
             best_str_c.add(c);
             best_str_s.add(str);
 
             if (res_path != null) {
                 cloneStr(str, best_str);
-                writeGraph(f(
-                        "%s-%d-%d",
-                        res_path,
-                        (int) new_sk,
-                        best_str_s.size())
-                );
+                writeGraph(
+                        f("%s-%d-%d", res_path, (int) new_sk, best_str_s.size()));
             }
         }
-
 
     }
 
     private String getDescr(ParentSet[] str) {
         StringBuilder b = new StringBuilder();
+
         for (int v = 0; v < str.length; v++) {
             b.append(Arrays.toString(str[v].parents));
         }
@@ -97,8 +97,10 @@ public abstract class SkelSolver extends BaseSolver {
             int n = Integer.valueOf(br.readLine().trim());
             Directed u = new Directed(n);
             String l;
+
             while ((l = br.readLine()) != null) {
                 String[] aux = l.split("->");
+
                 u.mark(nt(aux, 0) - 1, nt(aux, 1) - 1);
             }
             return u;

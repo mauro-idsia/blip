@@ -35,6 +35,7 @@ public abstract class Iamb {
      * @param x variable to search
      * @param t treeshold
      */
+    
     /**
      * @param x     variable to search
      * @param alpha signficance
@@ -81,8 +82,11 @@ public abstract class Iamb {
             if (!(condInd(x, best_y, CMB, alpha))) {
                 CMB = expandArray(CMB, best_y);
 
-                if (verb)
-                    pf("Adding %s (t: %.5f, mi: %.5f) - %s \n", dat.l_nm_var[best_y], alpha, best_f, Arrays.toString(CMB));
+                if (verb) {
+                    pf("Adding %s (t: %.5f, mi: %.5f) - %s \n",
+                            dat.l_nm_var[best_y], alpha, best_f,
+                            Arrays.toString(CMB));
+                }
 
             } else {
                 change = false;
@@ -111,8 +115,9 @@ public abstract class Iamb {
             if (condInd(x, best_y, n_CMB, alpha)) {
                 CMB = n_CMB;
 
-                if (verb)
+                if (verb) {
                     pf("Removing %d (mi: %.5f) - %s \n", best_y, best_f, CMB);
+                }
 
             } else {
                 change = false;

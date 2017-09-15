@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
+
 import ch.idsia.blip.core.common.arcs.Und;
 import ch.idsia.blip.core.learn.solver.brtl.BrutalUndirectedSolver;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
 import static ch.idsia.blip.core.utils.other.RandomStuff.p;
 import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+
 
 public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
@@ -55,8 +57,8 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
             // pf("Chosen %d - %s\n", res.v, todo.toString());
 
-            //   p(res);
-            //  p(todo);
+            // p(res);
+            // p(todo);
 
             if (res.neigh.length == 0) {
                 pf("Thread %d, null neighborhood!!! \n", thread);
@@ -71,8 +73,10 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
             }
 
             double elapsed = (System.currentTimeMillis() - start) / 1000.0;
+
             if (elapsed > cnt * 10) {
-                pf("Thread %d, remaining to look: %d, score: %d - %.2f \n", thread, todo.size(), new_sk, elapsed);
+                pf("Thread %d, remaining to look: %d, score: %d - %.2f \n",
+                        thread, todo.size(), new_sk, elapsed);
                 cnt += 1;
             }
         }
@@ -84,8 +88,9 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
     private void done(int v) {
         todo.remove(v);
-        if (bests[v] == null)
+        if (bests[v] == null) {
             p("cdfjds");
+        }
         totWeight -= bests[v].neigh.length;
         bests[v] = null;
     }
@@ -96,6 +101,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
         vars = new int[n_var];
 
         int[] copy = new int[und.neigh[theChosen].length];
+
         cloneArray(und.neigh[theChosen], copy);
 
         // pf("Chosen: %d \n", theChosen);
@@ -109,8 +115,10 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
                 int[] neigh = und.neigh[ix];
                 // Select a new random element from its neighborhood
                 int ix2 = neigh[randInt(0, neigh.length - 1)];
-                if (!find(ix2, copy) && ix2 != theChosen)
+
+                if (!find(ix2, copy) && ix2 != theChosen) {
                     copy = expandArray(copy, ix2);
+                }
 
                 // p(Arrays.toString(copy));
             }
@@ -122,7 +130,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
         cloneArray(copy, vars, tw);
         vars[tw] = theChosen;
 
-        //  pf("INITIAL CLIQUE: %s \n", Arrays.toString(vars));
+        // pf("INITIAL CLIQUE: %s \n", Arrays.toString(vars));
     }
 
     private void initCand() {
@@ -133,6 +141,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
         for (int i = 0; i < n_var; i++) {
             todo.add(i);
             Result r = new Result(i, new int[0], new SIntSet());
+
             bests[i] = r;
         }
     }
@@ -147,6 +156,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
         // Update parent set
         for (int i1 = 0; i1 < initCl.length; i1++) {
             int v1 = initCl[i1];
+
             done(v1);
             for (int i2 = i1 + 1; i2 < initCl.length; i2++) {
                 int v2 = initCl[i2];
@@ -154,7 +164,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
                 if (find(v1, und.neigh[v2])) {
                     new_und.mark(v1, v2);
                     new_sk += 1;
-                    //  pf("Initial marking %d %d \n", v1, v2);
+                    // pf("Initial marking %d %d \n", v1, v2);
                 }
             }
         }
@@ -164,6 +174,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
         for (int v : initCl) {
             SIntSet s = new SIntSet(reduceArray(initCl, v));
+
             addHandler(s);
             l_a.add(s);
         }
@@ -178,8 +189,11 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
         // add the new handlers
         SIntSet orig = res.handle;
         ArrayList<SIntSet> l_a = new ArrayList<SIntSet>();
+
         for (int elim : orig.set) {
-            SIntSet s = new SIntSet(reduceAndIncreaseArray(orig.set, res.v, elim));
+            SIntSet s = new SIntSet(
+                    reduceAndIncreaseArray(orig.set, res.v, elim));
+
             addHandler(s);
             l_a.add(s);
         }
@@ -190,6 +204,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
     private void updateBests(ArrayList<SIntSet> l_a) {
         // Update best handlers
         TIntIterator it = todo.iterator();
+
         while (it.hasNext()) {
             int v = it.next();
 
@@ -197,10 +212,12 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
             for (SIntSet h : l_a) {
                 int[] neigh = ArrayUtils.intersect(und.neigh[v], h.set);
+
                 if (neigh.length > sk) {
                     // TODO remove
                     totWeight -= bests[v].neigh.length;
                     Result c = new Result(v, neigh, h);
+
                     bests[v] = c;
                     totWeight += bests[v].neigh.length;
                     sk = bests[v].neigh.length;
@@ -214,13 +231,17 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
         double r = solver.randDouble() - Math.pow(2, -10);
         int sel = -1;
+
         for (int v = 0; v < n_var && sel == -1; v++) {
-            if (bests[v] == null)
+            if (bests[v] == null) {
                 continue;
+            }
 
             double s = bests[v].neigh.length / totWeight;
-            if (s > 0 && r <= s)
+
+            if (s > 0 && r <= s) {
                 sel = v;
+            }
             r -= s;
         }
 
@@ -239,6 +260,5 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
             this.handle = handle;
         }
     }
-
 
 }

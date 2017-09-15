@@ -40,22 +40,22 @@ public class MutualInformation extends Oracle {
     }
 
     /*
-    private int computeMaxDf(int N, double a, double w) throws OutOfRangeException {
-        // FN bound
-        double b = 0.05;
-        maxDF = 0;
-        double power = 1;
-        while( power >= (1 -b) && maxDF <= 20) {
-            maxDF ++;
-            ChiSqrDistribution d = new ChiSqrDistribution(maxDF);
-            double c = d.inverse(1 - a);
-            double delta = 2 * N * Math.log(2)  * Math.pow(w, 2);
-            NonCentralChiSquare s = new NonCentralChiSquare(maxDF, delta);
-            power = s.cumulative(c, true, true);
-        }
-        return 0;
-    }
-*/
+     private int computeMaxDf(int N, double a, double w) throws OutOfRangeException {
+     // FN bound
+     double b = 0.05;
+     maxDF = 0;
+     double power = 1;
+     while( power >= (1 -b) && maxDF <= 20) {
+     maxDF ++;
+     ChiSqrDistribution d = new ChiSqrDistribution(maxDF);
+     double c = d.inverse(1 - a);
+     double delta = 2 * N * Math.log(2)  * Math.pow(w, 2);
+     NonCentralChiSquare s = new NonCentralChiSquare(maxDF, delta);
+     power = s.cumulative(c, true, true);
+     }
+     return 0;
+     }
+     */
 
     /**
      * Compute the MI between all the variables
@@ -104,27 +104,34 @@ public class MutualInformation extends Oracle {
         for (int x_i = 0; x_i < x_ar; x_i++) {
             // P(x)
             int[] r_x = dat.row_values[x][x_i];
-            if (r_x.length == 0)
+
+            if (r_x.length == 0) {
                 continue;
+            }
 
             double p_x = getFreq(r_x.length, x_ar);
 
             for (int y_i = 0; y_i < y_ar; y_i++) {
                 // P(y)
                 int[] r_y = dat.row_values[y][y_i];
-                if (r_y.length == 0)
+
+                if (r_y.length == 0) {
                     continue;
+                }
                 double p_y = getFreq(r_y.length, y_ar);
 
                 int n_xy = ArrayUtils.intersectN(r_x, r_y);
-                if (n_xy == 0)
+
+                if (n_xy == 0) {
                     continue;
+                }
                 // P(x, y)
                 double p_xy = getFreq(n_xy, x_ar * y_ar);
 
                 double t1 = FastMath.log(p_x) + FastMath.log(p_y);
                 double t2 = FastMath.log(p_xy);
                 double t = t2 - t1;
+
                 t = p_xy * (t);
                 mi += t;
                 // pf("%.5f \n", mi);
@@ -150,6 +157,7 @@ public class MutualInformation extends Oracle {
             // P(z)
             int[] r_z = dat.row_values[z][z_i];
             double p_z = getFreq(r_z.length, z_ar);
+
             for (int x_i = 0; x_i < x_ar; x_i++) {
                 // P(x)
                 int[] r_x = dat.row_values[x][x_i];
@@ -174,12 +182,11 @@ public class MutualInformation extends Oracle {
 
                     mi += p_xyz
                             * ((FastMath.log(p_z) + FastMath.log(p_xyz))
-                            - (FastMath.log(p_xz) + FastMath.log(p_yz)));
+                                    - (FastMath.log(p_xz) + FastMath.log(p_yz)));
 
-
-                    pf(" %.5f * log ( (%.5f * %.5f) / (%.5f * %.5f) ) -> %.5f \n",
+                    pf(
+                            " %.5f * log ( (%.5f * %.5f) / (%.5f * %.5f) ) -> %.5f \n",
                             p_xyz, p_z, p_xyz, p_xz, p_yz, mi);
-
 
                 }
             }
@@ -224,9 +231,9 @@ public class MutualInformation extends Oracle {
 
                 for (int z_i = 0; z_i < z_rows.length; z_i++) {
 
-//                    if (containsMissing(z_i, z)) {
-//                        continue;
-//                    }
+                    // if (containsMissing(z_i, z)) {
+                    // continue;
+                    // }
 
                     // P(z)
                     int[] r_z = z_rows[z_i];
@@ -257,8 +264,9 @@ public class MutualInformation extends Oracle {
     }
 
     int[][] getZRows(int[] z) {
-        if (z.length == 1)
+        if (z.length == 1) {
             return dat.row_values[z[0]];
+        }
 
         return computeParentSetValues(z);
     }
@@ -528,13 +536,16 @@ public class MutualInformation extends Oracle {
 
         // Computes estimator for conditional mutual information
         double est_I = computeCMI(x, y, z);
+
         // 2*N*log(2)*I^(x, y|z) ~ X^2_{df}
         est_I *= 2 * dat.n_var * FastMath.log(2);
 
         // Computes degree of freedom
         int df = (dat.l_n_arity[x] - 1) * (dat.l_n_arity[y] - 1);
-        for (int c : z)
+
+        for (int c : z) {
             df *= dat.l_n_arity[c];
+        }
 
         df = Math.min(df, maxDF);
 
@@ -548,6 +559,7 @@ public class MutualInformation extends Oracle {
 
         // estimator for mutual information
         double est_I = computeMi(x, y);
+
         // 2*N*log(2)*I^(x, y|z) ~ X^2_{df}
         est_I *= 2 * dat.n_var * FastMath.log(2);
 

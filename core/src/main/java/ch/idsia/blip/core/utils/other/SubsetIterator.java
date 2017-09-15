@@ -3,6 +3,7 @@ package ch.idsia.blip.core.utils.other;
 
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
+
 public class SubsetIterator {
 
     private final int[] set;

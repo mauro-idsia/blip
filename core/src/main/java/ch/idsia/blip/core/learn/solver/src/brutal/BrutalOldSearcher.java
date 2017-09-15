@@ -1,5 +1,6 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
+
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.FakeSolver;
@@ -14,6 +15,7 @@ import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
+
 
 public class BrutalOldSearcher extends ScoreSearcher {
 
@@ -73,6 +75,7 @@ public class BrutalOldSearcher extends ScoreSearcher {
             // add new handler = new clique with size tw
             // created  just now
             SIntSet h = res.getSecond();
+
             for (int elim : h.set) {
                 addHandler(new SIntSet(reduceAndIncreaseArray(h.set, v, elim)));
             }
@@ -83,17 +86,17 @@ public class BrutalOldSearcher extends ScoreSearcher {
             }
 
             /*
-            BayesianNetwork best = new BayesianNetwork(new_str);
-            best.writeGraph("/home/loskana/Desktop/what/" + i);
-            solver.writeStructure("/home/loskana/Desktop/what/" + i, -10, new_str);
+             BayesianNetwork best = new BayesianNetwork(new_str);
+             best.writeGraph("/home/loskana/Desktop/what/" + i);
+             solver.writeStructure("/home/loskana/Desktop/what/" + i, -10, new_str);
 
-            try {
-                best.checkTreeWidth(tw);
-                best.checkAcyclic();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                best.writeGraph("/home/loskana/Desktop/what/final");
-            }*/
+             try {
+             best.checkTreeWidth(tw);
+             best.checkAcyclic();
+             } catch (Exception ex) {
+             ex.printStackTrace();
+             best.writeGraph("/home/loskana/Desktop/what/final");
+             }*/
 
         }
 
@@ -133,6 +136,7 @@ public class BrutalOldSearcher extends ScoreSearcher {
         for (int i = 0; i < this.tw; i++) {
             ParentSet[] new_str = this.aso.search();
             double new_sk = checkSk(new_str);
+
             if (new_sk > best_sk) {
                 RandomStuff.cloneStr(new_str, best_str);
                 best_sk = new_sk;
@@ -142,40 +146,40 @@ public class BrutalOldSearcher extends ScoreSearcher {
     }
 
     /*
-    private ParentSet[] exploreAll() {
+     private ParentSet[] exploreAll() {
 
-        Arrays.sort(initCl);
-        super.search(initCl);
-        double best_sk = last_sk;
-        ParentSet[] best_str = last_str;
+     Arrays.sort(initCl);
+     super.search(initCl);
+     double best_sk = sk;
+     ParentSet[] best_str = str;
 
-        int n = initCl.length;
-        int[] p = new int[n];  // Weight index control array initially all zeros. Of course, same size of the char array.
-        int i = 0; //Upper bound index. thread.e: if string is "abc" then index thread could be at "c"
-        Arrays.sort(initCl);
+     int n = initCl.length;
+     int[] p = new int[n];  // Weight index control array initially all zeros. Of course, same size of the char array.
+     int i = 0; //Upper bound index. thread.e: if string is "abc" then index thread could be at "c"
+     Arrays.sort(initCl);
 
-        while (i < n) {
-            if (p[i] < i) { //if the weight index is bigger or the same it means that we have already switched between these thread,j (one iteration before).
-                int j = ((i % 2) == 0) ? 0 : p[i];//Lower bound index. thread.e: if string is "abc" then j index will always be 0.
-                swap(initCl, i, j);
-                // Search current
-                super.search(initCl);
-                //  p(Arrays.toString(initCl));
-                if (last_sk > best_sk) {
-                    best_str = last_str;
-                    best_sk = last_sk;
-                }
-                p[i]++; //Adding 1 to the specific weight that relates to the char array.
-                i = 1; //if thread was 2 (for example), after the swap we now need to swap for thread=1
-            }
-            else {
-                p[i] = 0;//Weight index will be zero because one iteration before, it was 1 (for example) to indicate that char array a[thread] swapped.
-                i++;//thread index will have the option to ex forward in the char array for "longer swaps"
-            }
-        }
+     while (i < n) {
+     if (p[i] < i) { //if the weight index is bigger or the same it means that we have already switched between these thread,j (one iteration before).
+     int j = ((i % 2) == 0) ? 0 : p[i];//Lower bound index. thread.e: if string is "abc" then j index will always be 0.
+     swap(initCl, i, j);
+     // Search current
+     super.search(initCl);
+     //  p(Arrays.toString(initCl));
+     if (sk > best_sk) {
+     best_str = str;
+     best_sk = sk;
+     }
+     p[i]++; //Adding 1 to the specific weight that relates to the char array.
+     i = 1; //if thread was 2 (for example), after the swap we now need to swap for thread=1
+     }
+     else {
+     p[i] = 0;//Weight index will be zero because one iteration before, it was 1 (for example) to indicate that char array a[thread] swapped.
+     i++;//thread index will have the option to ex forward in the char array for "longer swaps"
+     }
+     }
 
-        return best_str;
-    } */
+     return best_str;
+     } */
 
     protected void clear() {
         new_bn = new BayesianNetwork(n_var);
@@ -205,7 +209,7 @@ public class BrutalOldSearcher extends ScoreSearcher {
 
     protected Pair<ParentSet, SIntSet> bestHandler(int v) {
 
-        //  p(m_scores[v][0]);
+        // p(m_scores[v][0]);
 
         for (ParentSet p : m_scores[v]) {
 

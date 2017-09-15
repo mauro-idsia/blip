@@ -35,6 +35,7 @@ public class BnMdlReader {
         List<String> aux2 = new ArrayList<String>();
 
         int i = 0;
+
         // Get names
         for (String a : aux) {
             // System.out.println(a);
@@ -72,10 +73,11 @@ public class BnMdlReader {
     }
 
     private static int find(String[] l, String f) {
-        for (int i = 0; i < l.length; i++)
+        for (int i = 0; i < l.length; i++) {
             if (t(f).equals(t(l[i]))) {
                 return i;
             }
+        }
         return -1;
     }
 

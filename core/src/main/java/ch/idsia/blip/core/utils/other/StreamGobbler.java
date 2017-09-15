@@ -1,6 +1,8 @@
 package ch.idsia.blip.core.utils.other;
 
+
 import java.io.*;
+
 
 public class StreamGobbler extends Thread {
 
@@ -18,8 +20,10 @@ public class StreamGobbler extends Thread {
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String line = null;
-            while ((line = br.readLine()) != null)
+
+            while ((line = br.readLine()) != null) {
                 w.append(line + "\n");
+            }
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {

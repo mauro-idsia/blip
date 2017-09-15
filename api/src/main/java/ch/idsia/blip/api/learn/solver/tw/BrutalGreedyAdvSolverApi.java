@@ -7,6 +7,7 @@ import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
+
 public class BrutalGreedyAdvSolverApi extends TwSolverApi {
 
     private static final Logger log = Logger.getLogger(
@@ -22,7 +23,7 @@ public class BrutalGreedyAdvSolverApi extends TwSolverApi {
     private String searcher;
 
     public static void main(String[] args) {
-        defaultMain(args, new BrutalGreedyAdvSolverApi(), log);
+        defaultMain(args, new BrutalGreedyAdvSolverApi());
     }
 
     @Override

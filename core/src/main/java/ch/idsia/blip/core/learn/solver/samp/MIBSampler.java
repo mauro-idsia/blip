@@ -1,6 +1,8 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
+
 import java.util.Random;
+
 
 public class MIBSampler extends MISampler {
 
@@ -33,7 +35,8 @@ public class MIBSampler extends MISampler {
         super.init();
 
         weight_r = new double[n];
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             weight_r[i] = 1.0 / weight[i];
+        }
     }
 }

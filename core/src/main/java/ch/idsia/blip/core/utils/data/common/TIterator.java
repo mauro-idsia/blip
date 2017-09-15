@@ -1,9 +1,11 @@
 package ch.idsia.blip.core.utils.data.common;
 
+
 /**
  * Common interface for all iterators used in Trove.
  */
 public interface TIterator {
+
     /**
      * Returns true if the iterator can be advanced past its current location.
      *

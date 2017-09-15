@@ -58,34 +58,34 @@ public class RankerScores {
             }
         }
 
-        if (debug > 0) {
-            // System.out.printf("%.1f - %.1f\n", f, s);
+        if (debug > 0) {// System.out.printf("%.1f - %.1f\n", f, s);
         }
 
         int f1 = (int) Math.floor(f);
         int s1 = (int) Math.floor(s);
-/*
-        BinomialDistribution binomial = new BinomialDistribution(f1 + s1, 0.5);
 
-        if (f1 > s1) {
-            double p_value = 1 - binomial.cumulativeProbability(f1);
+        /*
+         BinomialDistribution binomial = new BinomialDistribution(f1 + s1, 0.5);
 
-            if (debug > 0) {
-                System.out.printf("f > s: %.3f\n", p_value);
-            }
-            if (p_value < alpha) {
-                return 1;
-            }
-        } else {
-            double p_value = binomial.cumulativeProbability(f1);
+         if (f1 > s1) {
+         double p_value = 1 - binomial.cumulativeProbability(f1);
 
-            if (debug > 0) {
-                System.out.printf("f < s: %.3f\n", p_value);
-            }
-            if (p_value < alpha) {
-                return -1;
-            }
-        }*/
+         if (debug > 0) {
+         System.out.printf("f > s: %.3f\n", p_value);
+         }
+         if (p_value < alpha) {
+         return 1;
+         }
+         } else {
+         double p_value = binomial.cumulativeProbability(f1);
+
+         if (debug > 0) {
+         System.out.printf("f < s: %.3f\n", p_value);
+         }
+         if (p_value < alpha) {
+         return -1;
+         }
+         }*/
 
         return 0;
     }
@@ -117,22 +117,22 @@ public class RankerScores {
             }
 
             switch (r) {
-                case 1:
-                    f_ix++;
-                    f_skore += s_l - s_ix;
-                    break;
+            case 1:
+                f_ix++;
+                f_skore += s_l - s_ix;
+                break;
 
-                case 0:
-                    f_ix++;
-                    s_ix++;
-                    f_skore += 0.5 + s_l - s_ix;
-                    s_skore += 0.5 + f_l - f_ix;
-                    break;
+            case 0:
+                f_ix++;
+                s_ix++;
+                f_skore += 0.5 + s_l - s_ix;
+                s_skore += 0.5 + f_l - f_ix;
+                break;
 
-                case -1:
-                    s_ix++;
-                    s_skore += f_l - f_ix;
-                    break;
+            case -1:
+                s_ix++;
+                s_skore += f_l - f_ix;
+                break;
             }
         }
 

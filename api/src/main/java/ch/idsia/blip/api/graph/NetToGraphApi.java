@@ -1,5 +1,6 @@
 package ch.idsia.blip.api.graph;
 
+
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.common.BayesianNetwork;
 import ch.idsia.blip.core.common.graph.NetToGraph;
@@ -9,13 +10,15 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.other.RandomStuff.*;
 
+
 /**
  * Generate pa graph from pa network (requires graphviz)
  */
 
 public class NetToGraphApi extends Api {
 
-    private static final Logger log = Logger.getLogger(NetToGraphApi.class.getName());
+    private static final Logger log = Logger.getLogger(
+            NetToGraphApi.class.getName());
 
     protected NetToGraph ntg;
 
@@ -30,7 +33,7 @@ public class NetToGraphApi extends Api {
     }
 
     public static void main(String[] args) {
-        defaultMain(args, new NetToGraphApi(), log);
+        defaultMain(args, new NetToGraphApi());
     }
 
     @Override
@@ -40,8 +43,8 @@ public class NetToGraphApi extends Api {
         p(path_bn);
 
         String path_out = rmExt(path_bn);
+
         ntg.go(bn, path_out, max_time);
     }
-
 
 }

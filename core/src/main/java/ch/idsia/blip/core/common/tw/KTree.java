@@ -368,8 +368,7 @@ public class KTree {
         while (k == null) {
             try {
                 k = decode(Dandelion.sample(n_var, maxTw, solver));
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
         return k;
     }

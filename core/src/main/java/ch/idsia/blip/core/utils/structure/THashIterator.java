@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2001, Eric D. Friedman All Rights Reserved.
 //
 // This library is free software; you can redistribute it and/or
@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 
 package ch.idsia.blip.core.utils.structure;
 
@@ -48,7 +48,6 @@ import java.util.NoSuchElementException;
  */
 public abstract class THashIterator<V> implements TIterator, Iterator<V> {
 
-
     private final TObjectHash<V> _object_hash;
 
     /**
@@ -67,7 +66,6 @@ public abstract class THashIterator<V> implements TIterator, Iterator<V> {
      */
     protected int _index;
 
-
     /**
      * Create an instance of THashIterator over the values of the TObjectHash
      *
@@ -79,7 +77,6 @@ public abstract class THashIterator<V> implements TIterator, Iterator<V> {
         _index = _hash.capacity();
         _object_hash = hash;
     }
-
 
     /**
      * Moves the iterator to the next Object and returns it.
@@ -95,7 +92,6 @@ public abstract class THashIterator<V> implements TIterator, Iterator<V> {
         return objectAtIndex(_index);
     }
 
-
     /**
      * Returns true if the iterator can be advanced past its current
      * location.
@@ -105,7 +101,6 @@ public abstract class THashIterator<V> implements TIterator, Iterator<V> {
     public boolean hasNext() {
         return nextIndex() >= 0;
     }
-
 
     /**
      * Removes the last entry returned by the iterator.
@@ -129,7 +124,6 @@ public abstract class THashIterator<V> implements TIterator, Iterator<V> {
         _expectedSize--;
     }
 
-
     /**
      * Sets the internal <tt>index</tt> so that the `next' object
      * can be returned.
@@ -141,7 +135,6 @@ public abstract class THashIterator<V> implements TIterator, Iterator<V> {
             throw new NoSuchElementException();
         }
     }
-
 
     /**
      * Returns the index of the next value in the data structure
@@ -159,12 +152,13 @@ public abstract class THashIterator<V> implements TIterator, Iterator<V> {
 
         Object[] set = _object_hash._set;
         int i = _index;
-        while (i-- > 0 && (set[i] == TObjectHash.FREE || set[i] == TObjectHash.REMOVED)) {
+
+        while (i-- > 0
+                && (set[i] == TObjectHash.FREE || set[i] == TObjectHash.REMOVED)) {
             ;
         }
         return i;
     }
-
 
     /**
      * Returns the object at the specified index.  Subclasses should
