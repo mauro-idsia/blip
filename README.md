@@ -16,8 +16,10 @@ The process of learning a bounded-treewidth BN is explained by using the "child"
 ### Dataset format
 
 The format for the initial dataset has to be the same as the file "child-5000.dat", namely a space-separated file containing: 
-* first line, list of variable names
-* following lines, discrete value for each variable
+
+    * First line: list of variables names, separated by space;
+    * Second line: list of variables cardinalities, separated by space;
+    * Following lines: list of values taken by the variables in each datapoint, separated by space.
 
 ### Common command line options
 
@@ -59,3 +61,19 @@ For perfoming with k-max:
 ```
 java -jar blip.jar solver.kmax -j data/child-5000.jkl -r data/child-5000.kmax.res -t 10 -w 4 -v 1
 ```
+
+### Interpreting the result 
+
+The format of the ".res" file is as follows: each line indicates the parent set assigned to each variable and its score.
+
+For example the line "4: -2797.39 (10,17,18)" indicates that to the variable with index 4 in the dataset are assgined as parents the variables with index (10,17,18). This parent set has score -2797.39 (by default the score function is the BIC). 
+
+### Learn the parameters
+
+Using the structure found it is possible to learn the parameters with: 
+
+```
+java -jar blip.jar parle -d data/child-5000.dat -r data/child-5000.kmax.res -n data/child-5000.kmax.uai
+```
+
+The final output will be a full Bayesian network in UAI format. 
