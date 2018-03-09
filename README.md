@@ -5,8 +5,8 @@ Bayesian network Learning and Inference Project
 ## References
 
 This package implements the algorithms detailed in the following papers: 
-* Efficient Learning of Bounded-Treewidth Graphs from Complete and Incomplete Data Sets (submitted IJAR) - [supplementary material](supplementary-IJAR.pdf)
-* Approximated Structural Learning for Large Bayesian Networks (submitted ML) - [supplementary material](supplementary-ML17.pdf)
+* Efficient learning of bounded-treewidth Bayesian networks from complete and incomplete data sets(https://www.sciencedirect.com/science/article/pii/S0888613X17307272) (IJAR 2018) - [supplementary material](supplementary-IJAR.pdf)
+* Approximated Structural Learning for Large Bayesian Networks (accepted for publication ML 2018) - [supplementary material](supplementary-ML17.pdf)
 * [Learning Treewidth-Bounded Bayesian Networks with Thousands of Variables](https://papers.nips.cc/paper/6232-learning-treewidth-bounded-bayesian-networks-with-thousands-of-variables) (NIPS 2016) Mauro Scanagatta, Giorgio Corani, Cassio P. de Campos, Marco Zaffalon
 
 ## Usage
