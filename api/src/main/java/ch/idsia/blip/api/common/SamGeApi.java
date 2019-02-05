@@ -2,17 +2,16 @@ package ch.idsia.blip.api.common;
 
 
 import ch.idsia.blip.api.Api;
-import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.BayesianNetwork;
 import ch.idsia.blip.core.common.SamGe;
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
-import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getBayesianNetwork;
-import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
-import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.getBayesianNetwork;
+import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
 
 
 /**

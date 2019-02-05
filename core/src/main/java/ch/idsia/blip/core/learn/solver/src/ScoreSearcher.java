@@ -4,7 +4,7 @@ package ch.idsia.blip.core.learn.solver.src;
 import ch.idsia.blip.core.Base;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 
 public abstract class ScoreSearcher extends Base implements Searcher {

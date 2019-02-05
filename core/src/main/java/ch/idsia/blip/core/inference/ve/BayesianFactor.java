@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.inference.ve;
 
 
-import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.BayesianNetwork;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TDoubleArrayList;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
@@ -10,6 +10,7 @@ import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 import java.util.*;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
 
 
 /**
@@ -586,9 +587,9 @@ public class BayesianFactor {
         }
     }
 
-    public short mostProbable() {
+    public int mostProbable() {
         Double best;
-        short ix = -1;
+        int ix = -1;
 
         if (logComp) {
             best = -Double.MAX_VALUE;
@@ -596,7 +597,7 @@ public class BayesianFactor {
             best = 0.0;
         }
 
-        for (short i = 0; i < potent.length; i++) {
+        for (int i = 0; i < potent.length; i++) {
             if (potent[i] > best) {
                 best = potent[i];
                 ix = i;

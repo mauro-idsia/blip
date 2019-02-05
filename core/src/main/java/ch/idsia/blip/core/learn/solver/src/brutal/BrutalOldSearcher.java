@@ -1,14 +1,14 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
 
-import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.FakeSolver;
 import ch.idsia.blip.core.learn.solver.src.ScoreSearcher;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.other.Pair;
-import ch.idsia.blip.core.utils.other.ParentSet;
-import ch.idsia.blip.core.utils.other.RandomStuff;
+import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.RandomStuff;
 
 import java.util.Arrays;
 import java.util.TreeSet;

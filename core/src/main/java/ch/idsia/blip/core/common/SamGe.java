@@ -2,17 +2,18 @@ package ch.idsia.blip.core.common;
 
 
 import ch.idsia.blip.core.App;
-import ch.idsia.blip.core.common.io.dat.ArffFileLineWriter;
-import ch.idsia.blip.core.common.io.dat.BaseFileLineWriter;
-import ch.idsia.blip.core.common.io.dat.DatFileLineWriter;
+import ch.idsia.blip.core.utils.BayesianNetwork;
+import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.io.dat.ArffFileLineWriter;
+import ch.idsia.blip.core.io.dat.BaseFileLineWriter;
+import ch.idsia.blip.core.io.dat.DatFileLineWriter;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
-import ch.idsia.blip.core.utils.other.RandomStuff;
 
 import java.io.*;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
-import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.RandomStuff.logExp;
 
 
 public class SamGe extends App {

@@ -19,9 +19,9 @@ public class ArrayUtils {
         a[j] = temp;
     }
 
-    public static void shuffleArray(int[] ar, Random rnd) {
+    public static void shuffleArray(int[] ar, Random rnd, int mx) {
 
-        for (int i = ar.length - 1; i > 0; i--) {
+        for (int i = mx; i > 0; i--) {
             int index = rnd.nextInt(i + 1);
             // Simple swapArray
             int a = ar[index];
@@ -29,6 +29,10 @@ public class ArrayUtils {
             ar[index] = ar[i];
             ar[i] = a;
         }
+    }
+
+    public static void shuffleArray(int[] ar, Random rnd) {
+        shuffleArray(ar, rnd, ar.length-1);
     }
 
     public static double mean(double[] nums) {

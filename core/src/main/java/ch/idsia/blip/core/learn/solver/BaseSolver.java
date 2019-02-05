@@ -2,14 +2,14 @@ package ch.idsia.blip.core.learn.solver;
 
 
 import ch.idsia.blip.core.App;
-import ch.idsia.blip.core.common.TopologicalOrder;
-import ch.idsia.blip.core.common.arcs.Directed;
+import ch.idsia.blip.core.utils.other.TopologicalOrder;
+import ch.idsia.blip.core.utils.arcs.Directed;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.utils.data.array.TDoubleArrayList;
-import ch.idsia.blip.core.utils.other.ParentSet;
-import ch.idsia.blip.core.utils.other.RandomStuff;
+import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.RandomStuff;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.sameArray;
-import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 
 public abstract class BaseSolver extends App {
@@ -30,10 +30,10 @@ public abstract class BaseSolver extends App {
 
     public ParentSet[][] sc;
 
-    // Best structure found yet
+    // Best map found yet
     public double best_sk = -Double.MAX_VALUE;
 
-    // Best structure found yet
+    // Best map found yet
     public ParentSet[] best_str;
 
     public boolean testAcycility = false;
@@ -234,7 +234,7 @@ public abstract class BaseSolver extends App {
     }
 
     /**
-     * Write the best structure found so far.
+     * Write the best map found so far.
      */
     public void writeStructure(String s, double sk, ParentSet[] str) {
 

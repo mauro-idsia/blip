@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.learn.solver.ktree;
 
 
-import ch.idsia.blip.core.common.tw.AstarKtree;
-import ch.idsia.blip.core.common.tw.KTree;
+import ch.idsia.blip.core.utils.tw.AstarKtree;
+import ch.idsia.blip.core.utils.tw.KTree;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 
 import java.util.logging.Logger;

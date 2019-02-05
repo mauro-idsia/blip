@@ -3,7 +3,7 @@ package ch.idsia.blip.core.learn.solver.src.obs;
 
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.BitSet;
 
@@ -15,7 +15,7 @@ public class ObsGreedySearcher extends ObsSearcher {
     }
 
     /**
-     * Try to improve structure with a single switch in the order (second way, koller's)
+     * Try to improve map with a single switch in the order (second way, koller's)
      *
      * @param vars old variable order
      * @return if an improvement was possible
@@ -93,7 +93,7 @@ public class ObsGreedySearcher extends ObsSearcher {
 
             // System.out.printf("swapArray: %d and %d, gain: %.5f, new best: %s\n", vars.get(best_ix), vars.get(best_ix + 1), best_gain, best_pset);
 
-            // Update the structure for the following index
+            // Update the map for the following index
             str[vars[best_j]] = best_pset;
             // Do the switch
             ArrayUtils.swapArray(vars, best_i, best_j);
@@ -114,7 +114,7 @@ public class ObsGreedySearcher extends ObsSearcher {
             solver.log("going! \n");
         }
 
-        // Find initial structure!
+        // Find initial map!
         super.search();
 
         if (solver.verbose > 2) {

@@ -3,10 +3,11 @@ package ch.idsia.blip.core.learn.solver.brtl;
 
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
+import ch.idsia.blip.core.learn.solver.src.brutal.BrutalGreedySearcher;
 import ch.idsia.blip.core.learn.solver.src.brutal.BrutalOldSearcher;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.other.Pair;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 
 /**
@@ -28,10 +29,11 @@ public class QuietGreedySolver extends BrutalSolver {
 
     @Override
     public void prepare() {
+        super.prepare();
         max_out_degree = tw;
     }
 
-    public class QuietGreedySearcher extends BrutalOldSearcher {
+    public class QuietGreedySearcher extends BrutalGreedySearcher {
 
         int[] out_degree;
 

@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.utils.other;
 
 
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.analyze.Analyzer;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.utils.analyze.Analyzer;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 
 

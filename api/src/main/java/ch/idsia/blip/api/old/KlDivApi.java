@@ -2,10 +2,10 @@ package ch.idsia.blip.api.old;
 
 
 import ch.idsia.blip.api.Api;
-import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.common.io.bn.BnNetReader;
+import ch.idsia.blip.core.utils.BayesianNetwork;
+import ch.idsia.blip.core.io.bn.BnNetReader;
 import ch.idsia.blip.core.inference.ve.BayesianFactor;
-import ch.idsia.blip.core.old.KLDiv;
+import ch.idsia.blip.core.utils.other.KLDiv;
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
 
 import java.io.BufferedReader;

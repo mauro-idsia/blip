@@ -3,13 +3,13 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.data.SIntSet;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.Arrays;
 import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
-import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 
 public class BrutalAstarSearcher extends BrutalOldSearcher {
@@ -193,7 +193,7 @@ public class BrutalAstarSearcher extends BrutalOldSearcher {
         // Structure built so far
         public final ParentSet[] str;
 
-        // Optimistic score structure evaluation
+        // Optimistic score map evaluation
         public double f_sk;
 
         // Near-maximal clique (size tw), for adding new variables

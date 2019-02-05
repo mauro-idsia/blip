@@ -2,16 +2,16 @@ package ch.idsia.blip.api.old;
 
 
 import ch.idsia.blip.api.Api;
-import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.score.BDeu;
+import ch.idsia.blip.core.utils.BayesianNetwork;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.utils.score.BDeu;
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
 import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getBayesianNetwork;
-import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.RandomStuff.getBayesianNetwork;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
 
 
 /**

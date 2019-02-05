@@ -1,14 +1,14 @@
 package ch.idsia.blip.core.learn.feature;
 
 
-import ch.idsia.blip.core.common.io.dat.DatFileReader;
-import ch.idsia.blip.core.common.score.BDeu;
+import ch.idsia.blip.core.io.dat.DatFileReader;
+import ch.idsia.blip.core.utils.score.BDeu;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.other.Gamma;
 
 import java.io.IOException;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.RandomStuff.pf;
 
 
 /**

@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.utils.other;
 
 
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.analyze.MutualInformation;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.utils.analyze.MutualInformation;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getRandom;
+import static ch.idsia.blip.core.utils.RandomStuff.getRandom;
 
 
 public class DivConq {

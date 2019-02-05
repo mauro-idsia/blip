@@ -55,7 +55,7 @@ public class ParentSetQueue2 {
     }
 
     /**
-     * Add a new parent set to the score. Find the correct position in the linked list structure.
+     * Add a new parent set to the score. Find the correct position in the linked list map.
      *
      * @param hash_p hash of parent set base
      * @param p2     last variable added to parent set

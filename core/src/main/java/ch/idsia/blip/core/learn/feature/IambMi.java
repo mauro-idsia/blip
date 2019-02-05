@@ -1,9 +1,9 @@
 package ch.idsia.blip.core.learn.feature;
 
 
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.analyze.MutualInformation;
-import ch.idsia.blip.core.common.io.dat.DatFileReader;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.utils.analyze.MutualInformation;
+import ch.idsia.blip.core.io.dat.DatFileReader;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -8,7 +8,7 @@ package ch.idsia.blip.core.utils.data.common;
  * objects).
  * <p/>
  * <p> Note that iteration is fastest if you forego the calls to
- * <tt>hasNext</tt> in favor of checking the size of the structure
+ * <tt>hasNext</tt> in favor of checking the size of the map
  * yourself and then call next() that many times:
  * <p/>
  * <pre>
@@ -34,7 +34,7 @@ public interface TPrimitiveIterator extends TIterator {
     /**
      * Removes the last entry returned by the iterator.
      * Invoking this method more than once for a single entry
-     * will leave the underlying data structure in a confused
+     * will leave the underlying data map in a confused
      * state.
      */
     void remove();

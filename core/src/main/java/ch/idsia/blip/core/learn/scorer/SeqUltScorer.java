@@ -1,16 +1,16 @@
 package ch.idsia.blip.core.learn.scorer;
 
 
-import ch.idsia.blip.core.common.analyze.Entropy;
-import ch.idsia.blip.core.common.analyze.LogLikelihood;
-import ch.idsia.blip.core.common.analyze.MutualInformation;
-import ch.idsia.blip.core.common.score.BIC;
+import ch.idsia.blip.core.utils.analyze.Entropy;
+import ch.idsia.blip.core.utils.analyze.LogLikelihood;
+import ch.idsia.blip.core.utils.analyze.MutualInformation;
+import ch.idsia.blip.core.utils.score.BIC;
 import ch.idsia.blip.core.learn.scorer.concurrency.NotifyingThread;
 import ch.idsia.blip.core.learn.scorer.concurrency.ThreadCompleteListener;
 import ch.idsia.blip.core.utils.data.SIntSet;
-import ch.idsia.blip.core.utils.other.RandomStuff;
-import ch.idsia.blip.core.utils.structure.ArrayHashingStrategy;
-import ch.idsia.blip.core.utils.structure.TCustomHashMap;
+import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.utils.data.map.ArrayHashingStrategy;
+import ch.idsia.blip.core.utils.data.map.TCustomHashMap;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,8 @@ import java.util.logging.Logger;
 import static ch.idsia.blip.core.learn.scorer.SeqScorer.incrementPset;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
-import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.pf;
 import static java.lang.StrictMath.max;
 
 
@@ -99,7 +100,7 @@ public class SeqUltScorer extends BaseScorer {
         // For each s size, search all the variables, record the joint entropies
         for (int i = 1; i <= max_pset_size; i++) {
             if (verbose > 1) {
-                safeLogf("\nNew level: %d\n", i);
+                safeLogf("\nNew level: %d - %.2f\n", i, (System.currentTimeMillis() - start) / 1000.0 );
             }
             Thread t1 = new Thread(
                     new UltExecutor(thread_pool_size, 0, n_var, this, i));
@@ -168,7 +169,7 @@ public class SeqUltScorer extends BaseScorer {
             }
 
             if (verbose > 1) {
-                safeLogf("%d ", n);
+                safeLogf("# %d - %.2f\n", n, (System.currentTimeMillis() - start) / 1000.0);
             }
 
             aggregate(n, l_sc, l_h);
@@ -186,7 +187,7 @@ public class SeqUltScorer extends BaseScorer {
                     continue;
                 }
 
-                double ll_i = ll.computeLL(n, i);
+                // double ll_i = ll.computeLL(n, i);
 
                 double m = mi.computeMi(n, i) * dat.n_datapoints;
                 double l = max(ll_n, ll.computeLL(i));
@@ -269,7 +270,7 @@ public class SeqUltScorer extends BaseScorer {
             }
 
             if (toPruneXPi || toPruneYPi) {
-                return;
+                 // return;
             }
 
             double sk = bic.computeScore(n, pset);
@@ -279,8 +280,11 @@ public class SeqUltScorer extends BaseScorer {
             double h = ent.computeHCond(n, pset);
 
             l_h.put(s.set, h);
+
+            // pf("%d - %s\n", n, Arrays.toString(pset));
         }
 
+        /*
         private double pen(int n, int[] pset) {
             double pe = -Math.log(dat.n_datapoints) * (dat.l_n_arity[n] - 1) / 2;
 
@@ -288,7 +292,7 @@ public class SeqUltScorer extends BaseScorer {
                 pe *= dat.l_n_arity[p];
             }
             return pe;
-        }
+        } */
 
         private boolean pruneY(int[] orig, int[] pset) {
 
@@ -403,7 +407,7 @@ public class SeqUltScorer extends BaseScorer {
         }
 
         private boolean checkPi(double pen, SIntSet s, int v, int y) {
-            Double h = t_h.get(v).get(s);
+            Double h = t_h.get(v).get(s.set);
 
             if (h == null) {
                 return false;
@@ -426,14 +430,14 @@ public class SeqUltScorer extends BaseScorer {
         }
 
         private boolean check(double pen, SIntSet s, int v, int y) {
-            Double h = t_h.get(v).get(s);
+            Double h = t_h.get(v).get(s.set);
 
             if (h == null) {
                 return false;
             }
-            double sc2 = bic.computeScore(n, s.set);
-            double pen2 = bic.getPenalization(n, s.set);
-            double t = sc2 + pen2;
+           //  double sc2 = bic.computeScore(n, s.set);
+           //  double pen2 = bic.getPenalization(n, s.set);
+            // double t = sc2 + pen2;
 
             h = voidH[v];
 

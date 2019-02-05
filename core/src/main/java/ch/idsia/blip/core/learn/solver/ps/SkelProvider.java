@@ -1,9 +1,9 @@
 package ch.idsia.blip.core.learn.solver.ps;
 
 
-import ch.idsia.blip.core.common.arcs.Directed;
+import ch.idsia.blip.core.utils.arcs.Directed;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.other.SubsetIterator;
 
 import java.util.Iterator;

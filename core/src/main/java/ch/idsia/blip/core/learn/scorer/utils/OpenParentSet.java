@@ -1,6 +1,8 @@
 package ch.idsia.blip.core.learn.scorer.utils;
 
 
+import java.util.Arrays;
+
 /**
  * Entry of a parent set in the linked-list queue.
  */
@@ -37,9 +39,9 @@ public class OpenParentSet implements Comparable<OpenParentSet> {
         return -1;
     }
 
-    /* public String toString() {
-     return String.format("(%s %d %.3f)", p1.toString(), p2, sk);
+    public String toString() {
+     return String.format("(%s %d %.3f)", Arrays.toString(s), new_p, sk);
      }
-     */
+
 }
 

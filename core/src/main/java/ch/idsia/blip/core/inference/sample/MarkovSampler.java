@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.inference.sample;
 
 
-import ch.idsia.blip.core.common.MarkovNetwork;
+import ch.idsia.blip.core.utils.MarkovNetwork;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.hash.TIntIntHashMap;
 

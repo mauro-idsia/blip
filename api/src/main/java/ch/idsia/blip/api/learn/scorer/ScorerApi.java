@@ -2,6 +2,7 @@ package ch.idsia.blip.api.learn.scorer;
 
 
 import ch.idsia.blip.api.Api;
+import ch.idsia.blip.core.utils.DataSet;
 import ch.idsia.blip.core.learn.scorer.BaseScorer;
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
 import org.kohsuke.args4j.Option;
@@ -9,9 +10,9 @@ import org.kohsuke.args4j.Option;
 import java.io.File;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
-import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
-import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
 
 
 abstract class ScorerApi extends Api {
@@ -28,7 +29,7 @@ abstract class ScorerApi extends Api {
     public int max_pset_size = 6;
 
     @Option(name = "-t", usage = "Maximum time (if 0, default 60 seconds for variable)")
-    public int max_time = 0;
+    public int max_exec_time = 0;
 
     @Option(name = "-c", usage = "Chosen score function. Possible choices: BIC, BDeu")
     public String scoreNm = "bic";
@@ -47,9 +48,10 @@ abstract class ScorerApi extends Api {
 
     @Override
     public void exec() throws Exception {
+        DataSet d = getDataSet(ph_dat);
 
         scorer.init(options());
-        scorer.go(getDataSet(ph_dat));
+        scorer.go(d);
     }
 
     @Override

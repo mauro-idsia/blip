@@ -5,7 +5,7 @@ import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.List;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.RandomStuff.f;
 
 
 public class StringUtils {

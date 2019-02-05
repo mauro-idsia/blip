@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.inference.ve;
 
 
-import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.BayesianNetwork;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.ArrayList;
@@ -170,7 +170,7 @@ public class Simulation {
         }
 
         /**
-         * Set the domain from the structure of a network (variable and its parents)
+         * Set the domain from the map of a network (variable and its parents)
          *
          * @param v  variable of interest
          * @param bn network of interest

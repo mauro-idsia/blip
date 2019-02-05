@@ -2,8 +2,8 @@ package ch.idsia.blip.core.learn.scorer;
 
 
 import ch.idsia.blip.core.utils.data.ArrayUtils;
-import ch.idsia.blip.core.utils.structure.ArrayHashingStrategy;
-import ch.idsia.blip.core.utils.structure.TCustomHashSet;
+import ch.idsia.blip.core.utils.data.map.ArrayHashingStrategy;
+import ch.idsia.blip.core.utils.data.map.TCustomHashSet;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;

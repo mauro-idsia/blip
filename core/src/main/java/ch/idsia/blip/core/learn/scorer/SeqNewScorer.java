@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.learn.scorer;
 
 
-import ch.idsia.blip.core.common.analyze.LogLikelihood;
-import ch.idsia.blip.core.common.analyze.MutualInformation;
+import ch.idsia.blip.core.utils.analyze.LogLikelihood;
+import ch.idsia.blip.core.utils.analyze.MutualInformation;
 import ch.idsia.blip.core.utils.data.SIntSet;
 
 import java.io.IOException;
@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
-import static ch.idsia.blip.core.utils.other.RandomStuff.p;
-import static ch.idsia.blip.core.utils.other.RandomStuff.wf;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.wf;
 
 
 /**

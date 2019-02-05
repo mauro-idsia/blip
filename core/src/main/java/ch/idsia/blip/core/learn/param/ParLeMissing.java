@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.learn.param;
 
 
-import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.common.DataSet;
+import ch.idsia.blip.core.utils.BayesianNetwork;
+import ch.idsia.blip.core.utils.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TDoubleArrayList;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;

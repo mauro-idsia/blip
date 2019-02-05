@@ -1,9 +1,9 @@
 package ch.idsia.blip.core.learn.constraints;
 
 
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.arcs.Undirected;
-import ch.idsia.blip.core.common.io.dat.DatFileReader;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.utils.arcs.Undirected;
+import ch.idsia.blip.core.io.dat.DatFileReader;
 import ch.idsia.blip.core.learn.constraints.oracle.Oracle;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.f;
-import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.RandomStuff.f;
+import static ch.idsia.blip.core.utils.RandomStuff.pf;
 
 
 /**

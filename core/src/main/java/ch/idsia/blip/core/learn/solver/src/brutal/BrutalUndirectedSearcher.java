@@ -2,13 +2,13 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 
 import ch.idsia.blip.core.Base;
-import ch.idsia.blip.core.common.arcs.Und;
+import ch.idsia.blip.core.utils.arcs.Und;
 import ch.idsia.blip.core.learn.solver.brtl.BrutalUndirectedSolver;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.SIntSet;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ import java.util.TreeSet;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceAndIncreaseArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
-import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.RandomStuff.f;
 
 
 /**

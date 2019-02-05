@@ -3,15 +3,15 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.samp.SimpleSampler;
-import ch.idsia.blip.core.learn.solver.src.WinSearcher;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.learn.solver.src.WinObsSearcher;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class AuxSearcher extends WinSearcher {
+public class AuxSearcher extends WinObsSearcher {
 
     private int[] clique;
 

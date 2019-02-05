@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.learn.solver.ps;
 
 
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.ArrayList;
 import java.util.List;

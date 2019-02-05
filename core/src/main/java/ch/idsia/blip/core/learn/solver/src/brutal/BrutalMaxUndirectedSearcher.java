@@ -1,28 +1,28 @@
 package ch.idsia.blip.core.learn.solver.src.brutal;
 
 
-import ch.idsia.blip.core.common.arcs.Und;
+import ch.idsia.blip.core.utils.arcs.Und;
 import ch.idsia.blip.core.learn.solver.brtl.BrutalUndirectedSolver;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.data.common.TIntIterator;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.ArrayList;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.*;
-import static ch.idsia.blip.core.utils.other.RandomStuff.p;
-import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.pf;
 
 
 public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
 
-    private TIntHashSet todo;
+    protected TIntHashSet todo;
 
     private double totWeight = 0;
 
-    private Result[] bests;
+    protected Result[] bests;
 
     public BrutalMaxUndirectedSearcher(BrutalUndirectedSolver solver, int tw, Und und) {
         super(solver, tw, und);
@@ -86,7 +86,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
         return null;
     }
 
-    private void done(int v) {
+    protected void done(int v) {
         todo.remove(v);
         if (bests[v] == null) {
             p("cdfjds");
@@ -201,7 +201,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
         updateBests(l_a);
     }
 
-    private void updateBests(ArrayList<SIntSet> l_a) {
+    protected void updateBests(ArrayList<SIntSet> l_a) {
         // Update best handlers
         TIntIterator it = todo.iterator();
 
@@ -227,7 +227,7 @@ public class BrutalMaxUndirectedSearcher extends BrutalUndirectedSearcher {
         }
     }
 
-    private Result sampleWeighted() {
+    protected Result sampleWeighted() {
 
         double r = solver.randDouble() - Math.pow(2, -10);
         int sel = -1;

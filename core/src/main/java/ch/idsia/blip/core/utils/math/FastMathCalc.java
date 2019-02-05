@@ -3,7 +3,7 @@ package ch.idsia.blip.core.utils.math;
 
 import java.io.PrintStream;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.RandomStuff.f;
 
 
 /**

@@ -16,7 +16,7 @@ public interface TIterator {
     /**
      * Removes the last entry returned by the iterator. The result of invoking this method
      * more than once for a single entry is undefined and can leave the underlying data
-     * structure in a confused state.
+     * map in a confused state.
      */
     void remove();
 }

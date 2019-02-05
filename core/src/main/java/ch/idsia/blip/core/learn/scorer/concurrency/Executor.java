@@ -2,7 +2,7 @@ package ch.idsia.blip.core.learn.scorer.concurrency;
 
 
 import ch.idsia.blip.core.learn.scorer.BaseScorer;
-import ch.idsia.blip.core.utils.other.RandomStuff;
+import ch.idsia.blip.core.utils.RandomStuff;
 
 import java.util.logging.Logger;
 

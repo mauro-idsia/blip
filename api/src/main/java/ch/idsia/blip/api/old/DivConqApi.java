@@ -2,11 +2,11 @@ package ch.idsia.blip.api.old;
 
 
 import ch.idsia.blip.api.Api;
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.io.ScoreReader;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.io.ScoreReader;
 import ch.idsia.blip.core.utils.other.DivConq;
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 import org.kohsuke.args4j.Option;
 
 import java.io.Writer;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 
 /**

@@ -1,17 +1,17 @@
 package ch.idsia.blip.core.learn.solver.ktree;
 
 
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.analyze.MutualInformation;
-import ch.idsia.blip.core.common.tw.KTree;
-import ch.idsia.blip.core.common.tw.KTreeSampler;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.utils.analyze.MutualInformation;
+import ch.idsia.blip.core.utils.tw.KTree;
+import ch.idsia.blip.core.utils.tw.KTreeSampler;
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
-import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.RandomStuff.logExp;
 
 
 /**

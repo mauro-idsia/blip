@@ -10,7 +10,7 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Random;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 
 public abstract class BaseSampler extends Base {

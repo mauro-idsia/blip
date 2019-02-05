@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
 
-import ch.idsia.blip.core.common.analyze.MutualInformation;
+import ch.idsia.blip.core.utils.analyze.MutualInformation;
 
 import java.util.Random;
 

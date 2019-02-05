@@ -2,9 +2,10 @@ package ch.idsia.blip.core.utils.other;
 
 
 import ch.idsia.blip.core.App;
-import ch.idsia.blip.core.common.io.ScoreReader;
-import ch.idsia.blip.core.common.io.ScoreWriter;
-import ch.idsia.blip.core.common.tw.KTree;
+import ch.idsia.blip.core.io.ScoreReader;
+import ch.idsia.blip.core.io.ScoreWriter;
+import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.tw.KTree;
 
 import java.io.IOException;
 import java.util.HashMap;

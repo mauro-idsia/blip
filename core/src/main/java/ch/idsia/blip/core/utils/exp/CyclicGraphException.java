@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.utils.exp;
 
 
-import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.BayesianNetwork;
 
 
 public class CyclicGraphException extends Exception {

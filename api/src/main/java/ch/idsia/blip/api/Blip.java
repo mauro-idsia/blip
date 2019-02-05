@@ -7,8 +7,9 @@ import java.lang.reflect.Method;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.closeIt;
-import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.RandomStuff.closeIt;
+import static ch.idsia.blip.core.utils.RandomStuff.f;
+import static ch.idsia.blip.core.utils.RandomStuff.logExp;
 
 
 /**
@@ -17,6 +18,8 @@ import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
 class Blip {
 
     private static final Logger log = Logger.getLogger(Blip.class.getName());
+
+    private static String version = "0.9";
 
     /**
      * Command line invocation
@@ -69,7 +72,7 @@ class Blip {
 
     private static void printListApis(TreeSet<Api> m) {
 
-        String av = "Welcome to BLIP (Bayesian Learning and Inference Package). Available tasks: \n\n";
+        String av = f("Welcome to BLiP (Bayesian Learning Package). Version: %s. Available tasks: \n\n", version);
 
         // String exp = "Work in progress commands (use at your own risk): \n\n";
 

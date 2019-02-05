@@ -2,18 +2,18 @@ package ch.idsia.blip.core.learn.param;
 
 
 import ch.idsia.blip.core.App;
-import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.common.DataSet;
+import ch.idsia.blip.core.utils.BayesianNetwork;
+import ch.idsia.blip.core.utils.DataSet;
 import ch.idsia.blip.core.learn.scorer.concurrency.NotifyingThread;
 import ch.idsia.blip.core.learn.scorer.concurrency.ThreadCompleteListener;
-import ch.idsia.blip.core.utils.other.LLEval;
-import ch.idsia.blip.core.utils.other.RandomStuff;
+import ch.idsia.blip.core.common.LLEval;
+import ch.idsia.blip.core.utils.RandomStuff;
 
 import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSetReader;
-import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSetReader;
+import static ch.idsia.blip.core.utils.RandomStuff.logExp;
 
 
 public class ParLeSmooth extends App {
@@ -25,24 +25,21 @@ public class ParLeSmooth extends App {
         0.001, 0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 50, 100
     };
 
-    private double highestLL;
+    public double highestLL;
 
-    private BayesianNetwork best;
+    protected BayesianNetwork best;
 
-    private String valid;
+    protected String valid;
 
-    private DataSet train;
+    protected DataSet train;
 
-    private BayesianNetwork res;
+    protected BayesianNetwork res;
+
+    public double highestA;
 
     public BayesianNetwork go(BayesianNetwork res, DataSet train, String valid) throws FileNotFoundException {
 
-        highestLL = -Double.MAX_VALUE;
-        best = null;
-
-        this.res = res;
-        this.train = train;
-        this.valid = valid;
+        prepare(res, train, valid);
 
         Thread t1 = new Thread(new SmoothExecutor(thread_pool_size, this));
 
@@ -54,6 +51,15 @@ public class ParLeSmooth extends App {
         }
 
         return best;
+    }
+
+    protected void prepare(BayesianNetwork res, DataSet train, String valid) {
+        highestLL = -Double.MAX_VALUE;
+        best = null;
+
+        this.res = res;
+        this.train = train;
+        this.valid = valid;
     }
 
     private class SmoothExecutor implements Runnable, ThreadCompleteListener {
@@ -146,15 +152,16 @@ public class ParLeSmooth extends App {
             if (verbose > 0) {
                 logf("Propose new ll: %.4f for alpha: %.4f \n", l.ll, alpha);
             }
-            propose(l.ll, newBn);
+            propose(l.ll, newBn, alpha);
         }
     }
 
-    private void propose(double ll, BayesianNetwork newBn) {
+    protected void propose(double ll, BayesianNetwork newBn, double alpha) {
         synchronized (lock) {
             if (ll > highestLL) {
                 highestLL = ll;
                 best = newBn;
+                highestA = alpha;
             }
         }
     }

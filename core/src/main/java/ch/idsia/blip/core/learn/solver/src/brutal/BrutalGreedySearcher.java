@@ -4,8 +4,8 @@ package ch.idsia.blip.core.learn.solver.src.brutal;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.other.Pair;
-import ch.idsia.blip.core.utils.other.ParentSet;
-import ch.idsia.blip.core.utils.other.RandomStuff;
+import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.RandomStuff;
 
 import java.util.*;
 

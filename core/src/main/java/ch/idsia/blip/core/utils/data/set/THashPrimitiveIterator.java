@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * objects).
  * <p/>
  * <p> Note that iteration is fastest if you forego the calls to
- * <tt>hasNext</tt> in favor of checking the size of the structure
+ * <tt>hasNext</tt> in favor of checking the size of the map
  * yourself and then call next() that many times:
  * <p/>
  * <pre>
@@ -30,13 +30,13 @@ import java.util.NoSuchElementException;
 public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
 
     /**
-     * the data structure this iterator traverses
+     * the data map this iterator traverses
      */
     protected final TPrimitiveHash _hash;
 
     /**
      * the number of elements this iterator believes are in the
-     * data structure it accesses.
+     * data map it accesses.
      */
     protected int _expectedSize;
 
@@ -57,7 +57,7 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
     }
 
     /**
-     * Returns the index of the next value in the data structure
+     * Returns the index of the next value in the data map
      * or a negative value if the iterator is exhausted.
      *
      * @return an <code>int</code> value
@@ -89,7 +89,7 @@ public abstract class THashPrimitiveIterator implements TPrimitiveIterator {
     /**
      * Removes the last entry returned by the iterator.
      * Invoking this method more than once for a single entry
-     * will leave the underlying data structure in a confused
+     * will leave the underlying data map in a confused
      * state.
      */
     public void remove() {

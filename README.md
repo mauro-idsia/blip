@@ -1,13 +1,16 @@
 # blip
 
-Bayesian network Learning and Inference Project
+Bayesian network Learning Improved Project
 
 ## References
 
 This package implements the algorithms detailed in the following papers: 
-* [Efficient learning of bounded-treewidth Bayesian networks from complete and incomplete data sets](https://www.sciencedirect.com/science/article/pii/S0888613X17307272) (IJAR 2018) - [supplementary material](supplementary-IJAR.pdf)
-* Approximated Structural Learning for Large Bayesian Networks (accepted for publication ML 2018) - [supplementary material](supplementary-ML17.pdf)
+* [Learning Bayesian Networks with Thousands of Variables](https://papers.nips.cc/paper/5803-learning-bayesian-networks-with-thousands-of-variables) (NIPS 2015) Mauro Scanagatta, Giorgio Corani, Cassio P. de Campos, Marco Zaffalon
 * [Learning Treewidth-Bounded Bayesian Networks with Thousands of Variables](https://papers.nips.cc/paper/6232-learning-treewidth-bounded-bayesian-networks-with-thousands-of-variables) (NIPS 2016) Mauro Scanagatta, Giorgio Corani, Cassio P. de Campos, Marco Zaffalon
+* [Efficient learning of bounded-treewidth Bayesian networks from complete and incomplete data sets](https://www.sciencedirect.com/science/article/pii/S0888613X17307272) (IJAR 2018) - [supplementary material](supplementary-IJAR.pdf)
+* [Improved Local Search in Bayesian Networks Structure Learning](http://proceedings.mlr.press/v73/scanagatta17a.html) (AMBN 2017)
+* [Approximated Structural Learning for Large Bayesian Networks](https://link.springer.com/article/10.1007/s10994-018-5701-9) (ECML PKDD 2018) [supplementary material](supplementary-ML17.pdf)
+
 
 ## Usage
 
@@ -21,46 +24,68 @@ The format for the initial dataset has to be the same as the file "child-5000.da
     * Second line: list of variables cardinalities, separated by space;
     * Following lines: list of values taken by the variables in each datapoint, separated by space.
 
-### Common command line options
-
-* -d VAL : Datafile path (.dat format)
-* -j VAL : Parent set scores output file (.jkl format)
-* -r VAL : Structure output file (.res format)
-* -t N   : Maximum time limit, in seconds (default: 10)
-* -b N   : Number of machine cores to use (default: 1)
-* -w N   : Maximum treewidth
-* -seed N   : Seed for the pseudo random number generator
-
 ### Parent set identification 
 
-The first step is build the parent sets score cache. It can be done with: 
+The first step is build the parent sets score cache. The state-of-the-art approach is to use BIC* (for the BIC score): 
+
 ```
-java -jar blip.jar scorer.sq -c bdeu -d data/child-5000.dat -j data/child-5000.jkl -n 3 -t 10
+java -jar blip.jar scorer.is -d data/child-5000.dat -j data/child-5000.jkl -t 10 -b 0 
 ```
 
-* -a N   : (if BDeu is chosen) equivalent sample size parameter (default: 1.0)
-* -c VAL : Chosen score function. Possible choices: BIC, BDeu (default: bic)
-* -n N   : Maximum learned in-degree (if 0, no constraint is applied) (default: 0)
+Main options: 
+* -d VAL : Datafile input path (.dat format)
+* -j VAL : Parent set scores output file (.jkl format)
+* -t N   : Maximum time limit, in seconds (default: 10)
+* -b N   : Number of machine cores to use - if 0, all are used  (default: 1)
+
+### General structure optimization 
+
+Given the parent sets score cache, now it is time to learn the structure. The state-of-the-art approach is to use WINASOBS (Windows operator applied to ASOBS) with ENT (entropy-based) ordering: 
+
+```
+java -jar blip.jar solver.winasobs.adv -smp ent -j data/child-5000.jkl -r data/child.wa.res -t 10 -b 0 
+```
+
+Main options: 
+* -smp VAL : Advanced sampler (possible values: std, mi, ent, r_mi, r_ent)
+* -j N   : Parent set scores input file (.jkl format)
+* -r VAL : Structure output file (.res format)
+* -t N   : Maximum time limit, in seconds (default: 10)
+* -b N   : Number of machine cores to use - if 0, all are used  (default: 1)
 
 ### Bounded-treewidth structure optimization 
 
-For perfoming with k-greedy: 
-
-```
-java -jar blip.jar solver.kg -j data/child-5000.jkl -r data/child.kg.res -t 10 -w 4 -v 1
-```
-
-For perfoming with the k-greedy enhanched by entropy-based sample ordering: 
-
-```
-java -jar blip.jar solver.kg.adv -smp ent -d data/child-5000.dat -j data/child-5000.jkl -r data/child-5000.kgent.res -t 10 -w 4 -v 1
-```
+Given the parent sets score cache, it is possible to learn a structure under a bounded treewidth constraints. The state-of-the-art approach is to use k-max: 
 
 For perfoming with k-max:
 
 ```
-java -jar blip.jar solver.kmax -j data/child-5000.jkl -r data/child-5000.kmax.res -t 10 -w 4 -v 1
+java -jar blip.jar solver.kmax -w 4 -j data/child-5000.jkl -r data/child-5000.kmax.res -t 10 -b 0
 ```
+
+Main options: 
+*  -w N  : Maximum treewidth allowed
+* -j N   : Parent set scores input file (.jkl format)
+* -r VAL : Structure output file (.res format)
+* -t N   : Maximum time limit, in seconds (default: 10)
+* -b N   : Number of machine cores to use - if 0, all are used  (default: 1)
+
+### Structure learning from incomplete data sets
+
+To learn a structure from data containing missing values the state-of-the-art approach is to use SEM-kMAX: 
+
+```
+java -jar blip.jar imputation.sem  -d data/child-5000-missing.dat -o data/child-5000-imputed.dat -r data/child.res -t 1 -tmp data/tmp -w 6 -b 0
+```
+
+Main options: 
+* -d VAL   : Datafile (with missing valus) input path (.dat format)
+* -o VAL   : Datafile (with imputed values) output path (.dat format)
+* -r VAL   : Structure output file (.res format)
+* -t N     : Time regulation parameter (default: 1)
+* -tmp VAL : Temporary directory
+* -w N     : Learning treewidth (default: 6)
+* -b N     : Number of machine cores to use - if 0, all are used  (default: 1)
 
 ### Interpreting the result 
 
@@ -76,4 +101,10 @@ Using the structure found it is possible to learn the parameters with:
 java -jar blip.jar parle -d data/child-5000.dat -r data/child-5000.kmax.res -n data/child-5000.kmax.uai
 ```
 
+Main options: 
+* -d VAL  : Datafile input path (.dat format)
+* -r VAL  : Structure input file (.res format)
+* -n VAL  : BN output file (.uai format) 
+
 The final output will be a full Bayesian network in UAI format. 
+ 

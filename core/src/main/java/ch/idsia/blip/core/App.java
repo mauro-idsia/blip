@@ -30,6 +30,10 @@ public class App extends Base {
 
     private HashMap<String, String> options;
 
+    public App() {
+        start = System.currentTimeMillis();
+    }
+
     public void logf(String format, Object... args) {
         log(String.format(format, args));
     }
@@ -66,7 +70,6 @@ public class App extends Base {
             thread_pool_size = Runtime.getRuntime().availableProcessors();
         }
 
-        start = System.currentTimeMillis();
     }
 
     public int randInt(int min, int max) {
@@ -74,7 +77,7 @@ public class App extends Base {
     }
 
     public double randProb() {
-        return randInt(0, 1) * rand.nextDouble();
+        return rand.nextDouble();
     }
 
     public double randDouble() {

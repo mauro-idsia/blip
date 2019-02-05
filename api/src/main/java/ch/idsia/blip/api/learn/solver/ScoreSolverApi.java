@@ -4,15 +4,15 @@ package ch.idsia.blip.api.learn.solver;
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.learn.solver.ScoreSolver;
 import ch.idsia.blip.core.utils.other.IncorrectCallException;
-import ch.idsia.blip.core.utils.other.ParentSet;
-import ch.idsia.blip.core.utils.other.RandomStuff;
+import ch.idsia.blip.core.utils.ParentSet;
+import ch.idsia.blip.core.utils.RandomStuff;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
-import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
 
 
 public abstract class ScoreSolverApi extends Api {

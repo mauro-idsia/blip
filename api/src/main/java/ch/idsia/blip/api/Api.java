@@ -9,10 +9,9 @@ import org.kohsuke.args4j.spi.OptionHandler;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.logExp;
-import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.logExp;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
 
 
 public abstract class Api {
@@ -23,7 +22,7 @@ public abstract class Api {
     @Option(name = "-seed", usage = "Random seed")
     protected int seed = 0;
 
-    @Option(name = "-b", usage = "Number of machine cores to use (if 0, all are used)")
+    @Option(name = "-b", usage = "Number of machine cores to use - if 0, all are used ")
     protected int thread_pool_size = 1;
 
     public abstract void exec() throws Exception;
@@ -74,6 +73,7 @@ public abstract class Api {
         } catch (Exception exp) {
             p("Error during execution, in class: " + api.getClass().getName());
             p(exp.getMessage());
+            exp.printStackTrace();
         }
     }
 

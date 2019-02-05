@@ -1,12 +1,12 @@
 package ch.idsia.blip.core.learn.solver.src.obs;
 
 
-import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.BayesianNetwork;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.src.ScoreSearcher;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 import ch.idsia.blip.core.utils.exp.CyclicGraphException;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 
 /**

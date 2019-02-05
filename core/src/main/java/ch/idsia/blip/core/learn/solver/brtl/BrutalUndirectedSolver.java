@@ -1,14 +1,15 @@
 package ch.idsia.blip.core.learn.solver.brtl;
 
 
-import ch.idsia.blip.core.common.arcs.Und;
-import ch.idsia.blip.core.common.graph.UndSeparator;
+import ch.idsia.blip.core.utils.arcs.Und;
+import ch.idsia.blip.core.utils.graph.UndSeparator;
 import ch.idsia.blip.core.learn.solver.BaseSolver;
 import ch.idsia.blip.core.learn.solver.ps.NullProvider;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.samp.SimpleSampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
+import ch.idsia.blip.core.learn.solver.src.brutal.BtsSearcher;
 import ch.idsia.blip.core.learn.solver.src.brutal.BrutalMaxUndirectedSearcher;
 import ch.idsia.blip.core.learn.solver.src.brutal.BrutalMaxUndirectedSearcherOld;
 import ch.idsia.blip.core.learn.solver.src.brutal.BrutalUndirectedSearcher;
@@ -21,7 +22,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.sameArray;
-import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 
 /**
@@ -83,6 +84,8 @@ public class BrutalUndirectedSolver extends BaseSolver {
             return new BrutalMaxUndirectedSearcherOld(this, tw, und);
         } else if (behaviour == 2) {
             return new BrutalMaxUndirectedSearcher(this, tw, und);
+        } else if (behaviour == 3) {
+            return new BtsSearcher(this, tw, und);
         } else {
             // Stochastic behaviour (follow sampling)
             return new BrutalUndirectedSearcher(this, tw, und);

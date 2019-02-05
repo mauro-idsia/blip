@@ -2,7 +2,7 @@ package ch.idsia.blip.core.learn.scorer;
 
 
 import ch.idsia.blip.core.utils.other.Pair;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.logging.Logger;
 

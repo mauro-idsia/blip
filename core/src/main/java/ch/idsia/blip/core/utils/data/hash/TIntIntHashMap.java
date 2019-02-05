@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Map;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.RandomStuff.f;
 
 
 /**

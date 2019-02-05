@@ -11,7 +11,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.f;
+import static ch.idsia.blip.core.utils.RandomStuff.f;
 
 
 /**

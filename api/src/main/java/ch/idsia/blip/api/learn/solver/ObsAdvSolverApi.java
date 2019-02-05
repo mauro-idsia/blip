@@ -7,10 +7,9 @@ import ch.idsia.blip.core.utils.other.IncorrectCallException;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
-import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
-import static ch.idsia.blip.core.utils.other.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
 
 
 public class ObsAdvSolverApi extends ObsSolverApi {
@@ -37,9 +36,15 @@ public class ObsAdvSolverApi extends ObsSolverApi {
     protected void check() throws IncorrectCallException {
         super.check();
 
-        if ( dat_path!= null && !dat_path.equals("")  && new File(dat_path).exists()) {
+        if ( dat_path == null || !new File(dat_path).exists()) {
             throw new IncorrectCallException("Data input file ("+dat_path +") does not exists.");
         }
+    }
+
+    @Override
+    public void exec() throws Exception {
+        ((ObsSolver) solver).initAdv(dat_path, sampler, searcher);
+        super.exec();
     }
 
 }

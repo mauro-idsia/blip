@@ -3,12 +3,12 @@ package ch.idsia.blip.api.learn.scorer;
 
 import ch.idsia.blip.api.Api;
 import ch.idsia.blip.core.learn.scorer.RankerScores;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 import org.kohsuke.args4j.Option;
 
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getScoreReader;
+import static ch.idsia.blip.core.utils.RandomStuff.getScoreReader;
 
 
 /**

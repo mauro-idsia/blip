@@ -1,12 +1,12 @@
 package ch.idsia.blip.core.utils.other;
 
 
-import ch.idsia.blip.core.common.BayesianNetwork;
+import ch.idsia.blip.core.utils.BayesianNetwork;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.util.Random;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getRandom;
+import static ch.idsia.blip.core.utils.RandomStuff.getRandom;
 
 
 public class DFGenerator {

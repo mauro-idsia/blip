@@ -1,12 +1,12 @@
 package ch.idsia.blip.core.learn.solver;
 
 
-import ch.idsia.blip.core.common.arcs.Directed;
+import ch.idsia.blip.core.utils.arcs.Directed;
 import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.ps.SkelProvider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.samp.SkelSampler;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 
 public abstract class SkelSolver extends BaseSolver {

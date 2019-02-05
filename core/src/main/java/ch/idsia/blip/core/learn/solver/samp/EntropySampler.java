@@ -1,12 +1,12 @@
 package ch.idsia.blip.core.learn.solver.samp;
 
 
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.analyze.Entropy;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.utils.analyze.Entropy;
 
 import java.util.Random;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getDataSet;
+import static ch.idsia.blip.core.utils.RandomStuff.getDataSet;
 
 
 public class EntropySampler implements Sampler {

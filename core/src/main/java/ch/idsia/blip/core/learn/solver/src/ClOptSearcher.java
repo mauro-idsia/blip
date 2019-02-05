@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.learn.solver.src;
 
 
-import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.common.io.GobnilpReader;
+import ch.idsia.blip.core.utils.BayesianNetwork;
+import ch.idsia.blip.core.io.GobnilpReader;
 import ch.idsia.blip.core.learn.solver.ClOptSolver;
 import ch.idsia.blip.core.learn.solver.src.obs.ObsSearcher;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
@@ -10,7 +10,7 @@ import ch.idsia.blip.core.utils.data.FastList;
 import ch.idsia.blip.core.utils.data.common.TIntIterator;
 import ch.idsia.blip.core.utils.data.set.TIntHashSet;
 import ch.idsia.blip.core.utils.exp.CyclicGraphException;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 import ch.idsia.blip.core.utils.other.StreamGobbler;
 
 import java.io.File;
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.cloneArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.findAll;
-import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 
 public class ClOptSearcher extends ObsSearcher {
@@ -237,7 +237,7 @@ public class ClOptSearcher extends ObsSearcher {
             solver.log("going! \n");
         }
 
-        // Find initial structure!
+        // Find initial map!
         this.searchF(vars);
 
         if (solver.verbose > 2) {
@@ -335,7 +335,7 @@ public class ClOptSearcher extends ObsSearcher {
 
             // update the lists
             done(res.v);
-            // update structure
+            // update map
             str[res.v] = res.p;
         }
 

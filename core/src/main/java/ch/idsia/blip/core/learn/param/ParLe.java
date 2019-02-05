@@ -2,12 +2,12 @@ package ch.idsia.blip.core.learn.param;
 
 
 import ch.idsia.blip.core.App;
-import ch.idsia.blip.core.common.BayesianNetwork;
-import ch.idsia.blip.core.common.DataSet;
+import ch.idsia.blip.core.utils.BayesianNetwork;
+import ch.idsia.blip.core.utils.DataSet;
 import ch.idsia.blip.core.utils.data.ArrayUtils;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.p;
-import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.RandomStuff.p;
+import static ch.idsia.blip.core.utils.RandomStuff.pf;
 
 
 public abstract class ParLe extends App {
@@ -44,7 +44,7 @@ public abstract class ParLe extends App {
 
     /*
      protected boolean checkNames(BayesianNetwork res) {
-     // check that datafile and supplied structure shares the names;
+     // check that datafile and supplied map shares the names;
      // also builds index conversion array
      if (bn.n_var != dat.n_var) {
      p("Different variable size!");
@@ -68,7 +68,7 @@ public abstract class ParLe extends App {
      }
      if (index == -1) {
      pf(
-     "Variable %s from the dataset not found in bayesian structure! \n",
+     "Variable %s from the dataset not found in bayesian map! \n",
      nm);
      return false;
      }
@@ -84,27 +84,35 @@ public abstract class ParLe extends App {
 
         bn = new BayesianNetwork(res.n_var);
 
-        bn.l_parent_var = res.l_parent_var;
+        int[] inv_index = new int[bn.n_var];
+        int[] index = new int[bn.n_var];
+        for (int i = 0; i < bn.n_var; i++) {
+            inv_index[i] = ArrayUtils.index(dat.l_nm_var[i], res.l_nm_var);
+            index[i] = ArrayUtils.index(res.l_nm_var[i], dat.l_nm_var);
+        }
 
-        int ix = 0;
+        for (int ix = 0; ix < dat.n_var;ix++) {
+            String s = dat.l_nm_var[ix];
+            bn.l_nm_var[ix] = s;
 
-        for (int i = 0; i < dat.n_var; i++) {
-            String s = dat.l_nm_var[i];
+            int ar = dat.l_n_arity[ix];
+            bn.l_ar_var[ix] = ar;
 
-            bn.l_nm_var[i] = s;
+            int[] p = res.parents(inv_index[ix]);
+            int[] n_p = new int[p.length];
+            for (int k = 0; k < p.length; k++)
+                n_p[k] = index[p[k]];
 
-            int ar = dat.l_n_arity[ix++];
-
-            bn.l_ar_var[i] = ar;
+            bn.l_parent_var[ix] = n_p;
 
             String[] vl = new String[ar];
 
-            for (int j = 0; j < ar; j++) {
-                vl[j] = String.format("s%d", j);
+            for (int k = 0; k < ar; k++) {
+                vl[k] = String.format("s%d", k);
             }
-            bn.l_values_var[i] = vl;
+            bn.l_values_var[ix] = vl;
 
-            bn.l_potential_var[i] = new double[0];
+            bn.l_potential_var[ix] = new double[0];
         }
 
     }
@@ -182,7 +190,11 @@ public abstract class ParLe extends App {
     }
 
     public static BayesianNetwork ex(BayesianNetwork bn, DataSet dat) {
-        return new ParLeBayes(10).go(bn, dat);
+        return ex(bn, dat, 10);
+    }
+
+    public static BayesianNetwork ex(BayesianNetwork bn, DataSet dat, double alpha) {
+        return new ParLeBayes(alpha).go(bn, dat);
     }
 
 }

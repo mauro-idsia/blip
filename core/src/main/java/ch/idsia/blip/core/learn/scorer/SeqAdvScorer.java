@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.learn.scorer;
 
 
-import ch.idsia.blip.core.common.analyze.LogLikelihood;
-import ch.idsia.blip.core.common.analyze.MutualInformation;
+import ch.idsia.blip.core.utils.analyze.LogLikelihood;
+import ch.idsia.blip.core.utils.analyze.MutualInformation;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;

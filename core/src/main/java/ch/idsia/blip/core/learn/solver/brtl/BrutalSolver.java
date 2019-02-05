@@ -7,7 +7,7 @@ import ch.idsia.blip.core.learn.solver.ps.Provider;
 import ch.idsia.blip.core.learn.solver.samp.Sampler;
 import ch.idsia.blip.core.learn.solver.src.Searcher;
 import ch.idsia.blip.core.learn.solver.src.brutal.*;
-import ch.idsia.blip.core.utils.other.ParentSet;
+import ch.idsia.blip.core.utils.ParentSet;
 
 import java.util.HashMap;
 

@@ -1,8 +1,8 @@
 package ch.idsia.blip.core.learn.feature;
 
 
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.io.dat.DatFileReader;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.io.dat.DatFileReader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.expandArray;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.find;
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
-import static ch.idsia.blip.core.utils.other.RandomStuff.pf;
+import static ch.idsia.blip.core.utils.RandomStuff.pf;
 
 
 /**

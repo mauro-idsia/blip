@@ -1,7 +1,7 @@
 package ch.idsia.blip.core.learn.scorer;
 
 
-import ch.idsia.blip.core.common.DataSet;
+import ch.idsia.blip.core.utils.DataSet;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 
 import java.io.Writer;
@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import static ch.idsia.blip.core.utils.other.RandomStuff.getWriter;
+import static ch.idsia.blip.core.utils.RandomStuff.getWriter;
 
 
 public class AdvK2 extends BaseScorer {

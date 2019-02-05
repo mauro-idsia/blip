@@ -2,16 +2,16 @@ package ch.idsia.blip.core.learn.scorer;
 
 
 import ch.idsia.blip.core.App;
-import ch.idsia.blip.core.common.DataSet;
-import ch.idsia.blip.core.common.score.*;
+import ch.idsia.blip.core.utils.DataSet;
+import ch.idsia.blip.core.utils.score.*;
 import ch.idsia.blip.core.learn.scorer.concurrency.Executor;
 import ch.idsia.blip.core.learn.scorer.utils.OpenParentSet;
 import ch.idsia.blip.core.utils.data.SIntSet;
 import ch.idsia.blip.core.utils.data.array.TIntArrayList;
 import ch.idsia.blip.core.utils.data.hash.TIntDoubleHashMap;
-import ch.idsia.blip.core.utils.other.RandomStuff;
-import ch.idsia.blip.core.utils.structure.ArrayHashingStrategy;
-import ch.idsia.blip.core.utils.structure.TCustomHashMap;
+import ch.idsia.blip.core.utils.RandomStuff;
+import ch.idsia.blip.core.utils.data.map.ArrayHashingStrategy;
+import ch.idsia.blip.core.utils.data.map.TCustomHashMap;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ch.idsia.blip.core.utils.data.ArrayUtils.reduceArray;
-import static ch.idsia.blip.core.utils.other.RandomStuff.*;
+import static ch.idsia.blip.core.utils.RandomStuff.*;
 
 
 public abstract class BaseScorer extends App {
@@ -60,7 +60,7 @@ public abstract class BaseScorer extends App {
 
     protected ScoreWriter scoreWriter;
 
-    public double max_time;
+    public double max_searcher_time;
 
     protected abstract String getName();
 
@@ -118,13 +118,7 @@ public abstract class BaseScorer extends App {
             e = Math.min(n_var, Integer.valueOf(m.group(2)) + 1);
         }
 
-        // available time
-        if (max_time > 0) {
-            // for each searcher, (total time) * (num of threads) / (num of variables)
-            max_exec_time = (max_time * thread_pool_size) / (e - s);
-        } else {
-            max_exec_time = 60;
-        }
+        set_max_exec_time(e-s);
 
         Thread t1 = new Thread(new Executor(thread_pool_size, s, e, this));
 
@@ -143,8 +137,8 @@ public abstract class BaseScorer extends App {
      private void searchOne(int n) throws InterruptedException, UnsupportedEncodingException, FileNotFoundException {
 
      // available time
-     if (max_time == 0)
-     max_exec_time = 60;
+     if (max_exec_time == 0)
+     max_searcher_time = 60;
 
      Runnable r = getNewSearcher(n);
      Thread t = new Thread(r);
@@ -162,19 +156,13 @@ public abstract class BaseScorer extends App {
 
     public void searchAll() throws InterruptedException, IOException {
 
-        // available time
-        if (max_time > 0) {
-            // for each searcher, (total time) * (num of threads) / (num of variables)
-            max_exec_time = (max_time * thread_pool_size) / dat.n_var;
-        } else {
-            max_exec_time = 60;
-        }
+        set_max_exec_time(dat.n_var);
 
         if (verbose > 0) {
             pf("Executing with: \n");
             pf("%-12s: %s \n", "code", this.getClass().getName());
             pf("%-12s: %d \n", "threads", thread_pool_size);
-            pf("%-12s: %.2f \n", "max_time", max_exec_time);
+            pf("%-12s: %.2f \n", "search_time", max_searcher_time);
             pf("%-12s: %d \n", "max_degree", max_pset_size);
         }
 
@@ -202,10 +190,24 @@ public abstract class BaseScorer extends App {
 
     }
 
-    protected void conclude() {
+    private void set_max_exec_time(int n) {
+
+        // available time
+        if (max_exec_time > 0) {
+            max_exec_time -= (System.currentTimeMillis() - start) / 1000.0;
+            // for each searcher, (total time) * (num of threads) / (num of variables)
+            max_searcher_time = (max_exec_time * Math.min(n, thread_pool_size)) / n;
+        } else {
+            max_searcher_time = 60;
+        }
+    }
+
+    protected void conclude() throws IOException {
         if (verbose > 0) {
             pf("done! \n");
         }
+
+        scoreWriter.wr.close();
     }
 
     public abstract BaseSearcher getNewSearcher(int n);
@@ -270,7 +272,6 @@ public abstract class BaseScorer extends App {
         super.init(options);
 
         this.ph_scores = gStr("ph_scores");
-        this.max_time = gInt("max_time", 60);
         this.max_pset_size = gInt("max_pset_size", 6);
         this.scoreNm = gStr("scoreNm", "bdeu");
         this.alpha = gDouble("alpha", 1.0);
@@ -285,7 +286,7 @@ public abstract class BaseScorer extends App {
         } else if ("k2".equals(scoreNm)) {
             score = new K2(dat);
         } else if ("bic".equals(scoreNm)) {
-            score = new BIC(alpha, dat);
+            score = new BIC(dat);
         } else if ("mit".equals(scoreNm)) {
             score = new MIT(alpha, dat);
         } else {
@@ -598,20 +599,20 @@ public abstract class BaseScorer extends App {
         }
 
         boolean thereIsTime() {
-            if (max_exec_time == 0) {
+            if (max_searcher_time == 0) {
                 return true;
             }
             m_elapsed = ((System.currentTimeMillis() - m_start) / 1000.0);
-            return m_elapsed < max_exec_time;
+            return m_elapsed < max_searcher_time;
         }
 
     }
 
     protected void preamble(BaseScorer sc, Writer wr) throws IOException {
-        wf(wr, "%d\n", sc.n_var);
-        wf(wr, "# Method: %s \n", sc.getName(), max_exec_time);
+        wf(wr, "# Method: %s \n", sc.getName(), max_searcher_time);
         wf(wr, "# Score function: %s \n", score.descr());
         wf(wr, "# Max in-degree: %d \n", max_pset_size);
+        wf(wr, "%d\n", sc.n_var);
     }
 }
 
