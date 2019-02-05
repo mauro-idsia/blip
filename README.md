@@ -6,7 +6,7 @@ It is developed my Mauro Scanagatta and it is distributed under the GNU General 
 It focuses on score-based learning, mainly the BIC and the BDeu score functions, and
 allows the user to learn BNs from datasets containing thousands of variables. It provides state-of-the-art algortihms for the following tasks: parent set identification ( BIC ), general structure optimization (WINASOBS-ENT), bounded treewidth structure optimization (KMAX) and structure learning on incomplete data sets (SEM-KMAX). 
 
-An R binding [is also available] (https://github.com/mauro-idsia/r.blip).
+An R binding is also available: (https://github.com/mauro-idsia/r.blip).
 
 ## References
 
