@@ -49,11 +49,12 @@ Main options:
 Given the parent sets score cache, now it is time to learn the structure. The state-of-the-art approach is to use WINASOBS (Windows operator applied to ASOBS) with ENT (entropy-based) ordering: 
 
 ```
-java -jar blip.jar solver.winasobs.adv -smp ent -j data/child-5000.jkl -r data/child.wa.res -t 10 -b 0 
+java -jar blip.jar solver.winasobs.adv -smp ent -d data/child-5000.dat -j data/child-5000.jkl -r data/child.wa.res -t 10 -b 0
 ```
 
 Main options: 
 * -smp VAL : Advanced sampler (possible values: std, mi, ent, r_mi, r_ent)
+* -d VAL : Datafile input path (.dat format)
 * -j N   : Parent set scores input file (.jkl format)
 * -r VAL : Structure output file (.res format)
 * -t N   : Maximum time limit, in seconds (default: 10)
